@@ -1,54 +1,54 @@
 # template_proj
 
-Минимальный шаблон проекта с деревом документов и проверкой локальных ссылок.
-Это наша реализация progressive disclosure, не копия конфигурации Рината.
+A minimal project template with a document tree and local link checks.
+This is our implementation of progressive disclosure, not a copy of Rinat's setup.
 
-## С чего начать
+## Getting started
 
-1. Открой [AGENTS.md](AGENTS.md) и запусти `make docs`.
-2. В новом проекте заполни [смысловое ядро](docs/product/core.md).
-3. Опиши первую задачу и проверяемые примеры поведения.
-4. Выбери нужный для задачи стек и добавь реальные команды проверки в
+1. Read [AGENTS.md](AGENTS.md) and run `make docs`.
+2. In a new project, complete the [product core](docs/product/core.md).
+3. Describe the first task and verifiable examples of expected behavior.
+4. Choose a stack suited to the task and add actual verification commands to
    [verification.md](docs/development/verification.md).
-5. Выполни `make check` и проверки приложения.
+5. Run `make check` and the application checks.
 
-Для инструментов этого шаблона нужны Python 3 и Make. Пакеты устанавливать не нужно.
-Если программа `tree` отсутствует, `make docs` использует `find`.
+The template tools require Python 3 and Make. No packages need to be installed.
+When `tree` is unavailable, `make docs` uses `find`.
 
-## Карта
+## Layout
 
 ```text
-AGENTS.md                 короткая точка входа агента
-docs/product/             цели, язык и правила продукта
-docs/architecture/        устройство и ограничения системы
-docs/development/         рабочий цикл и проверка результата
-docs/specs/               карта исполняемых сценариев
-docs/decisions/           причины важных решений
-docs/plans/               только актуальные планы сложных задач
-scripts/                  проверка ссылок и её тесты
+AGENTS.md                 short agent entry point
+docs/product/             product goals, language, and rules
+docs/architecture/        system structure and constraints
+docs/development/         workflow and verification
+docs/specs/               executable scenario map
+docs/decisions/           reasons behind important decisions
+docs/plans/               active plans for complex tasks only
+scripts/                  link checker and its tests
 ```
 
-Локальные `AGENTS.md` добавляй, когда у конкретного участка кода появятся свои
-правила. Скилл можно подключить для повторяемой процедуры; актуальные правила
-продукта храни в документах и ссылайся на них из скилла.
+Add local `AGENTS.md` files when a part of the code needs its own rules.
+A skill can package a repeatable procedure; keep current product rules in documents
+and reference them from the skill.
 
-## Новый проект из шаблона
+## Creating a project from the template
 
-Из папки `projects` выполни, подставив свободное имя вместо `my_project`:
+From the `projects` directory, replace `my_project` with an unused project name:
 
 ```sh
 git clone --no-hardlinks ./template_proj ./my_project
 git -C ./my_project remote remove origin
 ```
 
-Новый репозиторий начинает с истории шаблона, но больше не связан с ним remote.
-Переименуй заголовок README, заполни ядро, настрой проверки и сделай свой коммит.
-Подробный порядок регистрации находится в соседнем Control Center; ссылка на него
-не требуется для работы скопированного проекта.
+The new repository starts with the template's history but no longer has a remote
+pointing to it. Update the README title, complete the product core, configure
+verification, and make your own commit. The neighboring Control Center contains
+the registration procedure; the copied project does not depend on that document.
 
-## Что означает обновление документов
+## How documentation is updated
 
-Агент обновляет затронутые знания в рамках задачи по
-[рабочему циклу](docs/development/workflow.md). Постоянного фонового процесса нет.
-`make check` проверяет существование локальных ссылок и сам проверяющий инструмент;
-смысл требований и поведение приложения требуют отдельных проверок.
+The agent updates affected knowledge as part of a task, following the
+[workflow](docs/development/workflow.md). There is no continuous background process.
+Keep documentation and specifications in English. `make check` verifies local link
+targets and the checker itself; requirements and application behavior need separate checks.

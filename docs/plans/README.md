@@ -1,12 +1,13 @@
-# Текущие планы
+# Active plans
 
-План создаётся для сложной задачи, которой нужен перенос между сессиями.
-Для небольшой задачи отдельный файл не требуется.
+Create a plan for a complex task that needs continuity between sessions.
+A small task does not need a separate file.
 
-Укажи цель, критерии завершения, шаги, уже проверенные результаты и следующий шаг.
-Не дублируй в плане все правила продукта.
+Include the goal, completion criteria, steps, verified results, and next action.
+Do not duplicate all product rules in the plan.
 
-После завершения перенеси устойчивое знание в соответствующий документ или
-[решение](../decisions/README.md), затем удали ненужный план. Git сохранит историю.
+After completion, move durable knowledge to the relevant document or
+[decision](../decisions/README.md), then delete the plan if it is no longer useful.
+Git preserves its history.
 
-Активных планов сейчас нет.
+There are no active plans.

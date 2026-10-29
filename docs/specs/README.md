@@ -1,16 +1,16 @@
-# Карта исполняемых сценариев
+# Executable scenario map
 
-Статус: бизнес-сценариев пока нет. Этот файл — индекс, не исполняемая спецификация.
+Status: no business scenarios exist yet. This file is an index, not an executable specification.
 
-Когда появится первое правило, добавь одну строку с относительными ссылками:
+When the first rule is defined, add a row with relative links:
 
-| Правило продукта | Файл исполняемых сценариев | Команда | Границы проверки |
+| Product rule | Executable scenario file | Command | Verification boundaries |
 | --- | --- | --- | --- |
 
-Храни сами сценарии рядом с тестами выбранного стека; не создавай их копию здесь.
-Для примера удобно использовать Given / When / Then: исходные условия,
-действие, наблюдаемый результат. Специальный парсер и Event Sourcing не обязательны.
+Keep executable scenarios with the chosen stack's tests; do not duplicate them here.
+Given / When / Then can help express each example: initial conditions, an action,
+and an observable result. A dedicated parser and Event Sourcing are optional.
 
-Сценарии проверяют сформулированные ожидания, а не полноту всех требований.
-Продуктовые правила находятся в [ядре и его связанных документах](../product/core.md),
-порядок запуска — в [проверках](../development/verification.md).
+Scenarios check stated expectations, not the completeness of all requirements.
+Product rules live in the [product core and its linked documents](../product/core.md).
+Execution instructions belong in [verification](../development/verification.md).

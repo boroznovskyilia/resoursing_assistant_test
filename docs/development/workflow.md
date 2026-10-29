@@ -1,38 +1,39 @@
-# Рабочий цикл задачи
+# Task workflow
 
-## Ориентация
+## Orientation
 
-Выполни `make docs`, прочитай ядро и документы своей темы.
-Найди затронутый код, его вызовы и существующие проверки.
-Уточни ожидаемое поведение и последствия изменения. Не читай все документы подряд.
+Run `make docs`, read the product core and the documents relevant to your task.
+Find affected code, its callers, and existing checks.
+Clarify expected behavior and the consequences of the change. Do not read every document.
 
-## Реализация
+## Implementation
 
-Для нетривиального поведения сначала сформулируй проверяемые примеры:
-«при таких условиях, после действия, наблюдаем такой результат».
-Используй тестовые средства выбранного стека; Gherkin не обязателен.
-Для небольшой обратимой правки отдельный план и новый тест могут не требоваться.
-При сложной задаче заведи временный [план](../plans/README.md).
-Внеси минимальное полное изменение и выполни связанные проверки.
+For nontrivial behavior, first formulate verifiable examples:
+"given these conditions, when this action occurs, expect this observable result."
+Use the chosen stack's testing tools; Gherkin is optional.
+A small reversible change may not need a separate plan or a new test.
+For a complex task, create a temporary [plan](../plans/README.md).
+Make the smallest complete change and run the relevant checks.
 
-## Обновление знаний
+## Updating knowledge
 
-Прочитай [правила документации](../document_writing.md).
-Сравни использованные документы с итоговым поведением и командами.
-Исправь затронутые знания в той же задаче. Если обновления не нужны, не создавай
-формальный отчёт в дереве документов. Удали ненужный завершённый план.
-Сохрани причину важного выбора в [решениях](../decisions/README.md).
+Read the [documentation rules](../document_writing.md).
+Compare the documents you used with the resulting behavior and commands.
+Update affected knowledge in the same task. If no documentation changes are needed,
+do not create a ceremonial report in the document tree. Remove completed plans
+that are no longer useful. Preserve the reason behind an important choice in
+[decisions](../decisions/README.md).
 
-## Завершение
+## Completion
 
-Запусти `make check` и реальные [проверки приложения](verification.md).
-В итоговом ответе укажи, что изменено, как проверено и что остаётся неизвестным.
-Проверки документов не заменяют проверки поведения.
+Run `make check` and the actual [application checks](verification.md).
+In the final response, explain what changed, how it was verified, and what remains unknown.
+Documentation checks do not replace behavioral checks.
 
-## Улучшение среды
+## Improving the environment
 
-Если агент споткнулся, исправь конкретную причину: непонятное имя документа,
-противоречивое правило, отсутствующий сценарий или неудобную команду.
-Для повторяющейся проблемы повтори исходную задачу в свежей сессии и сравни результат.
-Переносить урок в другие проекты следует после проверки его общей применимости;
-для этого есть отдельный Control Center.
+When an agent struggles, fix the specific cause: an unclear document name,
+a contradictory rule, a missing scenario, or an awkward command.
+For a recurring problem, repeat the original task in a fresh session and compare results.
+Transfer a lesson to other projects only after checking its broader applicability;
+the separate Control Center supports that process.

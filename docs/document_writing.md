@@ -1,45 +1,46 @@
-# Правила документации
+# Documentation rules
 
-## Что сохранять
+## What to preserve
 
-Сохраняй действующие правила, причины решений и повторяемые способы проверки.
-Не сохраняй переписку, сырые логи и каждый промежуточный шаг агента как инструкции.
-Не добавляй отдельный документ, если достаточно исправить существующий.
+Write documentation, specifications, and durable instructions in English.
+Preserve current rules, reasons behind decisions, and repeatable verification procedures.
+Do not turn conversations, raw logs, or every intermediate agent action into instructions.
+Update an existing document when it is sufficient instead of creating another one.
 
-## Как находить
+## Discoverability
 
-Имя файла должно объяснять тему. Одна тема — один основной документ.
-Используй содержательные заголовки; сначала краткий смысл, затем детали.
-Связывай соседние темы обычными относительными Markdown-ссылками.
-Не требуй чтения всего дерева в начале каждой задачи.
+Name each file after its topic. Give each topic one primary document.
+Use descriptive headings; start with a short explanation, then provide details.
+Connect related topics with ordinary relative Markdown links.
+Do not require reading the entire tree at the start of every task.
 
-## Как связывать с реализацией
+## Connecting documents to implementation
 
-У правила поведения укажи конкретные исполняемые сценарии и способ их запуска.
-У операции укажи команду, предпосылки и наблюдаемый результат.
-Пока проверка не реализована, прямо напиши «проверки пока нет».
-Не объявляй текст исполняемой спецификацией, если его нечем выполнить.
+For a behavioral rule, reference specific executable scenarios and how to run them.
+For an operation, provide its command, prerequisites, and observable result.
+When a check has not been implemented, explicitly state "no check exists yet."
+Do not call text an executable specification unless it can actually be executed.
 
-## Когда обновлять
+## When to update
 
-При изменении поведения, интерфейсов, команд или ограничений проверь затронутые
-документы в той же задаче. Непроверенные предположения обозначай явно.
-Если код противоречит требованию, не переписывай требование только ради совпадения.
-Изменение цели, продуктового ограничения или смысла правила согласуй с владельцем.
-После ошибки добавь минимальную защиту: исправление навигации, сценарий или команду.
-Сложный новый процесс нужен только при повторении проблемы.
+When behavior, interfaces, commands, or constraints change, review affected documents
+as part of the same task. Explicitly label unverified assumptions.
+If code contradicts a requirement, do not rewrite the requirement just to make them match.
+Agree on changes to goals, product constraints, or the meaning of a rule with the owner.
+After a failure, add the smallest useful safeguard: clearer navigation, a scenario,
+or a command. Add a more elaborate process only when the problem recurs.
 
-## Планы и решения
+## Plans and decisions
 
-В [plans](plans/README.md) держи актуальный ход сложной задачи.
-После завершения удали ненужный план: история останется в Git.
-Действующие причины выбора перенеси в [decisions](decisions/README.md).
-Не превращай план прошлого изменения в описание текущего продукта.
+Keep the current steps of a complex task in [plans](plans/README.md).
+After completion, delete plans that are no longer useful; Git preserves their history.
+Move the lasting reasons behind choices to [decisions](decisions/README.md).
+Do not use the plan for a past change as the description of the current product.
 
-## Проверка ссылок
+## Link checks
 
-`make check` проверяет существование целей обычных встроенных Markdown-ссылок.
-Используй относительные пути без пробелов. Внешние URL, ссылки только на заголовок,
-ссылки по меткам и точность якорей эта проверка не валидирует. Она не проверяет
-смысл текста и не запускает приложение. Команды внутри примеров исполняются
-отдельно только тогда, когда они уместны и безопасны в текущей среде.
+`make check` verifies that ordinary inline Markdown links point to existing local targets.
+Use relative paths without spaces. The checker does not validate external URLs,
+heading-only links, reference-style links, or fragment identifiers. It does not
+verify meaning or run the application. Execute commands shown in examples separately,
+only when appropriate and safe in the current environment.

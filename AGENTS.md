@@ -1,25 +1,27 @@
-# Работа в проекте
+# Working in this project
 
-Отвечай по-русски. Имена файлов и команд сохраняй как есть.
+Write repository documentation, specifications, and durable instructions in English.
+Respond to the user in their language unless they request otherwise.
+Keep filenames and commands unchanged.
 
-В начале задачи выполни `make docs`. Это карта документов: прочитай только
-относящиеся к задаче файлы. Для большого документа сначала посмотри заголовки:
-`rg -n '^#{1,6} ' путь/к/файлу.md`.
+Start each task with `make docs`. Use this document map to select only the files
+relevant to the task. For a long document, inspect its headings first:
+`rg -n '^#{1,6} ' path/to/document.md`.
 
-- [Смысл продукта](docs/product/core.md): цель, язык и ограничения.
-- [Архитектура](docs/architecture/overview.md): границы и важные зависимости.
-- [Рабочий цикл](docs/development/workflow.md): от задачи до проверки.
-- [Проверки](docs/development/verification.md): команды и их ограничения.
+- [Product core](docs/product/core.md): purpose, language, and constraints.
+- [Architecture](docs/architecture/overview.md): boundaries and key dependencies.
+- [Workflow](docs/development/workflow.md): from a task to verification.
+- [Verification](docs/development/verification.md): commands and their limits.
 
-Перед изменением документов прочитай [правила документации](docs/document_writing.md).
-Вместе с изменением поведения обновляй связанные требования и проверки.
-Расхождение кода с требованием сначала исследуй: ошибочным может быть код.
+Before editing documents, read the [documentation rules](docs/document_writing.md).
+Update related requirements and checks when changing behavior.
+Investigate discrepancies between code and requirements: the code may be wrong.
 
-В конце задачи выполни `make check` и проверки изменённого поведения из
-документа проверки. В ответе укажи результат, изменённые документы и то, что
-осталось непроверенным. Зелёная проверка документов не означает, что приложение работает.
+Before completing a task, run `make check` and the checks for the changed behavior
+listed in the verification document. Report the result, updated documents, and
+anything left unverified. Passing documentation checks does not prove the application works.
 
-Это шаблон: продукт и стек пока не выбраны. Не принимай незаполненные пункты за
-требования и не выбирай архитектуру без задачи. Не переноси правила других
-проектов автоматически. Общие соглашения подключаются при создании проекта;
-этот репозиторий должен оставаться понятным без Control Center.
+This is a template: the product and stack have not been defined. Do not treat
+unfilled sections as requirements or choose an architecture without a task.
+Do not automatically import other projects' rules. Shared conventions are adopted
+when creating a project; this repository must remain understandable without Control Center.

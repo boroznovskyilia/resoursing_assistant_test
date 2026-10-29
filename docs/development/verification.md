@@ -1,37 +1,37 @@
-# Проверки и их границы
+# Verification and its limits
 
-## Документы и инструмент шаблона
+## Documentation and template tools
 
 ```sh
 make docs
 make check
 ```
 
-Первая команда показывает карту документов. Вторая запускает самопроверку
-инструмента и ищет сломанные локальные ссылки в Markdown репозитория.
-Для другого репозитория можно указать его путь:
+The first command displays the document map. The second runs the checker's tests
+and looks for broken local links in the repository's Markdown files.
+To check another repository, provide its path:
 
 ```sh
 python3 scripts/check_docs.py ../control_center
 ```
 
-Ограничения разбора ссылок описаны в [правилах документации](../document_writing.md).
+Link parsing limitations are described in the
+[documentation rules](../document_writing.md).
 
-## Приложение
+## Application
 
-Не настроено: приложения и выбранного стека пока нет.
-До первой реализации добавь сюда точные команды сборки, проверок поведения
-и, при необходимости, интеграционного запуска. Укажи зависимости и результат.
-Не подменяй эти команды успешным `make check`.
+Not configured: there is no application or chosen stack yet.
+Before the first implementation, add exact build commands, behavioral checks,
+and integration setup where needed. Specify dependencies and expected results.
+A passing `make check` does not replace these checks.
 
-## Исполняемые сценарии
+## Executable scenarios
 
-Связи между продуктовым правилом, тестом и командой хранятся в
-[карте сценариев](../specs/README.md). Сценарии должны проверять наблюдаемый
-результат, включая важные ошибки и повторные действия.
+The [scenario map](../specs/README.md) connects product rules, tests, and commands.
+Scenarios should check observable results, including important failures and repeated actions.
 
-## Изменение проверки
+## Changing a check
 
-При падении сначала воспроизведи причину. Нельзя удалять ожидание или менять его
-только потому, что новая реализация ему не соответствует. Изменение ожидаемого
-поведения должно следовать из согласованного изменения требования.
+When a check fails, reproduce the cause first. Do not remove or change an expectation
+just because a new implementation violates it. Changes to expected behavior must
+follow an agreed change to the requirement.

@@ -1,11 +1,11 @@
-# Решения
+# Decisions
 
-Отдельное решение нужно, если без записанной причины будущая команда с большой
-вероятностью повторит спор или случайно нарушит ограничение.
+Create a decision record when, without the recorded reason, a future team would
+likely repeat the same debate or accidentally violate a constraint.
 
-Файл называй по теме, например `database-choice.md`. Достаточно полей:
-контекст, принятое решение, рассмотренные альтернативы, последствия и статус.
-Отмечай, какое старое решение заменено. Не храни здесь журнал всех действий агента.
+Name the file after the topic, such as `database-choice.md`. Include the context,
+decision, alternatives considered, consequences, and status.
+State which earlier decision it supersedes. Do not log every agent action here.
 
-Для этого шаблона стек не выбран. Причины выбора конкретного стека появятся
-в новом проекте после согласования его [цели](../product/core.md).
+No stack has been chosen for this template. Record the reasons for choosing one
+in the new project after agreeing on its [purpose](../product/core.md).

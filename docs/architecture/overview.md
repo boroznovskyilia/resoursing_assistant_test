@@ -1,22 +1,23 @@
-# Архитектура
+# Architecture
 
-Статус: приложение и стек пока не выбраны. Здесь нет принятой архитектуры продукта.
+Status: the application and stack have not been chosen. No product architecture
+has been adopted yet.
 
-## Границы
+## Boundaries
 
-После первой задачи опиши основные части системы, данные, внешние зависимости
-и места взаимодействия. Достаточно небольшой карты; не пересказывай каждый файл.
+After the first task, describe the main system components, data, external dependencies,
+and interactions. A small map is sufficient; do not describe every file.
 
-## Причины выбора
+## Reasons behind choices
 
-Важные решения с альтернативами и последствиями сохраняй в
-[решениях](../decisions/README.md).
+Record important choices, alternatives, and consequences in
+[decisions](../decisions/README.md).
 
-Event Sourcing не является условием использования этого шаблона.
-Поведенческие проверки применимы и к обычному приложению с CRUD.
+Event Sourcing is not required to use this template.
+Behavioral checks also apply to ordinary CRUD applications.
 
-## Среда для проверки
+## Verification environment
 
-Добавляй средства воспроизведения проблем по необходимости: тестовые данные,
-локальный запуск, понятные ошибки, доступ к нужным логам.
-Команды и ограничения описывай в [проверках](../development/verification.md).
+Add ways to reproduce problems as needed: test data, a local runtime, clear errors,
+and access to relevant logs. Document commands and limitations in
+[verification](../development/verification.md).
