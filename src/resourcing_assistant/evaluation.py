@@ -69,6 +69,7 @@ def server(settings, runtime):
         "AZURE_API_VERSION": settings.api_version,
         "CHAT_DEPLOYMENT": settings.chat_deployment,
         "EMBEDDING_DEPLOYMENT": settings.embedding_deployment,
+        "RESOURCING_EVAL_ARTIFACTS": "1",
     }
     with (runtime / "process.log").open("a") as log:
         process = subprocess.Popen(

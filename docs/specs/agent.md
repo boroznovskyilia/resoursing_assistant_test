@@ -88,8 +88,9 @@ sufficient; an optimizer or separate judge is not part of the baseline.
 
 | Signature | Inputs | Typed outputs | Code validates |
 | --- | --- | --- | --- |
-| InterpretRequest | Message, reference time, summary/recent context, exact active task, displayed result references, pending action metadata | intent, normalized_task, slots, semantic_mode, criteria, missing_fields, clarification, assumptions | Enums/shapes, supported intent, supplied field consistency |
-| PlanReads | Normalized task, all allowed compact schema/rules, resolved parameters, optional prior repair error | queries: query_id/purpose/sql/parameters, expected result roles | Unique query IDs, statement count, params, read policy, execution limits |
+| InterpretRequest | Message, compact actual source schema, reference time, summary/recent context, exact active task, displayed result references, pending action metadata | intent, normalized_task, slots, semantic_mode, criteria, missing_fields, clarification, assumptions | Enums/shapes, supported intent, supplied field consistency |
+| PlanReads | Explicit factual/semantic intent, normalized task, all allowed compact schema/rules, resolved parameters, optional prior repair error | answer plus up to three additional_answers: query_id/purpose/sql/parameters | Unique query IDs/binding names, statement count, params, read policy, execution limits |
+| PlanProjectChecks | Frozen project criteria | Summary predicate/scope, risk predicate, AND/OR operator | At least one predicate; source-field assessment and parent joins preserve both conditions |
 | AssessCandidates | Frozen criteria, source-linked texts, exact relevant facts | Per candidate: source_id, match/no_match/uncertain, evidence references, reasoning | IDs belong to batch; quotations/spans exist; exact facts are source-backed |
 | RankCandidates | Criteria, assessed candidates, verified facts/evidence, requested count | Ordered source IDs and per-item suitability reasons | IDs/uniqueness/order length, no new facts or source-free qualification |
 | ExplainResults | Question, exact metrics/rows, source excerpts, completeness and issues | explanation and source-linked item justifications | Required evidence exists; no replacement math or fabricated fields |
@@ -98,6 +99,12 @@ sufficient; an optimizer or separate judge is not part of the baseline.
 Small assessment/ranking steps may be merged when their combined typed contract stays
 inspectable. Embedding API calls are retrieval, not a generative signature. Fault
 providers are test-only, never production answer substitutes.
+
+PlanReads carries bindings as a required list of typed `{name,value}` records. The
+DSPy Structured Outputs adapter closes object properties and otherwise erases arbitrary
+nested dictionary keys; an adapter-level regression guards this boundary. Code converts
+the records to SQLite named bindings. Executed SQL API blocks still use a parameter
+dictionary. Public catalogue values accompany schema; source IDs/answers are never guessed.
 
 ## Working state contract
 

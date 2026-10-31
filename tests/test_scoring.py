@@ -92,6 +92,44 @@ def test_duplicate_or_conflicting_aggregate_cannot_pass():
     assert score(spec, answer([{"people": 1}, {"people": 11}]))["status"] == "failed"
 
 
+def test_equivalent_source_metric_aliases_keep_identical_value_checks():
+    spec = case("gq-06")
+    delivered = answer(
+        [
+            {"total_blocked_critical_items": 21},
+            {"engagement_code": "ENG-2026-0111", "blocked_critical_items": 2},
+        ]
+    )
+    assert score(spec, delivered)["status"] == "passed"
+    delivered["blocks"][0]["rows"][1]["blocked_critical_items"] = 3
+    assert score(spec, delivered)["status"] == "failed"
+    assert (
+        score(case("own-04"), answer([{"total_leaf_est_hours": 1068.1}]))["status"]
+        == "passed"
+    )
+    assert score(case("own-01"), answer([{"people_count": 11}]))["status"] == "passed"
+    assert (
+        score(case("own-01"), answer([{"people_count": 99, "people": 11}]))["status"]
+        == "failed"
+    )
+
+
+def test_scoped_metric_identity_must_be_in_linked_visible_query():
+    delivered = answer([{"hard_booked_hours": 30.0}])
+    delivered["blocks"][0]["evidence"] = [{"query_id": "hours"}]
+    delivered["blocks"][1].update(
+        query_id="hours",
+        sql="SELECT SUM(minutes)/60.0 AS hard_booked_hours FROM bookings WHERE person_id=:person_id",
+        parameters={"person_id": 348},
+    )
+    assert score(case("own-05"), delivered)["status"] == "passed"
+    delivered["blocks"][1]["parameters"]["person_id"] = 349
+    assert score(case("own-05"), delivered)["status"] == "failed"
+    delivered["blocks"][1]["parameters"]["person_id"] = 348
+    delivered["blocks"][0]["evidence"] = []
+    assert score(case("own-05"), delivered)["status"] == "failed"
+
+
 def test_empty_set_needs_an_actual_keyed_result():
     spec = case("own-02")
     missing = answer([])

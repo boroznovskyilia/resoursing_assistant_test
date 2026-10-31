@@ -15,20 +15,25 @@ business-correct answer. Guessed literal SELECT answers have no source grounding
 Runtime models receive no gold answers/reference SQL or additional-case oracles.
 Evaluator reads the same delivered blocks and actual database effects as the user.
 
+The compact schema includes bounded public catalogue values (regions, skills, status
+domains/codes, business units, currencies and workflow states). These are observed
+source vocabulary, not question-specific expected results. Private columns stay excluded.
+
 ## Generated read plans
 
 PlanReads receives compact schema for every allowed subject table: actual column names,
 keys/relationships, grain, units, domain statuses and calculation rules. Not the full
 verbatim dictionary, source rows/BLOBs, auth IDs or application/checkpoint schema.
 
-Output is a list of `{query_id, purpose, sql, parameters}` with detail/total/ranking roles.
+Output contains one complete primary `answer` and up to three `additional_answers`.
+Each is `{query_id, purpose, sql, parameters}`; helper lookups are not user answers.
 Independent requested totals can use separate queries instead of a fragile mega-join.
 Engineering default: at most four statements per plan. Oversize/malformed output uses
 the same one planner-repair allowance as a later syntax/schema correction; no silent
 omission. Named bound values carry names, IDs, epochs and thresholds. Identifier/schema
 validation is separate because placeholders cannot bind a table/column name.
 
-One repair may address format, syntax or schema. A permission rejection, resource
+One shared repair may address format, syntax, schema or a detected output-scope/source-grain error. A permission rejection, resource
 limit, valid empty result or semantically disappointing answer is not retried to obtain
 a nicer result. Every actual attempt is traceable; only successful queries used in
 the delivered answer are presented as SQL evidence. Earlier failed attempts remain
@@ -37,6 +42,21 @@ safe diagnostics, not proof. Never switch to a weaker connection after rejection
 Exact code renders values and conversions; DSPy explains provided evidence. Answer
 all requested parts, including totals beyond top-N rows. Independent failed parts can
 yield explicit partial data. Failed explanation must not erase successful rows/SQL.
+
+The interpreter receives the same compact source vocabulary to distinguish structured
+severity/status/critical-path questions from description meaning. Non-ranking factual
+lists must not silently add a top-level LIMIT; unspecified rankings show five with a
+visible assumption. Explicit requested sizes take precedence. Exact count requests
+need a delivered aggregate, while duration questions use SUM rather than COUNT.
+Logged hours must read actual time_entries. These guards detect particular mistakes;
+they do not prove arbitrary generated SQL is semantically correct.
+
+For semantic reads, source meaning must not become a SQL LIKE/industry/provider-unit
+proxy. The candidate reader exposes only exact structured columns actually mentioned
+by the user. Simple broad person pools and active-project/single-unit inclusion or
+exclusion pools are compiled from source catalogue values; complex filters, identity,
+dates and references retain guarded generated SELECTs. No public question IDs or
+expected result sets are used in this path.
 
 ## Read access policy
 
@@ -65,6 +85,11 @@ access behind claimed facts. Restrict resource allocations before large results 
 materialized, not just after allocation. No ORM/AST parser is required by assumption;
 add a dependency only if existing SQLite controls cannot meet tested requirements.
 
+Materialized CTEs may emit table-level SQLite authorizer reads with no database or
+column. Only previously observed derived names can use that exception; real tables,
+views and private/system objects remain protected. Source provenance records the
+underlying subject tables, never the temporary CTE name.
+
 ## Documents and local index
 
 | Kind | Document content | Metadata |
@@ -85,7 +110,23 @@ wrong dimensions/nonfinite/corrupt vectors cannot count as no matches. Cache is 
 rebuildable, and never more authoritative than current source rows. Person enrichment
 changes the embedding hash and means old raw-text counts are not index-size promises.
 
+Project matching first uses PlanProjectChecks to separate summary/industry and risk
+conditions. Identical source fields are assessed once per request, then joined to all
+parent project memberships. Industry scope uses the explicit industry phrase where
+available; provider unit and client name do not establish industry. Risk requirements
+need an actual matching risk record. AND/OR applies explicitly between fields; OR
+inside a staffing/key-person criterion remains intact. Exact source quotations must
+join back to the parent. Staff shortage is distinct from key-person dependency unless
+the user's broader people-risk criterion includes both. Invalid assessments remain
+uncertain, never fabricated matches. This is semantic model classification followed
+by deterministic joins, not a keyword-only answer.
+
 ## Shortlist versus exhaustive mode
+
+Raw request quantity words (all/every/count) control exhaustive coverage; a normalized
+model paraphrase cannot invent an all requirement. People recommendations default to
+shortlist; project/risk lists default to exhaustive. The requested answer entity is
+normalized separately from the entity mentioned in its conditions.
 
 **Shortlist:** apply exact eligibility, retrieve semantic candidates, assess evidence,
 then rank. Engineering defaults: requested count or ten, initial up-to-forty vector

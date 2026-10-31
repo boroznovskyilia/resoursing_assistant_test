@@ -10,6 +10,64 @@ from resourcing_assistant.llm import LOG
 from resourcing_assistant.evaluation import invariants
 
 
+@pytest.mark.parametrize(
+    "message,first,correct,reason",
+    [
+        (
+            "List all people",
+            "SELECT person_id FROM people LIMIT 5",
+            "SELECT person_id FROM people ORDER BY person_id",
+            "LIMIT",
+        ),
+        (
+            "List all people",
+            "SELECT p.person_id FROM people p JOIN person_skills s USING(person_id)",
+            "SELECT DISTINCT p.person_id FROM people p JOIN person_skills s USING(person_id)",
+            "duplicated",
+        ),
+        (
+            "How many hours were logged?",
+            "SELECT SUM(minutes)/60.0 AS total_hours FROM bookings",
+            "SELECT SUM(minutes)/60.0 AS total_hours FROM time_entries",
+            "time_entries",
+        ),
+    ],
+)
+def test_primary_query_scope_and_domain_get_one_shared_repair(
+    tmp_path, message, first, correct, reason
+):
+    class Corrected(ScriptedGateway):
+        def __init__(self):
+            super().__init__()
+            self.errors = []
+
+        def call(self, name, **inputs):
+            if name == "PlanReads":
+                self.errors.append(inputs["previous_error"])
+                sql = first if len(self.errors) == 1 else correct
+                return ReadPlan(
+                    answer=Query(
+                        query_id="answer",
+                        purpose="Complete answer",
+                        sql=sql,
+                        parameters=[],
+                    )
+                )
+            return super().call(name, **inputs)
+
+    gateway = Corrected()
+    s = Service(Settings(runtime=tmp_path), gateway)
+    try:
+        thread = s.store.create_thread()["thread_id"]
+        response = s.message(thread, "scope", message)
+        assert response.request_status == "completed"
+        assert len(gateway.errors) == 2 and reason in gateway.errors[1]
+        assert [b.sql for b in response.blocks if b.type == "sql"] == [correct]
+        assert invariants(s.settings.source, s.subject)
+    finally:
+        s.close()
+
+
 def test_sql_format_and_syntax_share_one_repair_then_next_request_works(tmp_path):
     class Broken(ScriptedGateway):
         def __init__(self):
@@ -23,13 +81,13 @@ def test_sql_format_and_syntax_share_one_repair_then_next_request_works(tmp_path
                     raise AppError("invalid_model_output", "Bad format", 502)
                 if self.plans == 2:
                     return ReadPlan(
-                        queries=[
-                            Query(
-                                query_id="bad",
-                                purpose="Bad query",
-                                sql="SELECT invented FROM missing_table",
-                            )
-                        ]
+                        answer=Query(
+                            parameters=[],
+                            query_id="bad",
+                            purpose="Bad query",
+                            sql="SELECT invented FROM missing_table",
+                        ),
+                        additional_answers=[],
                     )
             return super().call(name, **inputs)
 
@@ -55,13 +113,13 @@ def test_policy_violation_gets_no_repair_and_preserves_source(tmp_path):
             if name == "PlanReads":
                 self.plans += 1
                 return ReadPlan(
-                    queries=[
-                        Query(
-                            query_id="bad",
-                            purpose="Forbidden",
-                            sql="DELETE FROM bookings",
-                        )
-                    ]
+                    answer=Query(
+                        parameters=[],
+                        query_id="bad",
+                        purpose="Forbidden",
+                        sql="DELETE FROM bookings",
+                    ),
+                    additional_answers=[],
                 )
             return super().call(name, **inputs)
 
@@ -108,8 +166,15 @@ def test_fallback_logs_scope_no_prompt_and_retains_pending(tmp_path):
     class Shortlist(ScriptedGateway):
         def call(self, name, **inputs):
             value = super().call(name, **inputs)
-            if name == "InterpretRequest" and inputs["message"] == "semantic":
+            if (
+                name == "InterpretRequest"
+                and inputs["message"] == "Recommend active projects"
+            ):
+                value.intent = "semantic"
+                value.semantic_kind = "project"
+                value.criteria = "Staffing gap"
                 value.semantic_mode = "shortlist"
+                value.question = "Recommend active projects"
             return value
 
     s = Service(Settings(runtime=tmp_path), Shortlist())
@@ -119,7 +184,7 @@ def test_fallback_logs_scope_no_prompt_and_retains_pending(tmp_path):
     LOG.addHandler(handler)
     try:
         action = s.message(thread, "booking", "book").blocks[0].action_id
-        result = s.message(thread, "semantic", "semantic")
+        result = s.message(thread, "semantic", "Recommend active projects")
         assert (
             result.request_status == "completed"
             and s.store.pending(thread)["action_id"] == action

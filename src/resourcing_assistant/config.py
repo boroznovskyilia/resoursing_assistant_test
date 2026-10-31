@@ -31,10 +31,10 @@ class Settings:
         return cls(
             runtime=Path(os.getenv("RUNTIME_DIR", ROOT / ".runtime")).resolve(),
             reference_date=os.getenv("REFERENCE_DATE") or None,
-            endpoint=os.getenv(
-                "AZURE_ENDPOINT", os.getenv("AZURE_OPENAI_ENDPOINT", "")
-            ),
-            api_key=os.getenv("AZURE_API_KEY", os.getenv("AZURE_OPENAI_API_KEY", "")),
+            endpoint=os.getenv("AZURE_ENDPOINT")
+            or os.getenv("AZURE_API_BASE")
+            or os.getenv("AZURE_OPENAI_ENDPOINT", ""),
+            api_key=os.getenv("AZURE_API_KEY") or os.getenv("AZURE_OPENAI_API_KEY", ""),
             api_version=os.getenv("AZURE_API_VERSION", "2024-10-21"),
             chat_deployment=os.getenv("CHAT_DEPLOYMENT", "gpt-4.1-mini"),
             embedding_deployment=os.getenv(

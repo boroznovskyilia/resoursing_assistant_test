@@ -4,7 +4,7 @@ from hashlib import sha256
 import pytest
 
 from resourcing_assistant.config import Settings, period, to_minutes, capacity
-from resourcing_assistant.data import initialize, Reader, ReadError
+from resourcing_assistant.data import initialize, Reader, ReadError, connect
 
 
 @pytest.fixture
@@ -41,6 +41,108 @@ def test_comments_cte_count_and_bindings(data):
         )["rows"]
         == []
     )
+
+
+def test_limit_scope_ignores_quoted_text_and_comments():
+    from resourcing_assistant.data import has_limit
+
+    assert has_limit("SELECT person_id FROM people LIMIT 5")
+    assert has_limit(
+        "WITH sample AS (SELECT person_id FROM people LIMIT 5) SELECT * FROM sample"
+    )
+    assert not has_limit(
+        "WITH lookup AS (SELECT currency_id FROM currencies WHERE is_primary=1 LIMIT 1) SELECT * FROM lookup",
+        outer_only=True,
+    )
+    assert has_limit(
+        "WITH lookup AS (SELECT currency_id FROM currencies LIMIT 1) SELECT * FROM lookup LIMIT 5",
+        outer_only=True,
+    )
+    assert not has_limit(
+        "SELECT 'LIMIT 5' AS note, person_id FROM people -- LIMIT 1\n/* LIMIT 2 */"
+    )
+
+
+def test_planner_catalogues_are_bounded_source_values(data):
+    _, _, reader = data
+    schema = {t["table"]: t for t in reader.schema}
+    assert set(schema["people"]["values"]["location_region"]) == {
+        "AMER",
+        "EMEA",
+        "APAC",
+        "LATAM",
+    }
+    assert len(schema["skills"]["values"]["name"]) == 40
+    assert any(
+        r["domain"] == "requirement" and r["code"] == "OPN"
+        for r in schema["status_lookup"]["lookup_rows"]
+    )
+    assert "auth_user_id" not in schema["people"]["columns"]
+    assert "is_primary" in schema["currencies"]["columns"]
+    assert "is_primary=1" in schema["currencies"]["notes"]
+    assert all(
+        len(v) <= 40 for t in reader.schema for v in t.get("values", {}).values()
+    )
+
+
+def test_semantic_eligibility_cannot_prefilter_meaning_or_invent_filters(data):
+    _, _, reader = data
+    allowed = reader.eligibility_columns(
+        "project", "Which active healthcare projects have people risks?"
+    )
+    assert set(allowed) == {"engagements", "status_lookup"}
+    with pytest.raises(ReadError) as error:
+        reader.read_pages(
+            "SELECT e.engagement_id FROM engagements e JOIN risks r USING(engagement_id) WHERE r.description LIKE '%people%'",
+            {},
+            "engagement_id",
+            "bad",
+            "Candidates",
+            eligibility=allowed,
+        )
+    assert error.value.code == "invalid_sql" and "Semantic eligibility" in str(
+        error.value
+    )
+    valid = reader.read_pages(
+        "SELECT e.engagement_id FROM engagements e JOIN status_lookup s ON s.status_id=e.status_id WHERE s.domain='project' AND s.code='ACT'",
+        {},
+        "engagement_id",
+        "all",
+        "Candidates",
+        eligibility=allowed,
+    )
+    assert len(valid[0]["rows"]) == 60
+    assert "business_units" in reader.eligibility_columns(
+        "project", "All active projects outside HLS business unit"
+    )
+    people = reader.eligibility_columns(
+        "person", "Find experienced data engineers who could lead a migration"
+    )
+    assert people == {"people": {"person_id"}}
+    assert "person_skills" in reader.eligibility_columns(
+        "person", "Python in EMEA at proficiency 4"
+    )
+    with pytest.raises(ReadError) as error:
+        reader.read("SELECT auth_user_id FROM people", eligibility=people)
+    assert error.value.code == "sql_policy"
+
+
+def test_compiled_eligibility_uses_source_filters_without_semantic_keywords(data):
+    _, _, reader = data
+
+    def ids(kind, question):
+        sql, params = reader.simple_eligibility(kind, question, {})
+        return reader.read(sql, params)["rows"]
+
+    assert len(ids("person", "Find experienced data engineers")) == 400
+    assert len(ids("project", "All active healthcare projects with people risks")) == 60
+    assert len(ids("project", "All active projects outside HLS business unit")) == 49
+    assert len(ids("project", "All projects with people risks")) == 150
+    assert (
+        reader.simple_eligibility("person", "Python in EMEA at proficiency 4", {})
+        is None
+    )
+    assert reader.simple_eligibility("project", "Active HLS or FS projects", {}) is None
 
 
 def test_forbidden_sources_writes_and_multiple_statements(data):
@@ -133,3 +235,26 @@ def test_large_single_scalar_and_byte_budget(data):
     small = Reader(replace(settings, byte_limit=5000), path)
     result = small.read("SELECT person_id,bio FROM people ORDER BY person_id")
     assert result["truncated"] and len(result["rows"]) < 400
+
+
+def test_materialized_cte_reads_do_not_grant_private_objects(data):
+    settings, path, _ = data
+    with connect(path) as c:
+        c.execute("CREATE TABLE private_values(secret TEXT)")
+        c.execute("INSERT INTO private_values VALUES('private')")
+        c.commit()
+    reader = Reader(settings, path)
+    result = reader.read(
+        "WITH primary_currency AS MATERIALIZED (SELECT currency_id FROM currencies WHERE is_primary=1) SELECT COUNT(*) AS n FROM engagements e CROSS JOIN primary_currency"
+    )
+    assert result["rows"] == [{"n": 150}]
+    assert set(result["source_tables"]) == {"currencies", "engagements"}
+    for sql in (
+        "SELECT COUNT(*) FROM private_values",
+        "WITH x AS MATERIALIZED (SELECT * FROM private_values) SELECT COUNT(*) FROM x",
+        "WITH private_values AS (SELECT person_id FROM people) SELECT COUNT(*) FROM main.private_values",
+        "SELECT COUNT(*) FROM sqlite_master",
+    ):
+        with pytest.raises(ReadError) as error:
+            reader.read(sql)
+        assert error.value.code == "sql_policy"

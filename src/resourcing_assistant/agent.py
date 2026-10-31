@@ -1,16 +1,18 @@
 """Controlled persistent graph; source writes only through stored-action decisions."""
 
 import json
+import os
 import re
 import sqlite3
+from uuid import uuid4
 from typing import TypedDict
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.types import Command, interrupt
 from .config import period, capacity
-from .data import RULES, ReadError, connect
+from .data import RULES, ReadError, connect, has_limit
 from .llm import Gateway, token_count, rendered_tokens, event
-from .models import Interpretation, BookingSlots, AppError
+from .models import Interpretation, BookingSlots, AppError, ReadPlan, Query
 from .semantic import Semantic
 
 
@@ -29,6 +31,9 @@ class State(TypedDict, total=False):
     issues: list
     response: dict
     pending_action_id: str | None
+
+
+BUTTON_REPLIES = frozenset(("yes", "confirm", "approved", "approve", "ok", "да"))
 
 
 def card(action):
@@ -109,6 +114,18 @@ class Agent:
         return {"configurable": {"thread_id": thread}, "recursion_limit": 30}
 
     def load_context(self, state):
+        pending = self.store.pending(state["thread_id"])
+        if pending and state["text"].strip().lower() in BUTTON_REPLIES:
+            return {
+                "context": {
+                    "reference_date": state["reference_date"],
+                    "pending_action": pending,
+                },
+                "pending_action_id": pending["action_id"],
+                "issues": [],
+                "read_results": [],
+                "response": {},
+            }
         history = self.store.history(state["thread_id"])["messages"]
         roles = {}
         for row in history:
@@ -143,14 +160,23 @@ class Agent:
                 "recent_turns": recent,
                 "active_task": state.get("active_task", {}),
                 "displayed_references": state.get("displayed_references", []),
+                "pending_action": pending,
             }
-            return rendered_tokens(
+            planner = rendered_tokens(
                 "PlanReads",
+                intent="factual",
                 question=state["text"],
                 context=json.dumps(context),
-                allowed_schema=json.dumps(self.reader.schema) + "\n" + RULES,
+                allowed_schema=self.reader.prompt_schema() + "\n" + RULES,
                 previous_error="",
             )
+            interpreter = rendered_tokens(
+                "InterpretRequest",
+                message=state["text"],
+                context=json.dumps(context),
+                source_schema=self.reader.prompt_schema(),
+            )
+            return max(planner, interpreter)
 
         while len(recent) > 2 and (
             token_count(recent) > 3000 or prompt_estimate() > 8000
@@ -200,13 +226,9 @@ class Agent:
         }
 
     def interpret(self, state):
-        if state.get("pending_action_id") and state["text"].strip().lower() in (
-            "yes",
-            "confirm",
-            "approved",
-            "approve",
-            "ok",
-            "да",
+        if (
+            state.get("pending_action_id")
+            and state["text"].strip().lower() in BUTTON_REPLIES
         ):
             value = Interpretation(
                 intent="clarification",
@@ -218,7 +240,45 @@ class Agent:
                 "InterpretRequest",
                 message=state["text"],
                 context=json.dumps(state["context"]),
+                source_schema=self.reader.prompt_schema(),
             )
+        if value.intent in ("semantic", "mixed"):
+            head = re.split(
+                r"\b(?:with|who|whose|that|have|has|for|in|outside|having)\b",
+                value.question,
+                maxsplit=1,
+                flags=re.I,
+            )[0]
+            if re.search(
+                r"\b(?:people|persons?|candidates?|consultants?|engineers?|developers?|managers?)\b(?!-related)|^\s*who\b",
+                head,
+                re.I,
+            ):
+                value.semantic_kind = "person"
+            elif re.search(r"\b(?:projects?|engagements?)\b", head, re.I):
+                value.semantic_kind = "project"
+            elif re.search(r"\brisks?\b", head, re.I):
+                value.semantic_kind = "risk"
+            exhaustive = bool(
+                re.search(
+                    r"\ball\b|\bevery\b|\bhow many\b|\bcount\b|\bnumber of\b",
+                    state["text"],
+                    re.I,
+                )
+            )
+            recommendation = bool(
+                re.search(
+                    r"\brecommend|\bcould lead\b|\bsuitable\b|\bexperienced\b|\btop\s+\d+",
+                    state["text"],
+                    re.I,
+                )
+            )
+            if exhaustive:
+                value.semantic_mode = "exhaustive"
+            elif recommendation or value.semantic_kind == "person":
+                value.semantic_mode = "shortlist"
+            elif value.semantic_kind in ("project", "risk"):
+                value.semantic_mode = "exhaustive"
         return {"interpretation": value.model_dump()}
 
     def response(self, state, blocks, issues=None, assumptions=None):
@@ -391,25 +451,148 @@ class Agent:
         if task.slots.start_date and task.slots.end_date:
             a, b = period(task.slots.start_date, task.slots.end_date)
             inputs.update(window_start=a, window_end=b, capacity_hours=capacity(a, b))
+        eligibility = None
+        compiled = None
+        planning_question = task.question
+        ranking = bool(
+            re.search(r"\b(most|top|leading|highest|largest)\b", task.question, re.I)
+        ) and not re.search(r"\bat\s+most\b", task.question, re.I)
+        explicit_size = bool(
+            re.search(
+                r"\b(?:top|first|best|list|show|return)\s+(?:the\s+)?(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten)\b|\b(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(?:most|highest|leading)\b|\bonly\s+(?:one|1)\b",
+                task.question,
+                re.I,
+            )
+        )
+        logged = bool(
+            re.search(r"\b(logged|time entries|actual hours)\b", state["text"], re.I)
+        )
+        scalar_count = bool(
+            re.search(r"\bhow many\b|\bcount\b|\bnumber of\b", task.question, re.I)
+        ) and not re.search(
+            r"\b(each|per|by)\b|\bbroken down\b|\bhow many\s+(?:hours|minutes|days|weeks|months|dollars)\b",
+            task.question,
+            re.I,
+        )
+        schema = self.reader.schema
+        if task.intent in ("semantic", "mixed"):
+            user_text = "\n".join(
+                [state["text"]]
+                + [
+                    t["content"]
+                    for t in state["context"].get("recent_turns", [])
+                    if t["role"] == "user" and isinstance(t["content"], str)
+                ]
+            )
+            eligibility = self.reader.eligibility_columns(task.semantic_kind, user_text)
+            compiled = self.reader.simple_eligibility(
+                task.semantic_kind, task.question, task.slots.model_dump()
+            )
+            schema = [
+                {
+                    **s,
+                    "columns": {
+                        k: v
+                        for k, v in s["columns"].items()
+                        if k in eligibility[s["table"]]
+                    },
+                    "foreign_keys": [
+                        fk
+                        for fk in s["foreign_keys"]
+                        if fk["from"] in eligibility[s["table"]]
+                    ],
+                    "values": {
+                        k: v
+                        for k, v in s.get("values", {}).items()
+                        if k in eligibility[s["table"]]
+                    },
+                }
+                for s in schema
+                if s["table"] in eligibility
+            ]
+        elif ranking and not explicit_size:
+            planning_question += "\nOutput policy: return the TOP FIVE ranked contributors/entities, ordered by the requested measure, with per-entity IDs and measures. Return any requested full total separately."
+            task.assumptions.append(
+                "Rankings without an explicit size show the top five for context."
+            )
+        elif task.intent == "factual" and not explicit_size:
+            planning_question += "\nOutput policy: return ALL matching records, without LIMIT or intermediate/helper queries. Use the supplied code-computed period/capacity values."
+        if logged:
+            planning_question += "\nLogged hours are ACTUAL time_entries minutes via work_items, never bookings or assignments."
+        if task.intent == "factual" and scalar_count:
+            planning_question += "\nOutput policy: return a visible one-row COUNT aggregate for the requested entity count. Listing entity rows without the requested count is incomplete. Separate any requested rankings/details from the full count."
+        if (
+            task.intent == "factual"
+            and re.search(r"\b(total|sum)\b", task.question, re.I)
+            and re.search(r"planned\s+cost", task.question, re.I)
+            and re.search(r"\b(engagements?|projects?)\b", task.question, re.I)
+        ):
+            planning_question += "\nOutput policy: include total_usd AND engagement_count (COUNT DISTINCT qualifying engagements) in the aggregate row. Reporting currency is currencies.is_primary=1; use the actual currency FX from rate_cards."
         previous = ""
         results = []
         issues = []
         for attempt in range(2):
             try:
-                plan = self.gateway.call(
-                    "PlanReads",
-                    repair=False,
-                    question=task.question,
-                    context=json.dumps(inputs),
-                    allowed_schema=json.dumps(self.reader.schema) + "\n" + RULES,
-                    previous_error=previous,
+                plan = (
+                    ReadPlan(
+                        answer=Query(
+                            query_id="eligible",
+                            purpose="Exact structured candidate pool",
+                            sql=compiled[0],
+                            parameters=[
+                                {"name": k, "value": v} for k, v in compiled[1].items()
+                            ],
+                        ),
+                        additional_answers=[],
+                    )
+                    if compiled is not None
+                    else self.gateway.call(
+                        "PlanReads",
+                        intent="semantic"
+                        if task.intent in ("semantic", "mixed")
+                        else "factual",
+                        repair=False,
+                        question=planning_question,
+                        context=json.dumps(inputs),
+                        allowed_schema=self.reader.prompt_schema(schema) + "\n" + RULES,
+                        previous_error=previous,
+                    )
                 )
                 if len({q.query_id for q in plan.queries}) != len(plan.queries):
                     raise ReadError("invalid_sql", "Query IDs must be unique")
+                if os.getenv("RESOURCING_EVAL_ARTIFACTS") == "1":
+                    directory = (
+                        self.settings.runtime
+                        / "read-plans"
+                        / state["thread_id"]
+                        / state["request_id"]
+                    )
+                    directory.mkdir(parents=True, exist_ok=True)
+                    path = directory / f"attempt-{attempt + 1}-{uuid4().hex}.json"
+                    descriptor = os.open(
+                        path, os.O_CREAT | os.O_WRONLY | os.O_EXCL, 0o600
+                    )
+                    with os.fdopen(descriptor, "w") as stream:
+                        stream.write(plan.model_dump_json(indent=2))
                 results = []
                 issues = []
                 for query in plan.queries:
+                    bindings = query.bindings
+                    # Dates/capacity are computed in code; the model cannot replace them.
+                    for key in ("window_start", "window_end", "capacity_hours"):
+                        if key in bindings and key in inputs:
+                            bindings[key] = inputs[key]
                     try:
+                        if has_limit(
+                            query.sql, outer_only=task.intent == "factual"
+                        ) and (
+                            task.intent in ("semantic", "mixed")
+                            or not (ranking or explicit_size)
+                        ):
+                            raise ReadError(
+                                "invalid_sql",
+                                "Unrequested LIMIT can omit matching records. Return all matches; safety row limits/pagination are enforced by code.",
+                            )
                         if task.intent in ("semantic", "mixed"):
                             key = {
                                 "person": "person_id",
@@ -419,27 +602,59 @@ class Agent:
                             results.extend(
                                 self.reader.read_pages(
                                     query.sql,
-                                    query.parameters,
+                                    bindings,
                                     key,
                                     query.query_id,
                                     query.purpose,
+                                    eligibility=eligibility,
                                 )
                             )
                         else:
-                            results.append(
-                                self.reader.read(
-                                    query.sql,
-                                    query.parameters,
-                                    query.query_id,
-                                    query.purpose,
-                                )
+                            result = self.reader.read(
+                                query.sql,
+                                bindings,
+                                query.query_id,
+                                query.purpose,
                             )
+                            if (
+                                query is plan.answer
+                                and logged
+                                and "time_entries" not in result["source_tables"]
+                            ):
+                                raise ReadError(
+                                    "invalid_sql",
+                                    "Logged/actual hours MUST read time_entries via work_items, not bookings or assignments. Correct the primary answer source.",
+                                )
+                            if any(
+                                k.endswith("_id") for k in result["columns"]
+                            ) and len(
+                                {json.dumps(r, sort_keys=True) for r in result["rows"]}
+                            ) != len(result["rows"]):
+                                raise ReadError(
+                                    "invalid_sql",
+                                    "Identical entity rows were duplicated by a join. Use EXISTS/DISTINCT or include the actual source grain identity.",
+                                )
+                            results.append(result)
                     except ReadError as error:
                         if error.code == "invalid_sql" and not attempt:
                             raise
                         issues.append(
                             {"code": error.code, "message": str(error), "stage": "sql"}
                         )
+                if (
+                    task.intent == "factual"
+                    and scalar_count
+                    and not issues
+                    and not any(
+                        len(r["rows"]) == 1
+                        and re.search(r"\bCOUNT\s*\(", r["sql"], re.I)
+                        for r in results
+                    )
+                ):
+                    raise ReadError(
+                        "invalid_sql",
+                        "An exact count was requested. Return a one-row COUNT aggregate, not only the matching entity list or grouped detail.",
+                    )
                 break
             except (ReadError, AppError) as error:
                 code = error.code
@@ -450,7 +665,11 @@ class Agent:
                 previous = str(error)
         if not results:
             raise AppError("read_failed", "No requested query could be completed", 502)
-        return {"read_results": results, "issues": issues}
+        return {
+            "read_results": results,
+            "issues": issues,
+            "interpretation": task.model_dump(),
+        }
 
     def match(self, state):
         task = Interpretation.model_validate(state["interpretation"])

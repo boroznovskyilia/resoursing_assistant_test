@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-31T19:27:03.526570+00:00",
+  "updated_at": "2026-10-31T20:51:08.809336+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized."
   },
-  "current_task": "T11.1",
-  "next_action": "Full genuine22-case evaluation running. Inspect report and actual source-grounded answers; fix root causes and rerun affected cases while retaining original reports. Then review semantic/refusal cases and consolidate final results.",
+  "current_task": "T11.4",
+  "next_action": "Start one complete22-case actual Azure acceptance run on the latest code. Target204907Z_398bd2: gq03 andown01 passed;gq08 review_required;gq07 failed ranking ID contract. Fixed ranking to select explicit requested_count from each finite pool with unique/subset validation, tested40 local cases. Prior full203003Z_f107e4 counts {'passed': 13, 'failed': 4, 'review_required': 5}. All failed/partial runs retained. Earlier83 full backend39.12s and5 Chromium4.5s passed; rerun after latest ranking edit. Must source-inspect semantic/refusal answers and save explicitly AI-assisted review, no oracle prompts/scoring loosening. Export final results/all-run history, update stale docs/handoff, hash/secret/checks, restart old main8000PID73771 with same.runtime (nowAzure configured privately).",
   "blockers": [],
   "last_checks": [
     {
@@ -43,6 +43,51 @@
       "command": ".venv/bin/python -m resourcing_assistant.evaluation",
       "result": "not_run",
       "scope": "All22 actual-model cases explicitly not_run; preflight report .runtime/evaluation/20261031T184224Z_59f5f4/results.md; endpoint/key absent"
+    },
+    {
+      "command": "genuine Azure evaluation baseline20261031T192702Z_226c92",
+      "result": "failed",
+      "scope": "All22 executed against actual API/models:2 passed,18 failed,2 pending review. Root causes diagnosed; no failed score hidden. Code4271d38."
+    },
+    {
+      "command": "real targeted regressions20261031T193204Z_b4d5b4 /193403Z_3fcbcf /193549Z_59fd97",
+      "result": "failed",
+      "scope": "Progressively diagnosed closed nested bind dictionaries and semantic eligibility/AND predicates. gq02,gq04,gq09 passed in third run;gq01 passed in fourth. All artifacts retained; no score substitution."
+    },
+    {
+      "command": ".venv/bin/pytest -q tests",
+      "result": "passed",
+      "scope": "68 backend tests passed38.70s after query binding, schema vocabulary, explicit planning mode and authoritative clock fixes."
+    },
+    {
+      "command": "PLAYWRIGHT_BROWSERS_PATH=/private/tmp/resourcing-browsers npm --prefix frontend run test:e2e",
+      "result": "passed",
+      "scope": "All5 Chromium API/UI scenarios passed5.4s with explicit test provider."
+    },
+    {
+      "command": "targeted local tests after semantic eligibility guard",
+      "result": "passed",
+      "scope": "44 tests passed6.76s. Initial fixture failures corrected: scripted active filters must be named by user test input. Actual model-run failure remains separate."
+    },
+    {
+      "command": ".venv/bin/pytest -q tests",
+      "result": "passed",
+      "scope": "74 backend tests38.94s after field-semantic matching and config alias support; test double checks are not model accuracy."
+    },
+    {
+      "command": "Chromium e2e suite",
+      "result": "passed",
+      "scope": "5 tests5.5s after latest backend changes."
+    },
+    {
+      "command": "targeted backend after stronger factual plan",
+      "result": "passed",
+      "scope": "53 tests6.88s. Full74 tests and5 browser were green before this factual-plan refinement; rerun full checks after final fixes."
+    },
+    {
+      "command": "backend/browser and targeted actual Azure regression204907Z_398bd2",
+      "result": "failed",
+      "scope": "83 backend39.12s and5 Chromium4.5s passed before ranking correction; actual gq03/own01 passed,gq08 review_required,gq07 failed ranking.40 targeted tests3.49s passed after explicit selection-count correction. All artifacts retained."
     }
   ],
   "tasks": [
@@ -392,8 +437,10 @@
     },
     {
       "id": "T11.1",
-      "status": "in_progress",
-      "evidence": [],
+      "status": "done",
+      "evidence": [
+        "Executed multiple genuine complete22-case runs plus targeted regressions, all retained under .runtime/evaluation; no oracle data in runtime. Quality fixes/review continue in T11.4."
+      ],
       "blocker": null
     },
     {
@@ -417,7 +464,7 @@
     },
     {
       "id": "T11.4",
-      "status": "not_started",
+      "status": "in_progress",
       "evidence": [],
       "blocker": null
     },

@@ -2,6 +2,7 @@
 
 from contextlib import contextmanager, nullcontext
 import json
+import re
 import hashlib
 from pathlib import Path
 import sqlite3
@@ -22,6 +23,23 @@ class ReadError(Exception):
     def __init__(self, code, message):
         super().__init__(message)
         self.code = code
+
+
+def has_limit(sql, *, outer_only=False):
+    """Output-scope check only; SQLite authorizer remains the security boundary."""
+    tokens = re.findall(
+        r"--[^\n]*|/\*[\s\S]*?(?:\*/|$)|'(?:''|[^'])*'|\"(?:\"\"|[^\"])*\"|`(?:``|[^`])*`|\[[^\]]*\]|[()]|[A-Za-z_][A-Za-z0-9_]*",
+        sql,
+    )
+    depth = 0
+    for token in tokens:
+        if token == "(":
+            depth += 1
+        elif token == ")":
+            depth -= 1
+        elif token.upper() == "LIMIT" and (not outer_only or depth == 0):
+            return True
+    return False
 
 
 @contextmanager
@@ -93,6 +111,17 @@ class Reader:
         self.columns = {}
         self.schema = []
         with connect(path, readonly=True) as c:
+            self.objects = {
+                r[0]
+                for r in c.execute(
+                    "SELECT name FROM sqlite_schema WHERE type IN ('table','view')"
+                )
+            } | {
+                "sqlite_master",
+                "sqlite_schema",
+                "sqlite_temp_master",
+                "sqlite_temp_schema",
+            }
             for table in sorted(SUBJECT_TABLES):
                 columns = [
                     dict(r)
@@ -117,6 +146,228 @@ class Reader:
                         ],
                     }
                 )
+                notes = {
+                    "engagements": "planned_cost_cents is in currency_id minor units. ACTIVE means status_lookup domain=project AND code=ACT only; state_group=open also includes other states and is NOT active. Include qualifying engagement_count beside a project cost aggregate.",
+                    "rate_cards": "fx_rate converts this row's currency to the reporting currency. Rates are available HERE, not in a separate FX table. Reduce to one consistent FX per currency (GROUP BY currency_id, MAX(fx_rate)) BEFORE joining money rows. Never invent rate=1 or select a fictitious default tier; tier is unrelated to FX selection.",
+                    "currencies": "is_primary=1 identifies the reporting currency. Use rate_cards.fx_rate for conversion from source currency, not an assumed rate.",
+                    "time_entries": "ACTUAL logged time: minutes/60.0 gives hours; entry_ts is its UTC date. Join work_items for engagement_id. Bookings/assignments are NOT logged time.",
+                    "bookings": "Reserved time, NOT actual logged work. Use its direct person_id. Hard metric is kind=hard including completed rows, full intersecting minutes/60.",
+                    "work_items": "Nested WBS: estimate SUM leaves only (no children), not rollups. Critical-path flag is is_critical; blocked status is task/BLK, both structured facts.",
+                    "resource_requirements": "Open state is status_id -> status_lookup domain=requirement/state_group=open. request_status describes a different workflow and does not mean open.",
+                }.get(table)
+                if notes:
+                    self.schema[-1]["notes"] = notes
+                # Bounded public catalogues prevent guessed enum/status literals.
+                value_columns = {
+                    "people": ("location_region",),
+                    "skills": ("name",),
+                    "business_units": ("code",),
+                    "currencies": ("iso_code",),
+                    "risks": ("severity",),
+                    "resource_requirements": ("request_status",),
+                    "requirement_requests": ("state",),
+                    "bookings": ("kind",),
+                }.get(table, ())
+                values = {}
+                for column in value_columns:
+                    found = [
+                        r[0]
+                        for r in c.execute(
+                            f'SELECT DISTINCT "{column}" FROM "{table}" ORDER BY 1 LIMIT 41'
+                        )
+                    ]
+                    if len(found) <= 40:
+                        values[column] = found
+                if values:
+                    self.schema[-1]["values"] = values
+                if table == "status_lookup":
+                    self.schema[-1]["lookup_rows"] = [
+                        dict(r)
+                        for r in c.execute(
+                            "SELECT status_id,domain,code,state_group FROM status_lookup ORDER BY status_id"
+                        )
+                    ]
+
+    def prompt_schema(self, schema=None):
+        lines = []
+        for table in self.schema if schema is None else schema:
+            lines.append(
+                table["table"]
+                + "("
+                + ", ".join(f"{k}:{v}" for k, v in table["columns"].items())
+                + ")"
+            )
+            if table["foreign_keys"]:
+                lines.append(
+                    "FK "
+                    + ", ".join(
+                        f"{r['from']}->{r['to_table']}.{r['to_column']}"
+                        for r in table["foreign_keys"]
+                    )
+                )
+            if table.get("values"):
+                lines.append("Values " + json.dumps(table["values"]))
+            if table.get("lookup_rows"):
+                keys = list(table["lookup_rows"][0])
+                lines.append(
+                    "Lookup "
+                    + ",".join(keys)
+                    + ": "
+                    + json.dumps([[r[k] for k in keys] for r in table["lookup_rows"]])
+                )
+            if table.get("notes"):
+                lines.append(table["notes"])
+        return "\n".join(lines)
+
+    def eligibility_columns(self, kind, question):
+        """Expose structured predicates only when the user's text actually names them."""
+
+        def mentioned(value):
+            return bool(
+                value and re.search(r"\b" + re.escape(value) + r"\b", question, re.I)
+            )
+
+        table, key = {
+            "person": ("people", "person_id"),
+            "project": ("engagements", "engagement_id"),
+            "risk": ("risks", "risk_id"),
+        }[kind]
+        allowed = {table: {key}}
+        schema = {s["table"]: s for s in self.schema}
+        if kind == "person":
+            with connect(self.path, readonly=True) as c:
+                if any(
+                    mentioned(r[0])
+                    for r in c.execute("SELECT display_name FROM people")
+                ):
+                    allowed["people"].add("display_name")
+            if any(mentioned(v) for v in schema["people"]["values"]["location_region"]):
+                allowed["people"].add("location_region")
+            if any(mentioned(v) for v in schema["skills"]["values"]["name"]):
+                allowed["skills"] = {"skill_id", "name"}
+                allowed["person_skills"] = {"person_id", "skill_id"}
+                if re.search(r"\bproficiency\b", question, re.I):
+                    allowed["person_skills"].add("proficiency")
+            if re.search(r"booked|booking|availability|utilization", question, re.I):
+                allowed["bookings"] = self.columns["bookings"]
+        else:
+            if kind == "risk":
+                allowed["risks"].add("engagement_id")
+                if any(mentioned(v) for v in schema["risks"]["values"]["severity"]):
+                    allowed["risks"].add("severity")
+                allowed["engagements"] = {"engagement_id"}
+            if re.search(
+                r"\b(active|closed|cancelled|canceled|hold|new)\b", question, re.I
+            ):
+                allowed.setdefault("engagements", {"engagement_id"}).add("status_id")
+                allowed["status_lookup"] = self.columns["status_lookup"]
+            with connect(self.path, readonly=True) as c:
+                if any(
+                    mentioned(r["code"]) or mentioned(r["name"])
+                    for r in c.execute("SELECT code,name FROM business_units")
+                ):
+                    allowed.setdefault("engagements", {"engagement_id"}).add(
+                        "business_unit_id"
+                    )
+                    allowed["business_units"] = self.columns["business_units"]
+                if any(
+                    mentioned(r["display_name"]) or mentioned(r["legal_name"])
+                    for r in c.execute("SELECT display_name,legal_name FROM parties")
+                ):
+                    allowed.setdefault("engagements", {"engagement_id"}).add(
+                        "client_party_id"
+                    )
+                    allowed["parties"] = self.columns["parties"]
+            if re.search(r"\bENG-\d{4}-\d+\b", question, re.I):
+                allowed.setdefault("engagements", {"engagement_id"}).add("code")
+        return allowed
+
+    def simple_eligibility(self, kind, question, slots):
+        """Compile broad pools for simple exact filters; complex filters keep guarded SQL planning."""
+        allowed = self.eligibility_columns(kind, question)
+        if re.search(
+            r"\b(previous|above|those|these|them|same|first|second|third|fourth|fifth)\b",
+            question,
+            re.I,
+        ):
+            return None
+        if any(
+            slots.get(k) is not None
+            for k in (
+                "person",
+                "person_id",
+                "project",
+                "engagement_id",
+                "start_date",
+                "end_date",
+            )
+        ):
+            return None
+        if kind == "person" and allowed == {"people": {"person_id"}}:
+            return "SELECT person_id FROM people ORDER BY person_id", {}
+        if kind != "project" or set(allowed) - {
+            "engagements",
+            "status_lookup",
+            "business_units",
+        }:
+            return None
+        if allowed["engagements"] - {"engagement_id", "status_id", "business_unit_id"}:
+            return None
+        predicates, parameters = [], {}
+        if "status_lookup" in allowed:
+            if not re.search(r"\bactive\b", question, re.I) or re.search(
+                r"\b(not active|inactive|closed|hold|cancelled|canceled|new)\b",
+                question,
+                re.I,
+            ):
+                return None
+            predicates.append(
+                "e.status_id IN (SELECT status_id FROM status_lookup WHERE domain='project' AND code='ACT')"
+            )
+        if "business_units" in allowed:
+            matched_units = 0
+            with connect(self.path, readonly=True) as c:
+                for row in c.execute(
+                    "SELECT code,name FROM business_units ORDER BY business_unit_id"
+                ):
+                    terms = [
+                        v
+                        for v in row
+                        if re.search(r"\b" + re.escape(v) + r"\b", question, re.I)
+                    ]
+                    if not terms:
+                        continue
+                    matched_units += 1
+                    if matched_units > 1:
+                        return None
+                    negative = any(
+                        re.search(
+                            r"\b(?:outside|except|excluding|exclude|other than|not(?: in)?)\s+(?:the\s+)?"
+                            + re.escape(v)
+                            + r"\b",
+                            question,
+                            re.I,
+                        )
+                        for v in terms
+                    )
+                    if not negative and re.search(
+                        r"\b(outside|except|excluding|exclude|other than|not)\b",
+                        question,
+                        re.I,
+                    ):
+                        return None
+                    key = "unit_" + str(len(parameters))
+                    parameters[key] = row["code"]
+                    predicates.append(
+                        f"e.business_unit_id {'NOT IN' if negative else 'IN'} (SELECT business_unit_id FROM business_units WHERE code=:{key})"
+                    )
+        where = " WHERE " + " AND ".join(predicates) if predicates else ""
+        return (
+            "SELECT e.engagement_id FROM engagements e"
+            + where
+            + " ORDER BY e.engagement_id",
+            parameters,
+        )
 
     def read(
         self,
@@ -126,6 +377,7 @@ class Reader:
         purpose="detail",
         *,
         connection=None,
+        eligibility=None,
     ):
         if (
             not isinstance(sql, str)
@@ -136,10 +388,25 @@ class Reader:
         start = time.monotonic()
         digest = hashlib.sha256(sql.encode()).hexdigest()
         event("sql_started", query_id=query_id, sql_sha256=digest)
-        denied, tables = [], set()
+        denied, eligibility_denied, tables, derived = [], [], set(), set()
 
         def authorize(action, a, b, database, trigger):
+            if (
+                action == sqlite3.SQLITE_SELECT
+                and trigger
+                and trigger not in self.objects
+            ):
+                derived.add(trigger)
             if action == sqlite3.SQLITE_READ:
+                # Materialized CTEs emit table-level reads with no database/column.
+                # Never extend this exception to a real (possibly private) object.
+                if (
+                    database is None
+                    and not b
+                    and a in derived
+                    and a not in self.objects
+                ):
+                    return sqlite3.SQLITE_OK
                 # SQLite emits COUNT/table-level reads with empty column and no database.
                 if (
                     database not in ("main", None)
@@ -149,7 +416,14 @@ class Reader:
                 ):
                     denied.append(True)
                     return sqlite3.SQLITE_DENY
+                if eligibility is not None and (
+                    a not in eligibility or (b and b not in eligibility[a])
+                ):
+                    eligibility_denied.append(f"{a}.{b}")
+                    return sqlite3.SQLITE_DENY
                 tables.add(a)
+                if trigger and trigger not in self.objects:
+                    derived.add(trigger)
             elif action == sqlite3.SQLITE_FUNCTION:
                 if (b or a or "").lower() not in FUNCTIONS:
                     denied.append(True)
@@ -227,7 +501,14 @@ class Reader:
                     latency_ms=round((time.monotonic() - start) * 1000),
                 )
                 raise ReadError(
-                    code, "Query rejected by read policy" if denied else str(error)
+                    code,
+                    "Query rejected by read policy"
+                    if denied
+                    else "Semantic eligibility used an unrequested or free-text predicate: "
+                    + ", ".join(eligibility_denied)
+                    + ". Select only broad IDs using the provided eligibility schema; semantic meaning is assessed later."
+                    if eligibility_denied
+                    else str(error),
                 ) from error
         event(
             "sql_completed",
@@ -248,7 +529,7 @@ class Reader:
             "source_tables": sorted(tables),
         }
 
-    def read_pages(self, sql, parameters, key, query_id, purpose):
+    def read_pages(self, sql, parameters, key, query_id, purpose, *, eligibility=None):
         """Page a validated SELECT over a single source snapshot, before any model call."""
         if key not in {"person_id", "engagement_id", "risk_id"}:
             raise ReadError("invalid_sql", "Unsupported candidate identity key")
@@ -256,7 +537,14 @@ class Reader:
             raise ReadError("invalid_sql", "Reserved pagination parameter name")
         with connect(self.path, readonly=True) as conn:
             conn.execute("BEGIN")
-            first = self.read(sql, parameters, query_id, purpose, connection=conn)
+            first = self.read(
+                sql,
+                parameters,
+                query_id,
+                purpose,
+                connection=conn,
+                eligibility=eligibility,
+            )
             if key not in first["columns"]:
                 raise ReadError(
                     "invalid_sql", "Candidate query omitted source identity"
@@ -279,6 +567,7 @@ class Reader:
                     query_id + f"_page{len(pages) + 1}",
                     purpose,
                     connection=conn,
+                    eligibility=eligibility,
                 )
                 values = [r[key] for r in page["rows"]]
                 if any(type(value) is not int for value in values):

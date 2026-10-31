@@ -64,6 +64,83 @@ def test_offline_tokenizer_and_missing_credentials():
     assert error.value.code == "provider_unavailable"
 
 
+def test_query_contract_requires_explicit_bindings():
+    from pydantic import ValidationError
+    from resourcing_assistant.models import Query
+
+    assert "parameters" in Query.model_json_schema()["required"]
+    with pytest.raises(ValidationError):
+        Query(query_id="q", purpose="Count", sql="SELECT COUNT(*) FROM people")
+    value = Query(
+        query_id="q",
+        purpose="Count",
+        sql="SELECT COUNT(*) FROM people WHERE location_region=:region",
+        parameters=[{"name": "region", "value": "APAC"}],
+    )
+    assert value.bindings == {"region": "APAC"}
+    with pytest.raises(ValidationError):
+        Query(
+            query_id="q",
+            purpose="Count",
+            sql="SELECT :region FROM people",
+            parameters=[
+                {"name": "region", "value": "APAC"},
+                {"name": "region", "value": "EMEA"},
+            ],
+        )
+
+
+def test_supplied_azure_api_base_alias_with_blank_primary(monkeypatch, tmp_path):
+    import resourcing_assistant.config as config
+
+    monkeypatch.setattr(config, "ROOT", tmp_path)
+    monkeypatch.setenv("AZURE_ENDPOINT", "")
+    monkeypatch.setenv("AZURE_API_BASE", "https://test.invalid")
+    monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "")
+    monkeypatch.setenv("AZURE_API_KEY", "test-only")
+    assert config.Settings.from_env().endpoint == "https://test.invalid"
+
+
+def test_actual_dspy_planner_adapter_preserves_named_bindings(monkeypatch):
+    import json
+    import dspy
+    from dataclasses import replace
+
+    def transport(self, *args, **kwargs):
+        schema = kwargs["response_format"].model_json_schema()
+        assert set(schema["$defs"]["Binding"]["properties"]) == {"name", "value"}
+        assert schema["$defs"]["Query"]["properties"]["parameters"]["type"] == "array"
+        return [
+            json.dumps(
+                {
+                    "result": {
+                        "answer": {
+                            "query_id": "count",
+                            "purpose": "Count",
+                            "sql": "SELECT COUNT(*) AS people FROM people WHERE location_region=:region",
+                            "parameters": [{"name": "region", "value": "APAC"}],
+                        },
+                        "additional_answers": [],
+                    }
+                }
+            )
+        ]
+
+    monkeypatch.setattr(dspy.LM, "__call__", transport)
+    plan = Gateway(
+        replace(Settings(), endpoint="https://test.invalid", api_key="test-only")
+    ).call(
+        "PlanReads",
+        intent="factual",
+        question="Count people",
+        context="{}",
+        allowed_schema="people(location_region)",
+        previous_error="",
+        repair=False,
+    )
+    assert plan.queries[0].bindings == {"region": "APAC"}
+
+
 def test_real_dspy_adapter_typed_contract_repair_and_budget(monkeypatch):
     import dspy, json
     from dataclasses import replace
@@ -85,7 +162,12 @@ def test_real_dspy_adapter_typed_contract_repair_and_budget(monkeypatch):
     settings = replace(
         Settings(), endpoint="https://test.invalid", api_key="test-placeholder"
     )
-    value = Gateway(settings).call("InterpretRequest", message="count", context="{}")
+    value = Gateway(settings).call(
+        "InterpretRequest",
+        message="count",
+        context="{}",
+        source_schema="people(person_id)",
+    )
     assert value.intent == "factual" and len(calls) == 2
     assert calls[0] != calls[1]
     lm = BudgetLM(

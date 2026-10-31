@@ -9,6 +9,7 @@ from resourcing_assistant.models import (
     AppError,
     Assessment,
     RankItem,
+    ProjectChecks,
 )
 
 
@@ -47,7 +48,7 @@ class ScriptedGateway:
                         end_date="2026-04-30",
                     ),
                 )
-            if message == "semantic":
+            if message == "active semantic":
                 return Interpretation(
                     intent="semantic",
                     question=message,
@@ -59,24 +60,24 @@ class ScriptedGateway:
                 return Interpretation(intent="unsupported", question=message)
             return Interpretation(intent="factual", question=message)
         if name == "PlanReads":
-            if inputs["question"] == "semantic":
+            if inputs["question"] == "active semantic":
                 return ReadPlan(
-                    queries=[
-                        Query(
-                            query_id="eligible",
-                            purpose="Exact active projects",
-                            sql="SELECT e.engagement_id FROM engagements e JOIN status_lookup s ON s.status_id=e.status_id WHERE s.domain='project' AND s.code='ACT'",
-                        )
-                    ]
+                    answer=Query(
+                        parameters=[],
+                        query_id="eligible",
+                        purpose="Exact active projects",
+                        sql="SELECT e.engagement_id FROM engagements e JOIN status_lookup s ON s.status_id=e.status_id WHERE s.domain='project' AND s.code='ACT'",
+                    ),
+                    additional_answers=[],
                 )
             return ReadPlan(
-                queries=[
-                    Query(
-                        query_id="count",
-                        purpose="People count",
-                        sql="SELECT COUNT(*) AS people FROM people",
-                    )
-                ]
+                answer=Query(
+                    parameters=[],
+                    query_id="count",
+                    purpose="People count",
+                    sql="SELECT COUNT(*) AS people FROM people",
+                ),
+                additional_answers=[],
             )
         if name == "ExplainResults":
             if self.fail_explanation:
@@ -96,6 +97,10 @@ class ScriptedGateway:
                 )
                 for c in inputs["candidates"]
             ]
+        if name == "PlanProjectChecks":
+            return ProjectChecks(
+                summary=None, summary_scope="full", risk="Staffing gap", operator="all"
+            )
         if name == "RankCandidates":
             import json
 
@@ -104,7 +109,9 @@ class ScriptedGateway:
                     source_id=item["candidate"]["source_id"],
                     reason="Grounded risk match",
                 )
-                for item in json.loads(inputs["candidates"])
+                for item in json.loads(inputs["candidates"])[
+                    : inputs["requested_count"]
+                ]
             ]
         if name == "SummarizeHistory":
             return "Previously discussed staffing and source data."
@@ -196,7 +203,7 @@ def test_ambiguity_and_clean_new_thread(service):
 def test_exhaustive_semantic_source_set(service):
     s, _ = service
     thread = s.store.create_thread()["thread_id"]
-    result = s.message(thread, "r1", "semantic")
+    result = s.message(thread, "r1", "active semantic")
     matches = next(
         b
         for b in result.blocks
@@ -211,7 +218,7 @@ def test_exhaustive_semantic_source_set(service):
 def test_scalar_followup_keeps_last_entity_order(service):
     s, _ = service
     thread = s.store.create_thread()["thread_id"]
-    s.message(thread, "semantic", "semantic")
+    s.message(thread, "semantic", "active semantic")
     before = s.agent.graph.get_state(s.agent.config(thread)).values[
         "displayed_references"
     ]
@@ -220,3 +227,92 @@ def test_scalar_followup_keeps_last_entity_order(service):
         "displayed_references"
     ]
     assert before == after and before[0]["ids"]
+
+
+def test_factual_window_bindings_cannot_override_code_clock(tmp_path):
+    class WrongClock(ScriptedGateway):
+        def call(self, name, **inputs):
+            if name == "InterpretRequest":
+                return Interpretation(
+                    intent="factual",
+                    question="Period",
+                    slots=BookingSlots(start_date="2026-03-01", end_date="2026-05-31"),
+                )
+            if name == "PlanReads":
+                return ReadPlan(
+                    answer=Query(
+                        query_id="period",
+                        purpose="Period",
+                        sql="SELECT :window_start AS start, :window_end AS end, :capacity_hours AS capacity FROM people WHERE person_id=1",
+                        parameters=[
+                            {"name": "window_start", "value": 0},
+                            {"name": "window_end", "value": 1},
+                            {"name": "capacity_hours", "value": 1},
+                        ],
+                    ),
+                    additional_answers=[],
+                )
+            return super().call(name, **inputs)
+
+    from resourcing_assistant.config import period
+
+    s = Service(Settings(runtime=tmp_path), WrongClock())
+    try:
+        thread = s.store.create_thread()["thread_id"]
+        result = s.message(thread, "period", "Period")
+        block = next(b for b in result.blocks if b.type == "table")
+        start, end = period("2026-03-01", "2026-05-31")
+        assert block.rows == [{"start": start, "end": end, "capacity": 520}]
+        sql = next(b for b in result.blocks if b.type == "sql")
+        assert sql.parameters["window_start"] == start
+    finally:
+        s.close()
+
+
+@pytest.mark.parametrize(
+    "message,normalized,kind,mode",
+    [
+        (
+            "Suggest people experienced in migrations",
+            "List all people experienced in migrations",
+            "person",
+            "shortlist",
+        ),
+        (
+            "Which projects have people-related risks?",
+            "Which projects have people-related risks?",
+            "project",
+            "exhaustive",
+        ),
+        (
+            "Find project managers for projects",
+            "Find project managers for projects",
+            "person",
+            "shortlist",
+        ),
+        (
+            "List all people with cloud experience",
+            "List people with cloud experience",
+            "person",
+            "exhaustive",
+        ),
+    ],
+)
+def test_semantic_output_scope_uses_request(message, normalized, kind, mode, service):
+    s, gateway = service
+    original = gateway.call
+
+    def call(name, **inputs):
+        if name == "InterpretRequest":
+            return Interpretation(
+                intent="semantic",
+                question=normalized,
+                semantic_kind="risk",
+                semantic_mode="exhaustive",
+            )
+        return original(name, **inputs)
+
+    gateway.call = call
+    result = s.agent.interpret({"text": message, "context": {}})
+    assert result["interpretation"]["semantic_kind"] == kind
+    assert result["interpretation"]["semantic_mode"] == mode

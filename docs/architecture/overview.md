@@ -82,7 +82,10 @@ projects with staffing/key-person risk.
 3. Shortlist mode uses local vectors as candidates, then chat assessment. Exhaustive
    mode visits every eligible candidate in token-bounded batches; top-k cannot certify
    a full set. Duplicate risk vectors expand to every source membership.
-4. AssessCandidates returns match/no_match/uncertain plus source references. Validate
+4. Project criteria are decomposed by PlanProjectChecks into summary/industry and risk
+   checks. Deduplicated fields are assessed separately and joined by parent identity,
+   preserving required AND/OR and exact risk membership.
+   AssessCandidates returns match/no_match/uncertain plus source references. Validate
    returned IDs/spans, then RankCandidates orders accepted IDs with reasons.
 5. Join exact levels, roles and other values from source. Render ranked grounded rows,
    coverage and criteria. Persist the displayed order.

@@ -1,25 +1,57 @@
 """Score only delivered values; free-text truth remains an explicit review item."""
 
 from decimal import Decimal, InvalidOperation
+import re
 
 ALIASES = {
     "display_name": "person",
     "location_region": "region",
     "code": "engagement",
+    "engagement_code": "engagement",
+    "blocked_critical_items": "blocked_items",
+    "blocked_critical_items_count": "blocked_items",
+    "total_leaf_est_hours": "leaf_est_hours",
+    "total_estimated_leaf_task_hours": "leaf_est_hours",
+    "total_estimated_leaf_hours": "leaf_est_hours",
     "hard_hours": "hard_booked_hours",
     "total_cost_usd": "total_usd",
+    "total_usd_value": "total_usd",
+    "total_planned_cost": "total_usd",
     "total_planned_cost_usd": "total_usd",
     "count_people": "people",
+    "people_count": "people",
+    "person_count": "people",
     "total_people": "people",
 }
 
 
 def rows(answer):
     result = []
+    queries = {
+        b.get("query_id"): b for b in answer.get("blocks", []) if b["type"] == "sql"
+    }
     for block in answer.get("blocks", []):
         if block["type"] == "table":
+            scopes = {}
+            for reference in block.get("evidence", []):
+                query = queries.get(reference.get("query_id"), {})
+                for key, value in query.get("parameters", {}).items():
+                    if key.endswith("_id") and re.search(
+                        r":" + re.escape(key) + r"\b", query.get("sql", "")
+                    ):
+                        scopes.setdefault(key, []).append(value)
+            # Only visible, linked query identity; never fill a missing measure/oracle value.
+            identity = {k: v[0] for k, v in scopes.items() if all(x == v[0] for x in v)}
             for row in block["rows"]:
-                result.append({ALIASES.get(k, k): v for k, v in row.items()})
+                normalized, conflicts = {}, set()
+                for key, value in row.items():
+                    key = ALIASES.get(key, key)
+                    if key in normalized and normalized[key] != value:
+                        conflicts.add(key)
+                    normalized[key] = value
+                result.append(
+                    {**identity, **normalized, **{k: None for k in conflicts}}
+                )
     return result
 
 
