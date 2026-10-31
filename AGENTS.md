@@ -1,27 +1,52 @@
 # Working in this project
 
-Write repository documentation, specifications, and durable instructions in English.
-Respond to the user in their language unless they request otherwise.
-Keep filenames and commands unchanged.
+Repository documentation, specifications, durable instructions, code comments and
+product text are in English. Discuss the work with the owner in Russian.
+The repository name is exactly `resoursing_assistant_test`.
 
-Start each task with `make docs`. Use this document map to select only the files
-relevant to the task. For a long document, inspect its headings first:
-`rg -n '^#{1,6} ' path/to/document.md`.
+## Authorization boundary
 
-- [Product core](docs/product/core.md): purpose, language, and constraints.
-- [Architecture](docs/architecture/overview.md): boundaries and key dependencies.
-- [Workflow](docs/development/workflow.md): from a task to verification.
-- [Verification](docs/development/verification.md): commands and their limits.
+On 2026-10-31 the owner explicitly authorized full end-to-end implementation of the
+Resourcing Assistant according to the agreed plan, after confirming the scope question.
+Implementation, dependencies, application tests and local services are authorized.
+Real Azure checks may run when local credentials are available; no secrets in chat.
+Publishing, deployment, repository sharing and external messages remain separate.
 
-Before editing documents, read the [documentation rules](docs/document_writing.md).
-Update related requirements and checks when changing behavior.
-Investigate discrepancies between code and requirements: the code may be wrong.
+Read [handoff](docs/plans/handoff.md) and run `make progress` before selecting work.
+[progress.json](docs/plans/progress.json) is the single current task-status/evidence
+record. Update it after status/check/blocker changes and before compact or handoff.
+The plan owns task definitions; do not duplicate live status tables elsewhere.
 
-Before completing a task, run `make check` and the checks for the changed behavior
-listed in the verification document. Report the result, updated documents, and
-anything left unverified. Passing documentation checks does not prove the application works.
+Execute the dependency-ordered
+[work packages](docs/plans/implementation.md) without seeking approval for each routine
+step. Implement meaningful checks with each task, fix failures, and update actual
+verification evidence. A missing Azure credential blocks live-model checks, not
+independent local work. Never claim unavailable checks passed. Publishing, deployment,
+repository sharing and sending messages require their own applicable authorization.
 
-This is a template: the product and stack have not been defined. Do not treat
-unfilled sections as requirements or choose an architecture without a task.
-Do not automatically import other projects' rules. Shared conventions are adopted
-when creating a project; this repository must remain understandable without Control Center.
+## Design baseline and navigation
+
+The [decision register](docs/decisions/README.md) records accepted owner choices and
+clearly labeled engineering defaults. Use controlled LangGraph orchestration, DSPy
+typed tasks, generated read-only SQL and a fixed confirmed-booking writer. Memory is
+per-thread only; no Store, tenants or external runtime service beyond Azure models.
+Do not reopen resolved choices merely because an older external draft differs.
+
+Start a repository task with `make docs`. Read the relevant primary documents:
+
+- [Requirements](docs/specs/requirements.md) and [product scope](docs/product/core.md).
+- [Architecture and flows](docs/architecture/overview.md).
+- [Specifications and scenario map](docs/specs/README.md).
+- [Development plan](docs/plans/implementation.md).
+- [Workflow](docs/development/workflow.md) and [verification](docs/development/verification.md).
+
+Before documentation edits read [documentation rules](docs/document_writing.md).
+Inspect headings before reading a long file. Update affected contracts, scenarios and
+checks together. Distinguish source obligations, observed data, accepted owner choices,
+implementation defaults and measured evidence. Never replace a requirement to hide a
+failing implementation or load evaluation answers into runtime prompts.
+
+The local status scripts are development tooling, not assistant runtime.
+Before finishing edits run `make check`, `git diff --check`, and the relevant existing
+checks. Report results and unverified behavior. Documentation checks do not prove the
+application works. Do not import unrelated template or other-project rules.

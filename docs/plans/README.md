@@ -1,13 +1,11 @@
-# Active plans
+# Development plan
 
-Create a plan for a complex task that needs continuity between sessions.
-A small task does not need a separate file.
+The [work-package plan](implementation.md) contains dependency order, numbered tasks,
+inputs/outputs, corner cases, checks and completion criteria. Full end-to-end development was explicitly authorized on 2026-10-31.
+Current statuses/evidence are in [progress.json](progress.json); resume using
+[handoff.md](handoff.md) and `make progress`.
 
-Include the goal, completion criteria, steps, verified results, and next action.
-Do not duplicate all product rules in the plan.
-
-After completion, move durable knowledge to the relevant document or
-[decision](../decisions/README.md), then delete the plan if it is no longer useful.
-Git preserves its history.
-
-There are no active plans.
+Primary behavior lives in [specifications](../specs/README.md), reasons and statuses in
+[decisions](../decisions/README.md). Once implementation is authorized, track real
+package status/evidence in the plan and follow its execution loop. Do not duplicate
+specifications into progress logs or mark unverified work complete.

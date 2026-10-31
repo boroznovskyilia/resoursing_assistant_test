@@ -1,0 +1,485 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-10-31T19:04:09+00:00",
+  "authorization": {
+    "application_development": "authorized",
+    "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized."
+  },
+  "current_task": "T13.1",
+  "next_action": "Commit final English specification/status/tooling, clone the actual local Git repository into a clean temp directory, run documented setup/check/tests/build there, then record final evidence. Azure tasks remain blocked; do not claim a genuine evaluation/demo passed.",
+  "blockers": [
+    {
+      "id": "azure_access",
+      "scope": "Real Azure smoke tests and end-to-end model evaluation only",
+      "detail": "Owner will supply endpoint/key locally later. Do not ask for secrets in chat or read/print credentials. Independent local work can continue once development is authorized."
+    }
+  ],
+  "last_checks": [
+    {
+      "command": "make check",
+      "result": "passed",
+      "scope": "9 repository-tooling tests, links and durable status inventory"
+    },
+    {
+      "command": ".venv/bin/pytest -q tests",
+      "result": "passed",
+      "scope": "45 backend checks before Retry-After date/millisecond fix; targeted follow-up checks plus final clone run will supersede this count"
+    },
+    {
+      "command": "npm --prefix frontend run build",
+      "result": "passed",
+      "scope": "TypeScript/Vite production build"
+    },
+    {
+      "command": "PLAYWRIGHT_BROWSERS_PATH=/private/tmp/resourcing-browsers npm --prefix frontend run test:e2e",
+      "result": "passed",
+      "scope": "5 real Chromium checks against actual API with explicit test-only provider"
+    },
+    {
+      "command": "make setup in /private/tmp/resourcing-fresh-checkout",
+      "result": "passed",
+      "scope": "Clean filesystem copy without env/dependencies/runtime; actual Git-clone rehearsal pending"
+    },
+    {
+      "command": ".venv/bin/python -m resourcing_assistant.evaluation",
+      "result": "not_run",
+      "scope": "Preflight report has all22 cases not_run; no Azure credentials, no model-quality result"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T01.1",
+      "status": "done",
+      "evidence": [
+        "English specification saved; see docs/development/verification.md, latest documentation handoff results (2026-10-31)."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T01.2",
+      "status": "done",
+      "evidence": [
+        "English specification saved; see docs/development/verification.md, latest documentation handoff results (2026-10-31)."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T01.3",
+      "status": "done",
+      "evidence": [
+        "English specification saved; see docs/development/verification.md, latest documentation handoff results (2026-10-31)."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T01.4",
+      "status": "done",
+      "evidence": [
+        "Owner reviewed the plan and explicitly authorized full end-to-end application implementation on 2026-10-31."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T02.1",
+      "status": "done",
+      "evidence": [
+        "Locked Python3.12/uv environment, .env.example and idempotent setup; imports and missing-config/retry/real DSPy adapter tests pass. Genuine Azure checked separately."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T02.2",
+      "status": "done",
+      "evidence": [
+        "Locked Python3.12/uv environment, .env.example and idempotent setup; imports and missing-config/retry/real DSPy adapter tests pass. Genuine Azure checked separately."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T02.3",
+      "status": "done",
+      "evidence": [
+        "Locked Python3.12/uv environment, .env.example and idempotent setup; imports and missing-config/retry/real DSPy adapter tests pass. Genuine Azure checked separately."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T02.4",
+      "status": "blocked",
+      "evidence": [],
+      "blocker": "Actual Azure chat/embedding smoke needs local endpoint/key; adapter/retry/config code and offline checks exist."
+    },
+    {
+      "id": "T03.1",
+      "status": "done",
+      "evidence": [
+        "tests/test_data.py: original fingerprint preservation, read permissions/CTE/COUNT/bindings, deadlines, row/byte/huge-cell limits and complete keyset pages; deterministic conversions/capacity."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T03.2",
+      "status": "done",
+      "evidence": [
+        "tests/test_data.py: original fingerprint preservation, read permissions/CTE/COUNT/bindings, deadlines, row/byte/huge-cell limits and complete keyset pages; deterministic conversions/capacity."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T03.3",
+      "status": "done",
+      "evidence": [
+        "tests/test_data.py: original fingerprint preservation, read permissions/CTE/COUNT/bindings, deadlines, row/byte/huge-cell limits and complete keyset pages; deterministic conversions/capacity."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T03.4",
+      "status": "done",
+      "evidence": [
+        "tests/test_data.py: original fingerprint preservation, read permissions/CTE/COUNT/bindings, deadlines, row/byte/huge-cell limits and complete keyset pages; deterministic conversions/capacity."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T03.5",
+      "status": "done",
+      "evidence": [
+        "tests/test_data.py: original fingerprint preservation, read permissions/CTE/COUNT/bindings, deadlines, row/byte/huge-cell limits and complete keyset pages; deterministic conversions/capacity."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T04.1",
+      "status": "done",
+      "evidence": [
+        "tests/test_agent.py, test_storage.py, test_process.py, test_faults.py: durable history, request dedup, real SQLite checkpoints/restart, bounded compaction and exact pending fields."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T04.2",
+      "status": "done",
+      "evidence": [
+        "tests/test_agent.py, test_storage.py, test_process.py, test_faults.py: durable history, request dedup, real SQLite checkpoints/restart, bounded compaction and exact pending fields."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T04.3",
+      "status": "done",
+      "evidence": [
+        "tests/test_agent.py, test_storage.py, test_process.py, test_faults.py: durable history, request dedup, real SQLite checkpoints/restart, bounded compaction and exact pending fields."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T04.4",
+      "status": "done",
+      "evidence": [
+        "tests/test_agent.py, test_storage.py, test_process.py, test_faults.py: durable history, request dedup, real SQLite checkpoints/restart, bounded compaction and exact pending fields."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T04.5",
+      "status": "done",
+      "evidence": [
+        "tests/test_agent.py, test_storage.py, test_process.py, test_faults.py: durable history, request dedup, real SQLite checkpoints/restart, bounded compaction and exact pending fields."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T05.1",
+      "status": "done",
+      "evidence": [
+        "Typed InterpretRequest and deterministic source/name/ID resolution implemented; graph/API tests verify ambiguity, clean threads, clarification and unsupported routing with named test doubles."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T05.2",
+      "status": "done",
+      "evidence": [
+        "Typed InterpretRequest and deterministic source/name/ID resolution implemented; graph/API tests verify ambiguity, clean threads, clarification and unsupported routing with named test doubles."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T05.3",
+      "status": "done",
+      "evidence": [
+        "Typed InterpretRequest and deterministic source/name/ID resolution implemented; graph/API tests verify ambiguity, clean threads, clarification and unsupported routing with named test doubles."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T05.4",
+      "status": "done",
+      "evidence": [
+        "Typed InterpretRequest and deterministic source/name/ID resolution implemented; graph/API tests verify ambiguity, clean threads, clarification and unsupported routing with named test doubles."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T06.1",
+      "status": "done",
+      "evidence": [
+        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Actual-model quality remains blocked."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T06.2",
+      "status": "done",
+      "evidence": [
+        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Actual-model quality remains blocked."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T06.3",
+      "status": "done",
+      "evidence": [
+        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Actual-model quality remains blocked."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T06.4",
+      "status": "done",
+      "evidence": [
+        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Actual-model quality remains blocked."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T07.1",
+      "status": "done",
+      "evidence": [
+        "tests/test_semantic.py/test_agent.py/test_faults.py: local source documents, duplicate memberships, vector cache, full assessment/fallback, quoted-evidence checks, uncertainty, actual-success recovery; real recall not claimed."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T07.2",
+      "status": "done",
+      "evidence": [
+        "tests/test_semantic.py/test_agent.py/test_faults.py: local source documents, duplicate memberships, vector cache, full assessment/fallback, quoted-evidence checks, uncertainty, actual-success recovery; real recall not claimed."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T07.3",
+      "status": "done",
+      "evidence": [
+        "tests/test_semantic.py/test_agent.py/test_faults.py: local source documents, duplicate memberships, vector cache, full assessment/fallback, quoted-evidence checks, uncertainty, actual-success recovery; real recall not claimed."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T07.4",
+      "status": "done",
+      "evidence": [
+        "tests/test_semantic.py/test_agent.py/test_faults.py: local source documents, duplicate memberships, vector cache, full assessment/fallback, quoted-evidence checks, uncertainty, actual-success recovery; real recall not claimed."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T08.1",
+      "status": "done",
+      "evidence": [
+        "tests/test_storage.py/test_process.py/test_faults.py: no prewrite/Reject insert, exact terms, concurrency, immutable replacements, normal process restart, lost commit acknowledgement and checkpoint lag with one receipt."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T08.2",
+      "status": "done",
+      "evidence": [
+        "tests/test_storage.py/test_process.py/test_faults.py: no prewrite/Reject insert, exact terms, concurrency, immutable replacements, normal process restart, lost commit acknowledgement and checkpoint lag with one receipt."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T08.3",
+      "status": "done",
+      "evidence": [
+        "tests/test_storage.py/test_process.py/test_faults.py: no prewrite/Reject insert, exact terms, concurrency, immutable replacements, normal process restart, lost commit acknowledgement and checkpoint lag with one receipt."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T08.4",
+      "status": "done",
+      "evidence": [
+        "tests/test_storage.py/test_process.py/test_faults.py: no prewrite/Reject insert, exact terms, concurrency, immutable replacements, normal process restart, lost commit acknowledgement and checkpoint lag with one receipt."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T08.5",
+      "status": "done",
+      "evidence": [
+        "tests/test_storage.py/test_process.py/test_faults.py: no prewrite/Reject insert, exact terms, concurrency, immutable replacements, normal process restart, lost commit acknowledgement and checkpoint lag with one receipt."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T09.1",
+      "status": "done",
+      "evidence": [
+        "tests/test_api.py/test_process.py: typed HTTP contracts, validation, replay, same-thread admission/other-thread progress, explicit Resume and no inference on GET; production contains no fake switch."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T09.2",
+      "status": "done",
+      "evidence": [
+        "tests/test_api.py/test_process.py: typed HTTP contracts, validation, replay, same-thread admission/other-thread progress, explicit Resume and no inference on GET; production contains no fake switch."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T09.3",
+      "status": "done",
+      "evidence": [
+        "tests/test_api.py/test_process.py: typed HTTP contracts, validation, replay, same-thread admission/other-thread progress, explicit Resume and no inference on GET; production contains no fake switch."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T09.4",
+      "status": "done",
+      "evidence": [
+        "tests/test_api.py/test_process.py: typed HTTP contracts, validation, replay, same-thread admission/other-thread progress, explicit Resume and no inference on GET; production contains no fake switch."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T10.1",
+      "status": "done",
+      "evidence": [
+        "TypeScript/Vite build passed; five actual Chromium tests against the real API with test-only gateway passed; desktop/mobile screenshots inspected."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T10.2",
+      "status": "done",
+      "evidence": [
+        "TypeScript/Vite build passed; five actual Chromium tests against the real API with test-only gateway passed; desktop/mobile screenshots inspected."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T10.3",
+      "status": "done",
+      "evidence": [
+        "TypeScript/Vite build passed; five actual Chromium tests against the real API with test-only gateway passed; desktop/mobile screenshots inspected."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T10.4",
+      "status": "done",
+      "evidence": [
+        "TypeScript/Vite build passed; five actual Chromium tests against the real API with test-only gateway passed; desktop/mobile screenshots inspected."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T11.1",
+      "status": "blocked",
+      "evidence": [],
+      "blocker": "22-case real-API runner implemented and preflight verified; actual case execution needs Azure endpoint/key."
+    },
+    {
+      "id": "T11.2",
+      "status": "done",
+      "evidence": [
+        "Full isolated real-API runner/scorer/report/review workflow implemented; tests/test_scoring.py passed; all22 live cases honestly reported not_run due missing Azure."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T11.3",
+      "status": "done",
+      "evidence": [
+        "Full isolated real-API runner/scorer/report/review workflow implemented; tests/test_scoring.py passed; all22 live cases honestly reported not_run due missing Azure."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T11.4",
+      "status": "blocked",
+      "evidence": [],
+      "blocker": "Genuine Azure answers and subsequent manual semantic/refusal review remain unavailable."
+    },
+    {
+      "id": "T12.1",
+      "status": "done",
+      "evidence": [
+        "Integrated backend/fault/scorer/DSPy-boundary tests, real process tests and Chromium checks passed; local safe JSON/rotation/fallback/recovery events present. Provider measurements remain blocked."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T12.2",
+      "status": "done",
+      "evidence": [
+        "Integrated backend/fault/scorer/DSPy-boundary tests, real process tests and Chromium checks passed; local safe JSON/rotation/fallback/recovery events present. Provider measurements remain blocked."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T12.3",
+      "status": "done",
+      "evidence": [
+        "Integrated backend/fault/scorer/DSPy-boundary tests, real process tests and Chromium checks passed; local safe JSON/rotation/fallback/recovery events present. Provider measurements remain blocked."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T12.4",
+      "status": "blocked",
+      "evidence": [],
+      "blocker": "Real provider latency/token-cost/semantic recall measurements require Azure access; local functional limits tested."
+    },
+    {
+      "id": "T13.1",
+      "status": "in_progress",
+      "evidence": [],
+      "blocker": null
+    },
+    {
+      "id": "T13.2",
+      "status": "done",
+      "evidence": [
+        "README/DESIGN/NOT_DONE/specifications and submission guide updated in English; coherent local implementation commits recorded. Final clone rehearsal is current task."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T13.3",
+      "status": "done",
+      "evidence": [
+        "README/DESIGN/NOT_DONE/specifications and submission guide updated in English; coherent local implementation commits recorded. Final clone rehearsal is current task."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T13.4",
+      "status": "blocked",
+      "evidence": [],
+      "blocker": "Three model-backed demonstration conversations/recording await genuine Azure access; mechanics covered by real local API/browser/restart tests."
+    },
+    {
+      "id": "T13.5",
+      "status": "blocked",
+      "evidence": [],
+      "blocker": "Local submission draft/checklist prepared; actual remote repository/demo links and sending/publication require owner scope and completed real demo."
+    }
+  ]
+}

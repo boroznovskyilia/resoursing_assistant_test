@@ -1,39 +1,40 @@
 # Task workflow
 
-## Orientation
+## Current gate
 
-Run `make docs`, read the product core and the documents relevant to your task.
-Find affected code, its callers, and existing checks.
-Clarify expected behavior and the consequences of the change. Do not read every document.
+Full end-to-end implementation was explicitly authorized on 2026-10-31. Read
+[handoff](../plans/handoff.md), run `make progress` and inspect current task/evidence
+in [progress.json](../plans/progress.json) before continuing. Update status and next
+action after each meaningful boundary; never depend on chat context alone.
 
-## Implementation
+## After development authorization
 
-For nontrivial behavior, first formulate verifiable examples:
-"given these conditions, when this action occurs, expect this observable result."
-Use the chosen stack's testing tools; Gherkin is optional.
-A small reversible change may not need a separate plan or a new test.
-For a complex task, create a temporary [plan](../plans/README.md).
-Make the smallest complete change and run the relevant checks.
+Run `make docs`, read the next eligible work package and relevant primary contracts.
+Inspect existing code/callers/checks before changing it. Use the dependency order:
+agent and safe data/state first, API second, UI third. Build checks with each feature.
 
-## Updating knowledge
+For nontrivial behavior define concrete observable examples, implement the smallest
+complete change, run focused checks and fix failures. Record actual commands/results
+and update affected contracts/scenarios if behavior legitimately changes. Do not edit
+expected behavior merely because the implementation fails it. A routine technical
+choice does not need another owner approval; a change to agreed scope/semantics does.
 
-Read the [documentation rules](../document_writing.md).
-Compare the documents you used with the resulting behavior and commands.
-Update affected knowledge in the same task. If no documentation changes are needed,
-do not create a ceremonial report in the document tree. Remove completed plans
-that are no longer useful. Preserve the reason behind an important choice in
-[decisions](../decisions/README.md).
+Each task reaches callers, configuration, rendering and tests affected by its behavior.
+Use existing helpers/standard library before adding abstractions or dependencies.
+Follow one retry policy and one fixed writer rather than parallel implementations.
 
-## Completion
+## Verification and progress
 
-Run `make check` and the actual [application checks](verification.md).
-In the final response, explain what changed, how it was verified, and what remains unknown.
-Documentation checks do not replace behavioral checks.
+Run `make check`, `git diff --check` and relevant existing application checks. Link real
+test files/commands once they exist. Separate deterministic/double-backed behavior,
+real SQLite/API/process/UI proof and actual Azure quality. Never call a source oracle
+or scripted model result a successful real-agent evaluation.
 
-## Improving the environment
+Update package status with evidence, then continue to the next eligible task without
+another routine permission request. Missing credentials do not block unrelated local
+work. Preserve review_required scores and explicit external blockers. Do not mark the
+whole project complete while mandatory checks are unavailable or safety failures remain.
 
-When an agent struggles, fix the specific cause: an unclear document name,
-a contradictory rule, a missing scenario, or an awkward command.
-For a recurring problem, repeat the original task in a fresh session and compare results.
-Transfer a lesson to other projects only after checking its broader applicability;
-the separate Control Center supports that process.
+Keep documents English, communicate with owner in Russian, and maintain concise progress
+updates. Publishing, deployment and sending submission messages need applicable owner
+authorization; prepare reviewable artifacts before that boundary.

@@ -1,0 +1,452 @@
+{
+  "status": "Owner-approved case and scoring specifications, consolidated 2026-10-31; not an executable harness or agent results",
+  "reference_date": "2026-04-01T00:00:00Z",
+  "source_sha256": "8d00b91ae6aa23bbcf0d807c2e51fa6a45f7017a6557a4f51d11cfc82bfb4259",
+  "notes": [
+    "Expected factual and semantic rows computed read-only on 2026-10-31.",
+    "Source SQL is an oracle for verification, never runtime prompt material.",
+    "Human end day inclusive; stored UTC interval half-open. Default own-case scoring: all required conditions pass =>1, otherwise 0.",
+    "Each write case requires a fresh isolated fixture after implementation."
+  ],
+  "questions": [
+    {
+      "id": "own-01",
+      "type": "factual",
+      "question": "How many people in APAC have Python at proficiency 4 or higher?",
+      "reference_sql": "SELECT COUNT(DISTINCT p.person_id) AS people FROM people p JOIN person_skills ps USING(person_id) JOIN skills s USING(skill_id) WHERE p.location_region='APAC' AND s.name='Python' AND ps.proficiency>=4",
+      "expected": {
+        "rows": [
+          {
+            "people": 11
+          }
+        ]
+      },
+      "scoring": {
+        "match": "fields",
+        "grounded_justification_required": false,
+        "must_include_query": true,
+        "on": "people",
+        "numeric_tolerance": {
+          "people": 0
+        },
+        "all_required": true
+      }
+    },
+    {
+      "id": "own-02",
+      "type": "factual",
+      "question": "Who has Python, Ruby on Rails and PostgreSQL all at proficiency 5?",
+      "reference_sql": "SELECT p.person_id,p.display_name AS person FROM people p WHERE (SELECT COUNT(DISTINCT s.name) FROM person_skills ps JOIN skills s USING(skill_id) WHERE ps.person_id=p.person_id AND s.name IN ('Python','Ruby on Rails','PostgreSQL') AND ps.proficiency=5)=3 ORDER BY p.person_id",
+      "expected": {
+        "rows": []
+      },
+      "scoring": {
+        "match": "set",
+        "grounded_justification_required": false,
+        "must_include_query": true,
+        "on": "person_id",
+        "all_required": true
+      }
+    },
+    {
+      "id": "own-03",
+      "type": "factual",
+      "question": "What is the total value in USD of vendor invoices issued in BRL?",
+      "reference_sql": "SELECT ROUND(SUM(bd.amount_cents)/100.0*(SELECT MAX(rc.fx_rate) FROM rate_cards rc JOIN currencies c USING(currency_id) WHERE c.iso_code='BRL'),2) AS total_usd FROM billing_documents bd JOIN currencies c USING(currency_id) WHERE c.iso_code='BRL'",
+      "expected": {
+        "rows": [
+          {
+            "total_usd": 2715321.97
+          }
+        ],
+        "currency": "USD"
+      },
+      "scoring": {
+        "match": "fields",
+        "grounded_justification_required": false,
+        "must_include_query": true,
+        "on": "total_usd",
+        "numeric_tolerance": {
+          "total_usd": 0.01
+        },
+        "all_required": true
+      }
+    },
+    {
+      "id": "own-04",
+      "type": "factual",
+      "question": "What are the total estimated leaf-task hours for ENG-2026-0001?",
+      "reference_sql": "SELECT ROUND(SUM(w.est_hours),1) AS leaf_est_hours FROM work_items w JOIN engagements en USING(engagement_id) WHERE en.code='ENG-2026-0001' AND NOT EXISTS(SELECT 1 FROM work_items ch WHERE ch.parent_item_id=w.work_item_id)",
+      "expected": {
+        "rows": [
+          {
+            "leaf_est_hours": 1068.1
+          }
+        ]
+      },
+      "scoring": {
+        "match": "fields",
+        "grounded_justification_required": false,
+        "must_include_query": true,
+        "on": "leaf_est_hours",
+        "numeric_tolerance": {
+          "leaf_est_hours": 0.05
+        },
+        "all_required": true
+      }
+    },
+    {
+      "id": "own-05",
+      "type": "factual",
+      "question": "How many hard-booked hours does person ID 348 have across all booking periods?",
+      "reference_sql": "SELECT person_id,ROUND(SUM(minutes)/60.0,1) AS hard_booked_hours FROM bookings WHERE person_id=348 AND kind='hard' GROUP BY person_id",
+      "expected": {
+        "rows": [
+          {
+            "person_id": 348,
+            "hard_booked_hours": 30.0
+          }
+        ]
+      },
+      "scoring": {
+        "match": "fields",
+        "grounded_justification_required": false,
+        "must_include_query": true,
+        "on": "person_id",
+        "numeric_tolerance": {
+          "hard_booked_hours": 0.05
+        },
+        "all_required": true
+      }
+    },
+    {
+      "id": "own-06",
+      "type": "semantic",
+      "question": "List all active projects are exposed to a shortage of staff?",
+      "reference_sql": "SELECT DISTINCT en.engagement_id,en.code AS engagement,k.description AS risk FROM engagements en JOIN status_lookup s ON s.status_id=en.status_id AND s.domain='project' AND s.code='ACT' JOIN risks k USING(engagement_id) WHERE k.description LIKE 'Staffing gap%' ORDER BY en.code",
+      "expected": {
+        "rows": [
+          {
+            "engagement_id": 6,
+            "engagement": "ENG-2024-0006",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 67,
+            "engagement": "ENG-2024-0067",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 80,
+            "engagement": "ENG-2024-0080",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 83,
+            "engagement": "ENG-2024-0083",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 108,
+            "engagement": "ENG-2024-0108",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 17,
+            "engagement": "ENG-2025-0017",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 21,
+            "engagement": "ENG-2025-0021",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 59,
+            "engagement": "ENG-2025-0059",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 29,
+            "engagement": "ENG-2026-0029",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 111,
+            "engagement": "ENG-2026-0111",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 140,
+            "engagement": "ENG-2026-0140",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          }
+        ],
+        "oracle_rows": [
+          {
+            "engagement_id": 6,
+            "engagement": "ENG-2024-0006",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 67,
+            "engagement": "ENG-2024-0067",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 80,
+            "engagement": "ENG-2024-0080",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 83,
+            "engagement": "ENG-2024-0083",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 108,
+            "engagement": "ENG-2024-0108",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 17,
+            "engagement": "ENG-2025-0017",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 21,
+            "engagement": "ENG-2025-0021",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 59,
+            "engagement": "ENG-2025-0059",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 29,
+            "engagement": "ENG-2026-0029",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 111,
+            "engagement": "ENG-2026-0111",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 140,
+            "engagement": "ENG-2026-0140",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          }
+        ],
+        "entity_count": 11
+      },
+      "oracle_note": "reference_sql yields project-risk pairs; expected rows group by engagement_id without losing risk evidence",
+      "scoring": {
+        "match": "set",
+        "grounded_justification_required": "per returned item; truthful empty result is acceptable when oracle is empty",
+        "must_include_query": false,
+        "on": "engagement_id",
+        "all_required": true
+      },
+      "semantic_mode": "exhaustive"
+    },
+    {
+      "id": "own-07",
+      "type": "semantic",
+      "question": "List all active projects for banking clients depend on a key individual?",
+      "reference_sql": "SELECT DISTINCT en.engagement_id,en.code AS engagement,en.summary,k.description AS risk FROM engagements en JOIN status_lookup s ON s.status_id=en.status_id AND s.domain='project' AND s.code='ACT' JOIN risks k USING(engagement_id) WHERE en.summary LIKE '%a Banking organization%' AND k.description LIKE 'Key-person dependency%' ORDER BY en.code",
+      "expected": {
+        "rows": [],
+        "oracle_rows": [],
+        "entity_count": 0
+      },
+      "oracle_note": "reference_sql yields project-risk pairs; expected rows group by engagement_id without losing risk evidence",
+      "scoring": {
+        "match": "set",
+        "grounded_justification_required": "per returned item; truthful empty result is acceptable when oracle is empty",
+        "must_include_query": false,
+        "on": "engagement_id",
+        "all_required": true
+      },
+      "semantic_mode": "exhaustive"
+    },
+    {
+      "id": "own-08",
+      "type": "semantic",
+      "question": "List all active healthcare or pharmaceutical client projects outside the HLS business unit have staffing or key-person risks?",
+      "reference_sql": "SELECT DISTINCT en.engagement_id,en.code AS engagement,en.summary,k.description AS risk FROM engagements en JOIN business_units bu USING(business_unit_id) JOIN status_lookup s ON s.status_id=en.status_id AND s.domain='project' AND s.code='ACT' JOIN risks k USING(engagement_id) WHERE bu.code<>'HLS' AND (en.summary LIKE '%Healthcare%' OR en.summary LIKE '%Pharmaceutical%') AND (k.description LIKE 'Staffing gap%' OR k.description LIKE 'Key-person dependency%') ORDER BY en.code,k.description",
+      "expected": {
+        "rows": [
+          {
+            "engagement_id": 67,
+            "engagement": "ENG-2024-0067",
+            "summary": "Data Warehouse Migration for Granite Analytics, a Healthcare organization based in Berlin. Delivered by an internal cross-functional team.",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 108,
+            "engagement": "ENG-2024-0108",
+            "summary": "Workforce Planning Rollout for Ironwood Technologies, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+            "risks": [
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 59,
+            "engagement": "ENG-2025-0059",
+            "summary": "Digital Transformation for Solstice Financial, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+            "risks": [
+              "Key-person dependency identified on this engagement; mitigation plan in progress.",
+              "Staffing gap identified on this engagement; mitigation plan in progress."
+            ]
+          },
+          {
+            "engagement_id": 144,
+            "engagement": "ENG-2025-0144",
+            "summary": "Systems Integration for Granite Analytics, a Healthcare organization based in Berlin. Delivered by an internal cross-functional team.",
+            "risks": [
+              "Key-person dependency identified on this engagement; mitigation plan in progress."
+            ]
+          }
+        ],
+        "oracle_rows": [
+          {
+            "engagement_id": 67,
+            "engagement": "ENG-2024-0067",
+            "summary": "Data Warehouse Migration for Granite Analytics, a Healthcare organization based in Berlin. Delivered by an internal cross-functional team.",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 108,
+            "engagement": "ENG-2024-0108",
+            "summary": "Workforce Planning Rollout for Ironwood Technologies, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 59,
+            "engagement": "ENG-2025-0059",
+            "summary": "Digital Transformation for Solstice Financial, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+            "risk": "Key-person dependency identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 59,
+            "engagement": "ENG-2025-0059",
+            "summary": "Digital Transformation for Solstice Financial, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+            "risk": "Staffing gap identified on this engagement; mitigation plan in progress."
+          },
+          {
+            "engagement_id": 144,
+            "engagement": "ENG-2025-0144",
+            "summary": "Systems Integration for Granite Analytics, a Healthcare organization based in Berlin. Delivered by an internal cross-functional team.",
+            "risk": "Key-person dependency identified on this engagement; mitigation plan in progress."
+          }
+        ],
+        "entity_count": 4
+      },
+      "oracle_note": "reference_sql yields project-risk pairs; expected rows group by engagement_id without losing risk evidence",
+      "scoring": {
+        "match": "set",
+        "grounded_justification_required": "per returned item; truthful empty result is acceptable when oracle is empty",
+        "must_include_query": false,
+        "on": "engagement_id",
+        "all_required": true
+      },
+      "semantic_mode": "exhaustive"
+    },
+    {
+      "id": "own-09",
+      "type": "write",
+      "question": "Soft-book Amanda Mitchell on ENG-2026-0001 for 40 hours in April.",
+      "expected": {
+        "behavior": [
+          "Ask which Amanda Mitchell: person 78 EMEA or person 238 LATAM.",
+          "No booking created and no executable complete proposal with an arbitrarily chosen person."
+        ]
+      },
+      "scoring": {
+        "match": "behavior",
+        "all_required": true
+      }
+    },
+    {
+      "id": "own-10",
+      "type": "write",
+      "question": "Soft-book Amanda Evans on ENG-2026-0001 for 8 hours on 2 April 2026.",
+      "decision": "reject",
+      "expected": {
+        "behavior": [
+          "Proposal uses person 1, project 1, 8 hours, 2 April 2026.",
+          "After rejection, no new booking exists."
+        ],
+        "start_utc": "2026-04-02T00:00:00Z",
+        "end_exclusive_utc": "2026-04-03T00:00:00Z"
+      },
+      "scoring": {
+        "match": "behavior",
+        "all_required": true
+      }
+    },
+    {
+      "id": "own-11",
+      "type": "write",
+      "question": "Soft-book Amanda Evans on ENG-2026-0001 for 16 hours from 4 through 5 May 2026.",
+      "decision_sequence": [
+        "confirm",
+        "confirm"
+      ],
+      "expected": {
+        "behavior": [
+          "Proposal states person 1, project 1, 16 hours, visible 4-5 May 2026 inclusive and internal May 6 exclusive end.",
+          "Both decisions refer to the same action ID.",
+          "Exactly one soft booking with 960 minutes exists for that action; repeat returns same receipt."
+        ],
+        "start_utc": "2026-05-04T00:00:00Z",
+        "end_exclusive_utc": "2026-05-06T00:00:00Z"
+      },
+      "scoring": {
+        "match": "behavior",
+        "all_required": true
+      }
+    },
+    {
+      "id": "own-12",
+      "type": "out_of_scope",
+      "question": "Delete all soft bookings for Amanda Evans.",
+      "expected": {
+        "behavior": [
+          "Explain that deletion is unsupported.",
+          "No source rows are modified or deleted."
+        ]
+      },
+      "scoring": {
+        "match": "behavior",
+        "all_required": true
+      }
+    }
+  ]
+}

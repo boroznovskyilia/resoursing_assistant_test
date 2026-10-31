@@ -1,0 +1,664 @@
+{
+  "version": "1.0",
+  "database": "source.sqlite",
+  "reference_date": "2026-04-01T00:00:00Z",
+  "notes": [
+    "All expected answers were computed directly against source.sqlite with the reference SQL shown.",
+    "reference_date is the value of 'now' assumed by every question; the agent must be configurable to use it.",
+    "Timestamps are compared as UTC epoch seconds. Window boundaries are inclusive of the start day and exclusive of the end day.",
+    "Currency conversion uses rate_cards.fx_rate (one constant per currency: USD 1.0, EUR 1.08, GBP 1.27, BRL 0.19) as a multiplier into USD, the reporting currency.",
+    "For list answers, scoring is set-based on the key field unless 'ordered' is true. Numeric fields are scored with the tolerance given on the question.",
+    "A 'reference_sql' is one correct way to get the answer, not the only one."
+  ],
+  "questions": [
+    {
+      "id": "gq-01",
+      "type": "factual",
+      "question": "Who in EMEA has Python at proficiency 4 or higher and is less than 60% hard-booked between March and May 2026?",
+      "parameters": {
+        "window_start": "2026-03-01",
+        "window_end": "2026-06-01",
+        "capacity_hours_for_window": 520,
+        "capacity_note": "65 working days x 8 h; any reasonable capacity assumption is acceptable because every candidate is far below 60%"
+      },
+      "expected": {
+        "count": 6,
+        "key": "person",
+        "rows": [
+          {
+            "person": "Edward Hill",
+            "proficiency": 5,
+            "hard_booked_hours": 0.0
+          },
+          {
+            "person": "Matthew Hill",
+            "proficiency": 5,
+            "hard_booked_hours": 0.0
+          },
+          {
+            "person": "Matthew White",
+            "proficiency": 4,
+            "hard_booked_hours": 0.0
+          },
+          {
+            "person": "Anthony Thompson",
+            "proficiency": 5,
+            "hard_booked_hours": 10.0
+          },
+          {
+            "person": "Kevin Robinson",
+            "proficiency": 4,
+            "hard_booked_hours": 18.0
+          },
+          {
+            "person": "David Allen",
+            "proficiency": 4,
+            "hard_booked_hours": 26.0
+          }
+        ]
+      },
+      "scoring": {
+        "match": "set",
+        "on": "person",
+        "numeric_tolerance": {
+          "hard_booked_hours": 0.5
+        },
+        "must_include_query": true
+      },
+      "reference_sql": "WITH cand AS (\n  SELECT p.person_id, p.display_name, ps.proficiency\n  FROM people p JOIN person_skills ps ON ps.person_id = p.person_id\n  WHERE p.location_region = 'EMEA'\n    AND ps.skill_id = (SELECT skill_id FROM skills WHERE name = 'Python')\n    AND ps.proficiency >= 4),\nhard AS (\n  SELECT person_id, SUM(minutes) / 60.0 AS hours\n  FROM bookings\n  WHERE kind = 'hard' AND start_ts < :window_end AND end_ts >= :window_start\n  GROUP BY person_id)\nSELECT c.display_name, c.proficiency, ROUND(COALESCE(h.hours, 0), 1) AS hard_booked_hours\nFROM cand c LEFT JOIN hard h ON h.person_id = c.person_id\nORDER BY hard_booked_hours, c.display_name;"
+    },
+    {
+      "id": "gq-02",
+      "type": "factual",
+      "question": "Which open resource requirements belong to engagements with a critical risk and still have no submitted request?",
+      "expected": {
+        "count": 32,
+        "key": "requirement_id",
+        "rows": [
+          {
+            "requirement_id": 4,
+            "name": "Open role: UX Designer",
+            "engagement": "ENG-2026-0001"
+          },
+          {
+            "requirement_id": 6,
+            "name": "Open role: Machine Learning Engineer",
+            "engagement": "ENG-2026-0001"
+          },
+          {
+            "requirement_id": 77,
+            "name": "Open role: Solutions Architect",
+            "engagement": "ENG-2025-0021"
+          },
+          {
+            "requirement_id": 102,
+            "name": "Open role: Project Manager",
+            "engagement": "ENG-2024-0026"
+          },
+          {
+            "requirement_id": 104,
+            "name": "Open role: Consultant",
+            "engagement": "ENG-2026-0027"
+          },
+          {
+            "requirement_id": 124,
+            "name": "Open role: Solutions Architect",
+            "engagement": "ENG-2025-0034"
+          },
+          {
+            "requirement_id": 127,
+            "name": "Open role: DevOps Engineer",
+            "engagement": "ENG-2025-0034"
+          },
+          {
+            "requirement_id": 128,
+            "name": "Open role: UX Designer",
+            "engagement": "ENG-2025-0034"
+          },
+          {
+            "requirement_id": 129,
+            "name": "Open role: Junior Developer",
+            "engagement": "ENG-2025-0034"
+          },
+          {
+            "requirement_id": 163,
+            "name": "Open role: Engagement Manager",
+            "engagement": "ENG-2024-0044"
+          },
+          {
+            "requirement_id": 165,
+            "name": "Open role: Machine Learning Engineer",
+            "engagement": "ENG-2024-0044"
+          },
+          {
+            "requirement_id": 166,
+            "name": "Open role: Technical Writer",
+            "engagement": "ENG-2024-0044"
+          },
+          {
+            "requirement_id": 167,
+            "name": "Open role: Software Developer",
+            "engagement": "ENG-2024-0044"
+          },
+          {
+            "requirement_id": 177,
+            "name": "Open role: Consultant",
+            "engagement": "ENG-2026-0049"
+          },
+          {
+            "requirement_id": 179,
+            "name": "Open role: Practice Lead",
+            "engagement": "ENG-2026-0049"
+          },
+          {
+            "requirement_id": 180,
+            "name": "Open role: Scrum Master",
+            "engagement": "ENG-2026-0049"
+          },
+          {
+            "requirement_id": 194,
+            "name": "Open role: DevOps Engineer",
+            "engagement": "ENG-2024-0056"
+          },
+          {
+            "requirement_id": 199,
+            "name": "Open role: Support Engineer",
+            "engagement": "ENG-2024-0056"
+          },
+          {
+            "requirement_id": 200,
+            "name": "Open role: DevOps Engineer",
+            "engagement": "ENG-2025-0057"
+          },
+          {
+            "requirement_id": 207,
+            "name": "Open role: Support Engineer",
+            "engagement": "ENG-2025-0059"
+          },
+          {
+            "requirement_id": 231,
+            "name": "Open role: Solutions Architect",
+            "engagement": "ENG-2026-0069"
+          },
+          {
+            "requirement_id": 233,
+            "name": "Open role: Senior Developer",
+            "engagement": "ENG-2026-0069"
+          },
+          {
+            "requirement_id": 269,
+            "name": "Open role: UX Designer",
+            "engagement": "ENG-2026-0079"
+          },
+          {
+            "requirement_id": 331,
+            "name": "Open role: Consultant",
+            "engagement": "ENG-2025-0095"
+          },
+          {
+            "requirement_id": 335,
+            "name": "Open role: Project Manager",
+            "engagement": "ENG-2024-0097"
+          },
+          {
+            "requirement_id": 336,
+            "name": "Open role: Consultant",
+            "engagement": "ENG-2024-0097"
+          },
+          {
+            "requirement_id": 337,
+            "name": "Open role: Delivery Lead",
+            "engagement": "ENG-2026-0098"
+          },
+          {
+            "requirement_id": 344,
+            "name": "Open role: Software Developer",
+            "engagement": "ENG-2025-0102"
+          },
+          {
+            "requirement_id": 404,
+            "name": "Open role: Scrum Master",
+            "engagement": "ENG-2025-0120"
+          },
+          {
+            "requirement_id": 421,
+            "name": "Open role: Solutions Architect",
+            "engagement": "ENG-2026-0126"
+          },
+          {
+            "requirement_id": 426,
+            "name": "Open role: QA Engineer",
+            "engagement": "ENG-2026-0126"
+          },
+          {
+            "requirement_id": 485,
+            "name": "Open role: Solutions Architect",
+            "engagement": "ENG-2024-0149"
+          }
+        ]
+      },
+      "scoring": {
+        "match": "set",
+        "on": "requirement_id",
+        "partial_credit": "count within 2 of 32 with no false positives scores 0.5",
+        "must_include_query": true
+      },
+      "pitfalls": [
+        "'open' means status_lookup.state_group = 'open' for domain 'requirement' (codes OPN and PRT), not only code OPN",
+        "resource_requirements.request_status is a denormalised text column; the question is about requirement_requests.state"
+      ],
+      "reference_sql": "SELECT rr.requirement_id, rr.name, en.code\nFROM resource_requirements rr\nJOIN status_lookup sl ON sl.status_id = rr.status_id AND sl.domain = 'requirement' AND sl.state_group = 'open'\nJOIN engagements en ON en.engagement_id = rr.engagement_id\nWHERE EXISTS (SELECT 1 FROM risks k WHERE k.engagement_id = en.engagement_id AND k.severity = 'critical')\n  AND NOT EXISTS (SELECT 1 FROM requirement_requests rq WHERE rq.requirement_id = rr.requirement_id AND rq.state = 'submitted')\nORDER BY rr.requirement_id;"
+    },
+    {
+      "id": "gq-03",
+      "type": "factual",
+      "question": "What is the total planned cost, in the reporting currency, of active engagements in the Healthcare & Life Sciences business unit?",
+      "expected": {
+        "total_usd": 5157842.1,
+        "engagement_count": 11,
+        "currency": "USD",
+        "breakdown": [
+          {
+            "engagement": "ENG-2024-0062",
+            "currency": "USD",
+            "planned_cost": 200683.56,
+            "planned_cost_usd": 200683.56
+          },
+          {
+            "engagement": "ENG-2024-0080",
+            "currency": "EUR",
+            "planned_cost": 290220.51,
+            "planned_cost_usd": 313438.15
+          },
+          {
+            "engagement": "ENG-2024-0086",
+            "currency": "USD",
+            "planned_cost": 326518.98,
+            "planned_cost_usd": 326518.98
+          },
+          {
+            "engagement": "ENG-2024-0088",
+            "currency": "USD",
+            "planned_cost": 402756.68,
+            "planned_cost_usd": 402756.68
+          },
+          {
+            "engagement": "ENG-2024-0110",
+            "currency": "GBP",
+            "planned_cost": 191866.84,
+            "planned_cost_usd": 243670.89
+          },
+          {
+            "engagement": "ENG-2024-0113",
+            "currency": "USD",
+            "planned_cost": 602850.71,
+            "planned_cost_usd": 602850.71
+          },
+          {
+            "engagement": "ENG-2025-0058",
+            "currency": "EUR",
+            "planned_cost": 167530.67,
+            "planned_cost_usd": 180933.12
+          },
+          {
+            "engagement": "ENG-2026-0022",
+            "currency": "USD",
+            "planned_cost": 377009.68,
+            "planned_cost_usd": 377009.68
+          },
+          {
+            "engagement": "ENG-2026-0027",
+            "currency": "GBP",
+            "planned_cost": 1030675.71,
+            "planned_cost_usd": 1308958.15
+          },
+          {
+            "engagement": "ENG-2026-0048",
+            "currency": "USD",
+            "planned_cost": 530386.68,
+            "planned_cost_usd": 530386.68
+          },
+          {
+            "engagement": "ENG-2026-0141",
+            "currency": "USD",
+            "planned_cost": 670635.5,
+            "planned_cost_usd": 670635.5
+          }
+        ]
+      },
+      "scoring": {
+        "match": "number",
+        "on": "total_usd",
+        "numeric_tolerance": {
+          "total_usd": 1.0
+        },
+        "must_include_query": true
+      },
+      "pitfalls": [
+        "Three currencies are involved; summing the unconverted amounts gives 4,791,135.52, which is wrong",
+        "'active' is status_lookup code ACT in domain 'project'"
+      ],
+      "reference_sql": "SELECT en.code, cur.iso_code, en.planned_cost_cents / 100.0 AS planned_cost,\n       en.planned_cost_cents / 100.0 * fx.fx_rate AS planned_cost_usd\nFROM engagements en\nJOIN status_lookup sl ON sl.status_id = en.status_id AND sl.domain = 'project' AND sl.code = 'ACT'\nJOIN business_units bu ON bu.business_unit_id = en.business_unit_id AND bu.code = 'HLS'\nJOIN currencies cur ON cur.currency_id = en.currency_id\nJOIN (SELECT currency_id, MAX(fx_rate) AS fx_rate FROM rate_cards GROUP BY currency_id) fx ON fx.currency_id = en.currency_id;"
+    },
+    {
+      "id": "gq-04",
+      "type": "factual",
+      "question": "How many people in each region have the DSPy / LLM Ops skill at proficiency 3 or higher?",
+      "expected": {
+        "rows": [
+          {
+            "region": "AMER",
+            "people": 1
+          },
+          {
+            "region": "EMEA",
+            "people": 1
+          },
+          {
+            "region": "LATAM",
+            "people": 3
+          }
+        ],
+        "regions_with_zero": [
+          "APAC"
+        ]
+      },
+      "scoring": {
+        "match": "exact",
+        "on": "region",
+        "note": "Reporting APAC as 0 or omitting it are both acceptable"
+      },
+      "reference_sql": "SELECT p.location_region, COUNT(*) AS people\nFROM people p\nJOIN person_skills ps ON ps.person_id = p.person_id\nJOIN skills s ON s.skill_id = ps.skill_id\nWHERE s.name = 'DSPy / LLM Ops' AND ps.proficiency >= 3\nGROUP BY p.location_region ORDER BY p.location_region;"
+    },
+    {
+      "id": "gq-05",
+      "type": "factual",
+      "question": "Who logged the most hours on ENG-2026-0001 in the first quarter of 2026, and how many hours were logged on it in total that quarter?",
+      "parameters": {
+        "q1_start": "2026-01-01",
+        "q2_start": "2026-04-01"
+      },
+      "expected": {
+        "top_5": [
+          {
+            "person": "Mark Stewart",
+            "hours": 131.5
+          },
+          {
+            "person": "Andrew King",
+            "hours": 90.5
+          },
+          {
+            "person": "Patricia Anderson",
+            "hours": 62.0
+          },
+          {
+            "person": "Donald Moore",
+            "hours": 44.0
+          },
+          {
+            "person": "Michelle Martin",
+            "hours": 41.5
+          }
+        ],
+        "total_hours": 425.0,
+        "entry_count": 132
+      },
+      "scoring": {
+        "match": "ordered",
+        "on": "person",
+        "top_n_required": 3,
+        "numeric_tolerance": {
+          "hours": 0.5,
+          "total_hours": 0.5
+        },
+        "must_include_query": true
+      },
+      "pitfalls": [
+        "time_entries.minutes must be divided by 60",
+        "time entries join to engagements through work_items"
+      ],
+      "reference_sql": "SELECT p.display_name, SUM(te.minutes) / 60.0 AS hours\nFROM time_entries te\nJOIN work_items wi ON wi.work_item_id = te.work_item_id\nJOIN engagements en ON en.engagement_id = wi.engagement_id\nJOIN people p ON p.person_id = te.person_id\nWHERE en.code = 'ENG-2026-0001' AND te.entry_ts >= :q1_start AND te.entry_ts < :q2_start\nGROUP BY p.person_id ORDER BY hours DESC LIMIT 5;"
+    },
+    {
+      "id": "gq-06",
+      "type": "factual",
+      "question": "How many critical-path work items are currently blocked on active engagements, and which engagements have the most?",
+      "expected": {
+        "total_blocked_critical_items": 21,
+        "top_engagements": [
+          {
+            "engagement": "ENG-2024-0031",
+            "blocked_items": 2
+          },
+          {
+            "engagement": "ENG-2024-0053",
+            "blocked_items": 2
+          },
+          {
+            "engagement": "ENG-2025-0016",
+            "blocked_items": 2
+          },
+          {
+            "engagement": "ENG-2025-0058",
+            "blocked_items": 2
+          },
+          {
+            "engagement": "ENG-2026-0111",
+            "blocked_items": 2
+          }
+        ],
+        "top_note": "Five engagements are tied at 2 blocked items; any of them are acceptable as 'the most'"
+      },
+      "scoring": {
+        "match": "number",
+        "on": "total_blocked_critical_items",
+        "numeric_tolerance": {
+          "total_blocked_critical_items": 0
+        },
+        "must_include_query": true
+      },
+      "pitfalls": [
+        "Two different status domains are involved: 'task' for the work item (BLK) and 'project' for the engagement (ACT)",
+        "is_critical is a 0/1 flag on work_items"
+      ],
+      "reference_sql": "SELECT en.code, COUNT(*) AS blocked_critical_items\nFROM work_items wi\nJOIN status_lookup ts ON ts.status_id = wi.status_id AND ts.domain = 'task' AND ts.code = 'BLK'\nJOIN engagements en ON en.engagement_id = wi.engagement_id\nJOIN status_lookup es ON es.status_id = en.status_id AND es.domain = 'project' AND es.code = 'ACT'\nWHERE wi.is_critical = 1\nGROUP BY en.engagement_id ORDER BY blocked_critical_items DESC, en.code;"
+    },
+    {
+      "id": "gq-07",
+      "type": "semantic",
+      "question": "Find experienced data engineers who could lead a data-migration workstream.",
+      "expected": {
+        "strong_matches": [
+          {
+            "person": "David Brown",
+            "region": "APAC",
+            "skills": "SQL Modeling (5)",
+            "years_experience": 7
+          },
+          {
+            "person": "Emily Allen",
+            "region": "LATAM",
+            "skills": "SQL Modeling (5)",
+            "years_experience": 8
+          },
+          {
+            "person": "Jessica Williams",
+            "region": "LATAM",
+            "skills": "SQL Modeling (5), PostgreSQL (5)",
+            "years_experience": 9
+          },
+          {
+            "person": "John Morris",
+            "region": "AMER",
+            "skills": "ETL Design (5)",
+            "years_experience": 8
+          },
+          {
+            "person": "Kimberly Jackson",
+            "region": "LATAM",
+            "skills": "Data Engineering (4), ETL Design (4)",
+            "years_experience": 6
+          },
+          {
+            "person": "Kimberly Smith",
+            "region": "APAC",
+            "skills": "SQL Modeling (4)",
+            "years_experience": 7
+          },
+          {
+            "person": "Matthew Evans",
+            "region": "EMEA",
+            "skills": "PostgreSQL (5)",
+            "years_experience": 8
+          },
+          {
+            "person": "Olivia Walker",
+            "region": "AMER",
+            "skills": "Data Engineering (4), PostgreSQL (4)",
+            "years_experience": 12
+          },
+          {
+            "person": "Robert Garcia",
+            "region": "LATAM",
+            "skills": "SQL Modeling (4)",
+            "years_experience": 5
+          },
+          {
+            "person": "Sarah Anderson",
+            "region": "AMER",
+            "skills": "PostgreSQL (5)",
+            "years_experience": 6
+          }
+        ],
+        "must_mention_at_least": 4,
+        "best_candidates_by_experience": [
+          "Olivia Walker (12 years)",
+          "Jessica Williams (9 years)",
+          "Emily Allen (8 years)"
+        ]
+      },
+      "scoring": {
+        "match": "overlap",
+        "on": "person",
+        "minimum_overlap": 4,
+        "justification_required": true,
+        "justification_must_reference": [
+          "years of experience or title from the bio",
+          "at least one concrete skill with its proficiency"
+        ]
+      },
+      "pitfalls": [
+        "There is no 'data migration' skill; ETL Design, Data Engineering, SQL Modeling and PostgreSQL are the relevant ones",
+        "Bios are templated but do carry the title and years of experience, which is the 'experienced' signal"
+      ],
+      "reference_sql": "-- Structured part only; the mapping 'data migration' -> {Data Engineering, ETL Design, SQL Modeling, PostgreSQL}\n-- and 'experienced' -> title/years in people.bio is the retrieval problem the candidate must solve.\nSELECT p.display_name, p.location_region, p.bio, GROUP_CONCAT(s.name || ' (' || ps.proficiency || ')', ', ') AS skills\nFROM people p\nJOIN person_skills ps ON ps.person_id = p.person_id\nJOIN skills s ON s.skill_id = ps.skill_id\nWHERE p.bio LIKE '%Data Engineer%'\n  AND s.name IN ('Data Engineering', 'ETL Design', 'SQL Modeling', 'PostgreSQL') AND ps.proficiency >= 4\nGROUP BY p.person_id ORDER BY p.display_name;"
+    },
+    {
+      "id": "gq-08",
+      "type": "semantic",
+      "question": "Which active engagements for healthcare or pharmaceutical clients carry people-related risks?",
+      "expected": {
+        "count": 5,
+        "key": "engagement",
+        "rows": [
+          {
+            "engagement": "ENG-2024-0067",
+            "title": "Granite Analytics — Data Warehouse Migration",
+            "people_risks": [
+              "Staffing gap"
+            ]
+          },
+          {
+            "engagement": "ENG-2024-0108",
+            "title": "Ironwood Technologies — Workforce Planning Rollout",
+            "people_risks": [
+              "Staffing gap"
+            ]
+          },
+          {
+            "engagement": "ENG-2024-0110",
+            "title": "Solstice Financial — Legacy Modernization",
+            "people_risks": [
+              "Key-person dependency"
+            ]
+          },
+          {
+            "engagement": "ENG-2025-0059",
+            "title": "Solstice Financial — Digital Transformation",
+            "people_risks": [
+              "Key-person dependency",
+              "Staffing gap"
+            ]
+          },
+          {
+            "engagement": "ENG-2025-0144",
+            "title": "Granite Analytics — Systems Integration",
+            "people_risks": [
+              "Key-person dependency"
+            ]
+          }
+        ]
+      },
+      "scoring": {
+        "match": "set",
+        "on": "engagement",
+        "minimum_overlap": 4,
+        "justification_required": true,
+        "justification_must_reference": [
+          "the risk category that was treated as people-related",
+          "the client's industry from the summary"
+        ]
+      },
+      "pitfalls": [
+        "Industry is not a column; it appears only in engagements.summary ('a Healthcare organization', 'a Pharmaceuticals organization')",
+        "Risk descriptions never say 'people'; 'Key-person dependency' and 'Staffing gap' are the people-related categories"
+      ],
+      "reference_sql": "-- Industry lives only in engagements.summary; 'people-related' must be mapped to the\n-- 'Key-person dependency' and 'Staffing gap' risk categories.\nSELECT DISTINCT en.code, en.title, k.description\nFROM engagements en\nJOIN risks k ON k.engagement_id = en.engagement_id\nJOIN status_lookup sl ON sl.status_id = en.status_id AND sl.domain = 'project' AND sl.code = 'ACT'\nWHERE (en.summary LIKE '%Healthcare%' OR en.summary LIKE '%Pharmaceutical%')\n  AND (k.description LIKE 'Key-person dependency%' OR k.description LIKE 'Staffing gap%')\nORDER BY en.code;"
+    },
+    {
+      "id": "gq-09",
+      "type": "write",
+      "question": "Soft-book Amanda Evans on ENG-2026-0001 for 40 hours in April.",
+      "precondition": {
+        "person_id": 1,
+        "engagement_id": 1,
+        "existing_bookings_between_them": 0
+      },
+      "expected": {
+        "behaviour": [
+          "The agent does not write anything before confirmation.",
+          "A confirmation block is returned with person 'Amanda Evans', engagement 'ENG-2026-0001', start 2026-04-01, end 2026-04-30 (or 2026-05-01 exclusive), hours 40.",
+          "After confirmation, exactly one new row exists in bookings with person_id 1, engagement_id 1, kind 'soft', status_id 13 (domain 'booking', code 'SFT'), minutes 2400, start_ts/end_ts inside April 2026.",
+          "After rejection, no row is created and the thread reports that.",
+          "Confirmation sent after the API process has been restarted still creates the row."
+        ],
+        "verification_sql": "SELECT booking_id, kind, status_id, minutes, start_ts, end_ts FROM bookings WHERE person_id = 1 AND engagement_id = 1;"
+      },
+      "scoring": {
+        "match": "behaviour",
+        "all_required": true
+      },
+      "pitfalls": [
+        "Hours must be stored as minutes (40 h = 2400)",
+        "'April' must resolve against reference_date (2026); the agent should state the year it assumed",
+        "status_id must be scoped to domain 'booking'"
+      ]
+    },
+    {
+      "id": "gq-10",
+      "type": "out_of_scope",
+      "question": "What was the weather in Dublin on the day ENG-2026-0001 started?",
+      "expected": {
+        "behaviour": [
+          "The agent states that the database has no weather data and does not invent an answer.",
+          "It may still return the engagement's planned start date and the client's city (Dublin) from the summary, clearly separated from what it cannot answer."
+        ]
+      },
+      "scoring": {
+        "match": "behaviour",
+        "fail_if": "any weather value is asserted"
+      }
+    }
+  ]
+}

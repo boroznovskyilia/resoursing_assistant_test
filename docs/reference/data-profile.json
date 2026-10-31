@@ -1,0 +1,4510 @@
+{
+  "source": "/Users/iliab/Downloads/source.sqlite",
+  "sha256": "8d00b91ae6aa23bbcf0d807c2e51fa6a45f7017a6557a4f51d11cfc82bfb4259",
+  "profile_date": "2026-10-28",
+  "integrity": "ok",
+  "foreign_key_violations": [],
+  "tables": {
+    "approvals": {
+      "rows": 291,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "approval_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "engagement_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "state",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "decided_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "engagements",
+          "from": "engagement_id",
+          "to": "engagement_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {
+        "decided_ts": 92
+      },
+      "timestamp_ranges": {
+        "decided_ts": {
+          "min": "2024-03-20T16:48:43+00:00",
+          "max": "2027-08-22T14:10:51+00:00"
+        },
+        "created_ts": {
+          "min": "2024-01-09T20:13:54+00:00",
+          "max": "2026-07-30T09:43:06+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-03-14T09:23:19+00:00",
+          "max": "2027-08-22T14:10:51+00:00"
+        }
+      }
+    },
+    "assignments": {
+      "rows": 8036,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "assignment_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "work_item_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "start_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "end_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "work_items",
+          "from": "work_item_id",
+          "to": "work_item_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "people",
+          "from": "person_id",
+          "to": "person_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {},
+      "timestamp_ranges": {
+        "start_ts": {
+          "min": "2024-01-17T11:52:54+00:00",
+          "max": "2027-10-03T10:47:59+00:00"
+        },
+        "end_ts": {
+          "min": "2024-01-21T17:44:02+00:00",
+          "max": "2027-10-22T23:43:27+00:00"
+        },
+        "created_ts": {
+          "min": "2024-01-17T11:52:54+00:00",
+          "max": "2027-10-03T10:47:59+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-01-21T17:44:02+00:00",
+          "max": "2027-10-22T23:43:27+00:00"
+        }
+      }
+    },
+    "billing_documents": {
+      "rows": 1200,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "doc_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "doc_number",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "supplier_party_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "amount_cents",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "currency_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "due_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "cost_center_code",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "approval_state",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "currencies",
+          "from": "currency_id",
+          "to": "currency_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "parties",
+          "from": "supplier_party_id",
+          "to": "party_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {},
+      "timestamp_ranges": {
+        "due_ts": {
+          "min": "2024-01-31T07:15:01+00:00",
+          "max": "2026-09-27T01:27:35+00:00"
+        },
+        "created_ts": {
+          "min": "2024-01-01T07:15:01+00:00",
+          "max": "2026-07-06T13:47:59+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-01-01T07:15:01+00:00",
+          "max": "2026-07-06T13:47:59+00:00"
+        }
+      }
+    },
+    "bookings": {
+      "rows": 2620,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "booking_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "header_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "engagement_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "allocation_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "status_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "kind",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "category_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "requirement_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "start_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 10,
+          "name": "end_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 11,
+          "name": "minutes",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 12,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 13,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "rate_categories",
+          "from": "category_id",
+          "to": "category_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "status_lookup",
+          "from": "status_id",
+          "to": "status_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 2,
+          "seq": 0,
+          "table": "team_allocations",
+          "from": "allocation_id",
+          "to": "allocation_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 3,
+          "seq": 0,
+          "table": "engagements",
+          "from": "engagement_id",
+          "to": "engagement_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 4,
+          "seq": 0,
+          "table": "people",
+          "from": "person_id",
+          "to": "person_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {},
+      "timestamp_ranges": {
+        "start_ts": {
+          "min": "2024-01-15T02:25:47+00:00",
+          "max": "2027-02-12T16:38:21+00:00"
+        },
+        "end_ts": {
+          "min": "2024-03-17T16:57:08+00:00",
+          "max": "2027-10-31T14:16:03+00:00"
+        },
+        "created_ts": {
+          "min": "2024-01-15T02:25:47+00:00",
+          "max": "2027-02-12T16:38:21+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-01-15T02:25:47+00:00",
+          "max": "2027-02-12T16:38:21+00:00"
+        }
+      }
+    },
+    "business_units": {
+      "rows": 6,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "business_unit_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "code",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [],
+      "nulls": {}
+    },
+    "category_assignments": {
+      "rows": 551,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "cat_assignment_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "category_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "label",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "is_default",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": "0",
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "rate_categories",
+          "from": "category_id",
+          "to": "category_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "people",
+          "from": "person_id",
+          "to": "person_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {}
+    },
+    "currencies": {
+      "rows": 4,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "currency_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "iso_code",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "symbol",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "is_primary",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": "0",
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [],
+      "nulls": {}
+    },
+    "engagements": {
+      "rows": 150,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "engagement_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "code",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "title",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "summary",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "client_party_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "delivery_unit_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "manager_person_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "owner_person_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "business_unit_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "planned_start_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 10,
+          "name": "actual_start_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 11,
+          "name": "planned_end_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 12,
+          "name": "actual_end_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 13,
+          "name": "scheduling_mode",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 14,
+          "name": "status_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 15,
+          "name": "pct_complete",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 16,
+          "name": "budget_effort_hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 17,
+          "name": "effort_done_hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 18,
+          "name": "effort_left_hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 19,
+          "name": "planned_cost_cents",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 20,
+          "name": "actual_cost_cents",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 21,
+          "name": "planned_revenue_cents",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 22,
+          "name": "actual_revenue_cents",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 23,
+          "name": "currency_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 24,
+          "name": "source_tag",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 25,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 26,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "currencies",
+          "from": "currency_id",
+          "to": "currency_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "status_lookup",
+          "from": "status_id",
+          "to": "status_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 2,
+          "seq": 0,
+          "table": "business_units",
+          "from": "business_unit_id",
+          "to": "business_unit_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 3,
+          "seq": 0,
+          "table": "people",
+          "from": "owner_person_id",
+          "to": "person_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 4,
+          "seq": 0,
+          "table": "people",
+          "from": "manager_person_id",
+          "to": "person_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 5,
+          "seq": 0,
+          "table": "org_units",
+          "from": "delivery_unit_id",
+          "to": "org_unit_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 6,
+          "seq": 0,
+          "table": "parties",
+          "from": "client_party_id",
+          "to": "party_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {
+        "actual_start_ts": 23,
+        "actual_end_ts": 104
+      },
+      "timestamp_ranges": {
+        "planned_start_ts": {
+          "min": "2024-01-09T20:13:54+00:00",
+          "max": "2026-07-30T09:43:06+00:00"
+        },
+        "actual_start_ts": {
+          "min": "2024-01-03T20:13:54+00:00",
+          "max": "2026-08-13T23:04:12+00:00"
+        },
+        "planned_end_ts": {
+          "min": "2024-06-06T03:54:57+00:00",
+          "max": "2027-10-31T14:16:03+00:00"
+        },
+        "actual_end_ts": {
+          "min": "2024-08-28T06:55:08+00:00",
+          "max": "2027-12-22T14:16:03+00:00"
+        },
+        "created_ts": {
+          "min": "2023-11-09T15:21:10+00:00",
+          "max": "2026-06-30T23:04:12+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-02-11T05:54:23+00:00",
+          "max": "2027-05-11T14:58:32+00:00"
+        }
+      }
+    },
+    "org_units": {
+      "rows": 14,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "org_unit_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "code",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "business_unit_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "business_units",
+          "from": "business_unit_id",
+          "to": "business_unit_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {}
+    },
+    "parties": {
+      "rows": 88,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "party_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "party_type",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "legal_name",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "display_name",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "country",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "city",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [],
+      "nulls": {}
+    },
+    "people": {
+      "rows": 400,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "given_name",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "family_name",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "display_name",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "email",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "bio",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "auth_user_id",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "avatar_url",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "location_region",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 10,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [],
+      "nulls": {},
+      "timestamp_ranges": {
+        "created_ts": {
+          "min": "2022-08-19T12:36:00+00:00",
+          "max": "2023-12-31T16:16:50+00:00"
+        },
+        "updated_ts": {
+          "min": "2022-10-02T23:36:11+00:00",
+          "max": "2024-10-13T09:39:02+00:00"
+        }
+      }
+    },
+    "person_avatars": {
+      "rows": 400,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "mime",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "width",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "height",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "source",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "source_url",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "byte_size",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "bytes",
+          "type": "BLOB",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "people",
+          "from": "person_id",
+          "to": "person_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {
+        "source_url": 148
+      },
+      "timestamp_ranges": {
+        "created_ts": {
+          "min": "2026-07-08T06:38:44+00:00",
+          "max": "2026-07-08T06:38:44+00:00"
+        }
+      }
+    },
+    "person_skills": {
+      "rows": 2012,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "person_skill_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "skill_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "proficiency",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "acquired_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "skills",
+          "from": "skill_id",
+          "to": "skill_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "people",
+          "from": "person_id",
+          "to": "person_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {},
+      "timestamp_ranges": {
+        "acquired_ts": {
+          "min": "2023-03-07T01:19:53+00:00",
+          "max": "2026-07-06T21:13:46+00:00"
+        }
+      }
+    },
+    "rate_cards": {
+      "rows": 40,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "rate_card_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "category_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "pricelist_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "currency_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "fx_rate",
+          "type": "REAL",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "unit_price_cents",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "tier",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "currencies",
+          "from": "currency_id",
+          "to": "currency_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "rate_categories",
+          "from": "category_id",
+          "to": "category_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {}
+    },
+    "rate_categories": {
+      "rows": 20,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "category_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "ref_number",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "description",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "target_util_pct",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [],
+      "nulls": {}
+    },
+    "requirement_requests": {
+      "rows": 729,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "request_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "requirement_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "state",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "resource_requirements",
+          "from": "requirement_id",
+          "to": "requirement_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {},
+      "timestamp_ranges": {
+        "created_ts": {
+          "min": "2024-01-28T09:55:54+00:00",
+          "max": "2027-09-09T13:38:37+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-01-28T09:55:54+00:00",
+          "max": "2027-09-09T13:38:37+00:00"
+        }
+      }
+    },
+    "resource_requirements": {
+      "rows": 488,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "requirement_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "engagement_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "role_category_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "status_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "is_primary",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": "0",
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "alloc_method",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "work_location",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "from_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "to_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 10,
+          "name": "effort",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 11,
+          "name": "duration",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 12,
+          "name": "remaining_duration",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 13,
+          "name": "fulfilled_duration",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 14,
+          "name": "fulfilled_hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 15,
+          "name": "pct",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 16,
+          "name": "cost_price_cents",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 17,
+          "name": "quantity",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 18,
+          "name": "city",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 19,
+          "name": "state_or_province",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 20,
+          "name": "country",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 21,
+          "name": "latitude",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 22,
+          "name": "longitude",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 23,
+          "name": "request_status",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 24,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 25,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "status_lookup",
+          "from": "status_id",
+          "to": "status_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "rate_categories",
+          "from": "role_category_id",
+          "to": "category_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 2,
+          "seq": 0,
+          "table": "engagements",
+          "from": "engagement_id",
+          "to": "engagement_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {},
+      "timestamp_ranges": {
+        "from_ts": {
+          "min": "2024-01-28T11:20:14+00:00",
+          "max": "2027-01-08T03:44:35+00:00"
+        },
+        "to_ts": {
+          "min": "2024-04-23T18:26:12+00:00",
+          "max": "2027-10-31T14:16:03+00:00"
+        },
+        "created_ts": {
+          "min": "2024-01-18T18:46:13+00:00",
+          "max": "2027-01-02T01:34:32+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-01-28T11:20:14+00:00",
+          "max": "2027-01-08T03:44:35+00:00"
+        }
+      }
+    },
+    "risks": {
+      "rows": 373,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "risk_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "engagement_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "description",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "severity",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "engagements",
+          "from": "engagement_id",
+          "to": "engagement_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {},
+      "timestamp_ranges": {
+        "created_ts": {
+          "min": "2024-03-22T22:44:42+00:00",
+          "max": "2027-08-19T19:23:21+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-03-22T22:44:42+00:00",
+          "max": "2027-08-19T19:23:21+00:00"
+        }
+      }
+    },
+    "skills": {
+      "rows": 40,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "skill_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "description",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "family",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [],
+      "nulls": {}
+    },
+    "status_lookup": {
+      "rows": 20,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "status_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "domain",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "code",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "label",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "state_group",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [],
+      "nulls": {}
+    },
+    "team_allocations": {
+      "rows": 880,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "allocation_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "engagement_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "category_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "requirement_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "org_unit_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "billing_kind",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "alloc_method",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "worker_kind",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 10,
+          "name": "start_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 11,
+          "name": "end_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 12,
+          "name": "hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 13,
+          "name": "required_hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 14,
+          "name": "hard_hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 15,
+          "name": "soft_hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 16,
+          "name": "pct",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 17,
+          "name": "active",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": "1",
+          "pk": 0
+        },
+        {
+          "cid": 18,
+          "name": "status_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 19,
+          "name": "owner_person_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 20,
+          "name": "business_unit_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 21,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 22,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "business_units",
+          "from": "business_unit_id",
+          "to": "business_unit_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "people",
+          "from": "owner_person_id",
+          "to": "person_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 2,
+          "seq": 0,
+          "table": "status_lookup",
+          "from": "status_id",
+          "to": "status_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 3,
+          "seq": 0,
+          "table": "org_units",
+          "from": "org_unit_id",
+          "to": "org_unit_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 4,
+          "seq": 0,
+          "table": "people",
+          "from": "person_id",
+          "to": "person_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 5,
+          "seq": 0,
+          "table": "rate_categories",
+          "from": "category_id",
+          "to": "category_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 6,
+          "seq": 0,
+          "table": "engagements",
+          "from": "engagement_id",
+          "to": "engagement_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {},
+      "timestamp_ranges": {
+        "start_ts": {
+          "min": "2024-01-28T23:16:27+00:00",
+          "max": "2027-02-01T18:29:19+00:00"
+        },
+        "end_ts": {
+          "min": "2024-05-12T12:10:09+00:00",
+          "max": "2027-10-29T19:53:49+00:00"
+        },
+        "created_ts": {
+          "min": "2024-01-09T20:13:54+00:00",
+          "max": "2026-07-30T09:43:06+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-01-17T20:13:54+00:00",
+          "max": "2026-09-26T08:42:43+00:00"
+        }
+      }
+    },
+    "time_entries": {
+      "rows": 48435,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "entry_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "work_item_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "entry_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "minutes",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "work_items",
+          "from": "work_item_id",
+          "to": "work_item_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "people",
+          "from": "person_id",
+          "to": "person_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {},
+      "timestamp_ranges": {
+        "entry_ts": {
+          "min": "2024-01-18T10:47:06+00:00",
+          "max": "2027-10-21T17:57:45+00:00"
+        },
+        "created_ts": {
+          "min": "2024-01-18T10:47:06+00:00",
+          "max": "2027-10-21T17:57:45+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-01-18T10:47:06+00:00",
+          "max": "2027-10-21T17:57:45+00:00"
+        }
+      }
+    },
+    "work_item_links": {
+      "rows": 1470,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "link_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "engagement_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "predecessor_item_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "successor_item_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "link_kind",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "work_items",
+          "from": "successor_item_id",
+          "to": "work_item_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "work_items",
+          "from": "predecessor_item_id",
+          "to": "work_item_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 2,
+          "seq": 0,
+          "table": "engagements",
+          "from": "engagement_id",
+          "to": "engagement_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {},
+      "timestamp_ranges": {
+        "created_ts": {
+          "min": "2024-01-30T08:15:06+00:00",
+          "max": "2027-10-22T14:21:56+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-01-30T08:15:06+00:00",
+          "max": "2027-10-22T14:21:56+00:00"
+        }
+      }
+    },
+    "work_items": {
+      "rows": 9184,
+      "columns": [
+        {
+          "cid": 0,
+          "name": "work_item_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "engagement_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "wbs_code",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "item_number",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "label",
+          "type": "TEXT",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "parent_item_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "sort_order",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "est_hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "done_hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "left_hours",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 10,
+          "name": "pct",
+          "type": "REAL",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 11,
+          "name": "is_milestone",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": "0",
+          "pk": 0
+        },
+        {
+          "cid": 12,
+          "name": "is_critical",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": "0",
+          "pk": 0
+        },
+        {
+          "cid": 13,
+          "name": "is_manual",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": "0",
+          "pk": 0
+        },
+        {
+          "cid": 14,
+          "name": "planned_start_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 15,
+          "name": "planned_end_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 16,
+          "name": "sched_start_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 17,
+          "name": "sched_end_ts",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 18,
+          "name": "planned_cost_cents",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 19,
+          "name": "actual_cost_cents",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 20,
+          "name": "planned_revenue_cents",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 21,
+          "name": "actual_revenue_cents",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 22,
+          "name": "status_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 23,
+          "name": "cost_center_code",
+          "type": "TEXT",
+          "notnull": 0,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 24,
+          "name": "created_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        },
+        {
+          "cid": 25,
+          "name": "updated_ts",
+          "type": "INTEGER",
+          "notnull": 1,
+          "dflt_value": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "status_lookup",
+          "from": "status_id",
+          "to": "status_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "work_items",
+          "from": "parent_item_id",
+          "to": "work_item_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        },
+        {
+          "id": 2,
+          "seq": 0,
+          "table": "engagements",
+          "from": "engagement_id",
+          "to": "engagement_id",
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION",
+          "match": "NONE"
+        }
+      ],
+      "nulls": {
+        "parent_item_id": 914
+      },
+      "timestamp_ranges": {
+        "planned_start_ts": {
+          "min": "2024-01-09T20:13:54+00:00",
+          "max": "2027-09-28T14:07:05+00:00"
+        },
+        "planned_end_ts": {
+          "min": "2024-01-24T06:49:02+00:00",
+          "max": "2027-10-31T14:16:03+00:00"
+        },
+        "sched_start_ts": {
+          "min": "2024-01-09T20:13:54+00:00",
+          "max": "2027-09-28T14:07:05+00:00"
+        },
+        "sched_end_ts": {
+          "min": "2024-01-24T06:49:02+00:00",
+          "max": "2027-10-31T14:16:03+00:00"
+        },
+        "created_ts": {
+          "min": "2024-01-05T20:13:54+00:00",
+          "max": "2027-09-26T20:18:53+00:00"
+        },
+        "updated_ts": {
+          "min": "2024-01-24T06:49:02+00:00",
+          "max": "2027-10-31T14:16:03+00:00"
+        }
+      }
+    }
+  },
+  "total_rows": 77451,
+  "indexes": [
+    {
+      "name": "ix_work_items_eng",
+      "tbl_name": "work_items",
+      "sql": "CREATE INDEX ix_work_items_eng      ON work_items(engagement_id)"
+    },
+    {
+      "name": "ix_work_items_parent",
+      "tbl_name": "work_items",
+      "sql": "CREATE INDEX ix_work_items_parent   ON work_items(parent_item_id)"
+    },
+    {
+      "name": "ix_links_eng",
+      "tbl_name": "work_item_links",
+      "sql": "CREATE INDEX ix_links_eng           ON work_item_links(engagement_id)"
+    },
+    {
+      "name": "ix_team_eng",
+      "tbl_name": "team_allocations",
+      "sql": "CREATE INDEX ix_team_eng            ON team_allocations(engagement_id)"
+    },
+    {
+      "name": "ix_team_person",
+      "tbl_name": "team_allocations",
+      "sql": "CREATE INDEX ix_team_person         ON team_allocations(person_id)"
+    },
+    {
+      "name": "ix_assign_person",
+      "tbl_name": "assignments",
+      "sql": "CREATE INDEX ix_assign_person       ON assignments(person_id)"
+    },
+    {
+      "name": "ix_assign_item",
+      "tbl_name": "assignments",
+      "sql": "CREATE INDEX ix_assign_item         ON assignments(work_item_id)"
+    },
+    {
+      "name": "ix_time_person",
+      "tbl_name": "time_entries",
+      "sql": "CREATE INDEX ix_time_person         ON time_entries(person_id)"
+    },
+    {
+      "name": "ix_time_item",
+      "tbl_name": "time_entries",
+      "sql": "CREATE INDEX ix_time_item           ON time_entries(work_item_id)"
+    },
+    {
+      "name": "ix_book_person",
+      "tbl_name": "bookings",
+      "sql": "CREATE INDEX ix_book_person         ON bookings(person_id)"
+    },
+    {
+      "name": "ix_book_eng",
+      "tbl_name": "bookings",
+      "sql": "CREATE INDEX ix_book_eng            ON bookings(engagement_id)"
+    },
+    {
+      "name": "ix_req_eng",
+      "tbl_name": "resource_requirements",
+      "sql": "CREATE INDEX ix_req_eng             ON resource_requirements(engagement_id)"
+    },
+    {
+      "name": "ix_req_role",
+      "tbl_name": "resource_requirements",
+      "sql": "CREATE INDEX ix_req_role            ON resource_requirements(role_category_id)"
+    },
+    {
+      "name": "ix_pskill_person",
+      "tbl_name": "person_skills",
+      "sql": "CREATE INDEX ix_pskill_person       ON person_skills(person_id)"
+    },
+    {
+      "name": "ix_catassign_person",
+      "tbl_name": "category_assignments",
+      "sql": "CREATE INDEX ix_catassign_person    ON category_assignments(person_id)"
+    },
+    {
+      "name": "ix_bill_supplier",
+      "tbl_name": "billing_documents",
+      "sql": "CREATE INDEX ix_bill_supplier       ON billing_documents(supplier_party_id)"
+    }
+  ],
+  "checks": {
+    "duplicate_people_names": [
+      {
+        "display_name": "Amanda Mitchell",
+        "n": 2
+      },
+      {
+        "display_name": "Amanda Taylor",
+        "n": 2
+      },
+      {
+        "display_name": "Andrew Moore",
+        "n": 2
+      },
+      {
+        "display_name": "Ashley Wright",
+        "n": 2
+      },
+      {
+        "display_name": "Brian Baker",
+        "n": 2
+      },
+      {
+        "display_name": "Donald Brown",
+        "n": 2
+      },
+      {
+        "display_name": "Donald Lee",
+        "n": 2
+      },
+      {
+        "display_name": "Edward Wright",
+        "n": 2
+      },
+      {
+        "display_name": "Emily Anderson",
+        "n": 2
+      },
+      {
+        "display_name": "George Carter",
+        "n": 2
+      },
+      {
+        "display_name": "Jennifer King",
+        "n": 2
+      },
+      {
+        "display_name": "Jessica Baker",
+        "n": 2
+      },
+      {
+        "display_name": "John Smith",
+        "n": 2
+      },
+      {
+        "display_name": "Joseph Harris",
+        "n": 2
+      },
+      {
+        "display_name": "Joshua Miller",
+        "n": 2
+      },
+      {
+        "display_name": "Karen King",
+        "n": 2
+      },
+      {
+        "display_name": "Kimberly Thompson",
+        "n": 2
+      },
+      {
+        "display_name": "Linda Harris",
+        "n": 2
+      },
+      {
+        "display_name": "Margaret Phillips",
+        "n": 2
+      },
+      {
+        "display_name": "Michael Scott",
+        "n": 2
+      },
+      {
+        "display_name": "Nancy White",
+        "n": 2
+      },
+      {
+        "display_name": "Olivia Lee",
+        "n": 2
+      },
+      {
+        "display_name": "Patricia Anderson",
+        "n": 2
+      },
+      {
+        "display_name": "Patricia Campbell",
+        "n": 2
+      },
+      {
+        "display_name": "Patricia Collins",
+        "n": 2
+      },
+      {
+        "display_name": "Rachel Collins",
+        "n": 2
+      },
+      {
+        "display_name": "Robert Adams",
+        "n": 2
+      },
+      {
+        "display_name": "Robert Garcia",
+        "n": 2
+      },
+      {
+        "display_name": "Robert Turner",
+        "n": 2
+      },
+      {
+        "display_name": "Robert Williams",
+        "n": 2
+      },
+      {
+        "display_name": "Sandra Nelson",
+        "n": 2
+      },
+      {
+        "display_name": "Steven Harris",
+        "n": 2
+      },
+      {
+        "display_name": "Thomas Adams",
+        "n": 2
+      },
+      {
+        "display_name": "William Clark",
+        "n": 2
+      }
+    ],
+    "duplicate_skill_names": [],
+    "duplicate_project_codes": [],
+    "duplicate_person_skills": [],
+    "duplicate_person_role": [],
+    "people_default_role_anomalies": [],
+    "people_without_skills": [
+      {
+        "n": 0
+      }
+    ],
+    "people_multiple_project_allocations": [],
+    "booking_status_kind": [
+      {
+        "kind": "hard",
+        "domain": "booking",
+        "code": "CMP",
+        "n": 675
+      },
+      {
+        "kind": "hard",
+        "domain": "booking",
+        "code": "HRD",
+        "n": 640
+      },
+      {
+        "kind": "soft",
+        "domain": "booking",
+        "code": "PRP",
+        "n": 626
+      },
+      {
+        "kind": "soft",
+        "domain": "booking",
+        "code": "SFT",
+        "n": 679
+      }
+    ],
+    "booking_allocation_mismatch": [
+      {
+        "n": 2095
+      }
+    ],
+    "booking_requirement_project_mismatch": [
+      {
+        "n": 0
+      }
+    ],
+    "allocation_requirement_project_mismatch": [
+      {
+        "n": 0
+      }
+    ],
+    "booking_missing_requirement": [
+      {
+        "n": 0
+      }
+    ],
+    "allocation_missing_requirement": [
+      {
+        "n": 0
+      }
+    ],
+    "assignments_on_nonleaf": [
+      {
+        "n": 0
+      }
+    ],
+    "entries_on_nonleaf": [
+      {
+        "n": 0
+      }
+    ],
+    "work_item_tree_sizes": [
+      {
+        "node_type": "internal",
+        "n": 2378,
+        "est_hours": 169518.1
+      },
+      {
+        "node_type": "leaf",
+        "n": 5892,
+        "est_hours": 169518.1
+      },
+      {
+        "node_type": "root",
+        "n": 914,
+        "est_hours": 169518.1
+      }
+    ],
+    "work_item_parent_project_mismatch": [
+      {
+        "n": 0
+      }
+    ],
+    "duplicate_risks_per_project": [
+      {
+        "engagement_id": 8,
+        "description": "Vendor dependency identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 17,
+        "description": "Staffing gap identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 18,
+        "description": "Key-person dependency identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 21,
+        "description": "Staffing gap identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 23,
+        "description": "Unclear requirements identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 26,
+        "description": "Unclear requirements identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 28,
+        "description": "Environment instability identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 29,
+        "description": "Regulatory compliance identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 29,
+        "description": "Staffing gap identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 30,
+        "description": "Regulatory compliance identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 37,
+        "description": "Unclear requirements identified on this engagement; mitigation plan in progress.",
+        "n": 3
+      },
+      {
+        "engagement_id": 38,
+        "description": "Staffing gap identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 43,
+        "description": "Environment instability identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 49,
+        "description": "Environment instability identified on this engagement; mitigation plan in progress.",
+        "n": 3
+      },
+      {
+        "engagement_id": 51,
+        "description": "Regulatory compliance identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 57,
+        "description": "Key-person dependency identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 67,
+        "description": "Staffing gap identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 78,
+        "description": "Regulatory compliance identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 83,
+        "description": "Data quality issues identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 90,
+        "description": "Unclear requirements identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 94,
+        "description": "Unclear requirements identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 98,
+        "description": "Budget overrun identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 101,
+        "description": "Vendor dependency identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 105,
+        "description": "Integration delay identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 110,
+        "description": "Integration delay identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 111,
+        "description": "Staffing gap identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 119,
+        "description": "Unclear requirements identified on this engagement; mitigation plan in progress.",
+        "n": 3
+      },
+      {
+        "engagement_id": 124,
+        "description": "Budget overrun identified on this engagement; mitigation plan in progress.",
+        "n": 3
+      },
+      {
+        "engagement_id": 125,
+        "description": "Environment instability identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 130,
+        "description": "Unclear requirements identified on this engagement; mitigation plan in progress.",
+        "n": 3
+      },
+      {
+        "engagement_id": 131,
+        "description": "Environment instability identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 135,
+        "description": "Regulatory compliance identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 141,
+        "description": "Scope creep identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 143,
+        "description": "Integration delay identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 146,
+        "description": "Scope creep identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      },
+      {
+        "engagement_id": 148,
+        "description": "Unclear requirements identified on this engagement; mitigation plan in progress.",
+        "n": 2
+      }
+    ],
+    "risk_categories": [
+      {
+        "description": "Unclear requirements identified on this engagement; mitigation plan in progress.",
+        "n": 57
+      },
+      {
+        "description": "Regulatory compliance identified on this engagement; mitigation plan in progress.",
+        "n": 41
+      },
+      {
+        "description": "Environment instability identified on this engagement; mitigation plan in progress.",
+        "n": 40
+      },
+      {
+        "description": "Integration delay identified on this engagement; mitigation plan in progress.",
+        "n": 39
+      },
+      {
+        "description": "Staffing gap identified on this engagement; mitigation plan in progress.",
+        "n": 37
+      },
+      {
+        "description": "Key-person dependency identified on this engagement; mitigation plan in progress.",
+        "n": 36
+      },
+      {
+        "description": "Budget overrun identified on this engagement; mitigation plan in progress.",
+        "n": 36
+      },
+      {
+        "description": "Vendor dependency identified on this engagement; mitigation plan in progress.",
+        "n": 32
+      },
+      {
+        "description": "Scope creep identified on this engagement; mitigation plan in progress.",
+        "n": 29
+      },
+      {
+        "description": "Data quality issues identified on this engagement; mitigation plan in progress.",
+        "n": 26
+      }
+    ],
+    "work_item_money_effort_sum": [
+      {
+        "all_est_hours": 508554.3,
+        "leaf_est_hours": 169518.1
+      }
+    ],
+    "bookings_values": [
+      {
+        "n": 2620,
+        "min_minutes": 120,
+        "max_minutes": 960,
+        "nonpositive": 0,
+        "invalid_window": 0,
+        "incomplete": 0
+      }
+    ],
+    "assignments_values": [
+      {
+        "min_hours": 2.0,
+        "max_hours": 52.8,
+        "nonpositive": 0,
+        "invalid_window": 0
+      }
+    ],
+    "entries_values": [
+      {
+        "min_minutes": 30,
+        "max_minutes": 480,
+        "nonpositive": 0,
+        "not_half_hour": 0
+      }
+    ],
+    "proficiency_values": [
+      {
+        "proficiency": 1,
+        "n": 114
+      },
+      {
+        "proficiency": 2,
+        "n": 441
+      },
+      {
+        "proficiency": 3,
+        "n": 586
+      },
+      {
+        "proficiency": 4,
+        "n": 431
+      },
+      {
+        "proficiency": 5,
+        "n": 440
+      }
+    ],
+    "progress_ranges": [
+      {
+        "field": "engagements.pct_complete",
+        "min": 0.002,
+        "max": 0.999
+      },
+      {
+        "field": "work_items.pct",
+        "min": 0.0,
+        "max": 100.0
+      },
+      {
+        "field": "resource_requirements.pct",
+        "min": 0.0,
+        "max": 99.9
+      },
+      {
+        "field": "team_allocations.pct",
+        "min": 20.1,
+        "max": 100.0
+      }
+    ],
+    "project_status_counts": [
+      {
+        "domain": "project",
+        "code": "NEW",
+        "label": "New",
+        "n": 23
+      },
+      {
+        "domain": "project",
+        "code": "ACT",
+        "label": "Active",
+        "n": 60
+      },
+      {
+        "domain": "project",
+        "code": "HLD",
+        "label": "On Hold",
+        "n": 21
+      },
+      {
+        "domain": "project",
+        "code": "CLS",
+        "label": "Closed",
+        "n": 35
+      },
+      {
+        "domain": "project",
+        "code": "CAN",
+        "label": "Cancelled",
+        "n": 11
+      }
+    ],
+    "requirement_status_counts": [
+      {
+        "domain": "requirement",
+        "code": "OPN",
+        "state_group": "open",
+        "n": 129
+      },
+      {
+        "domain": "requirement",
+        "code": "PRT",
+        "state_group": "open",
+        "n": 125
+      },
+      {
+        "domain": "requirement",
+        "code": "FLD",
+        "state_group": "closed",
+        "n": 126
+      },
+      {
+        "domain": "requirement",
+        "code": "CNL",
+        "state_group": "closed",
+        "n": 108
+      }
+    ],
+    "currencies_fx": [
+      {
+        "iso_code": "USD",
+        "is_primary": 1,
+        "rate_card_rows": 9,
+        "min_fx": 1.0,
+        "max_fx": 1.0
+      },
+      {
+        "iso_code": "EUR",
+        "is_primary": 0,
+        "rate_card_rows": 11,
+        "min_fx": 1.08,
+        "max_fx": 1.08
+      },
+      {
+        "iso_code": "GBP",
+        "is_primary": 0,
+        "rate_card_rows": 16,
+        "min_fx": 1.27,
+        "max_fx": 1.27
+      },
+      {
+        "iso_code": "BRL",
+        "is_primary": 0,
+        "rate_card_rows": 4,
+        "min_fx": 0.19,
+        "max_fx": 0.19
+      }
+    ],
+    "people_regions": [
+      {
+        "location_region": "AMER",
+        "n": 96
+      },
+      {
+        "location_region": "APAC",
+        "n": 114
+      },
+      {
+        "location_region": "EMEA",
+        "n": 99
+      },
+      {
+        "location_region": "LATAM",
+        "n": 91
+      }
+    ],
+    "party_types": [
+      {
+        "party_type": "client",
+        "n": 55
+      },
+      {
+        "party_type": "internal",
+        "n": 8
+      },
+      {
+        "party_type": "vendor",
+        "n": 25
+      }
+    ],
+    "business_units": [
+      {
+        "code": "FS",
+        "name": "Financial Services",
+        "projects": 24
+      },
+      {
+        "code": "HLS",
+        "name": "Healthcare & Life Sciences",
+        "projects": 26
+      },
+      {
+        "code": "PS",
+        "name": "Public Sector",
+        "projects": 26
+      },
+      {
+        "code": "RCG",
+        "name": "Retail & Consumer Goods",
+        "projects": 27
+      },
+      {
+        "code": "TMT",
+        "name": "Technology, Media & Telecom",
+        "projects": 25
+      },
+      {
+        "code": "ENR",
+        "name": "Energy & Resources",
+        "projects": 22
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": 1,
+        "name": "Ruby on Rails",
+        "family": "backend",
+        "people": 56
+      },
+      {
+        "skill_id": 2,
+        "name": "Python",
+        "family": "backend",
+        "people": 60
+      },
+      {
+        "skill_id": 3,
+        "name": "API Design",
+        "family": "backend",
+        "people": 52
+      },
+      {
+        "skill_id": 4,
+        "name": "Domain-Driven Design",
+        "family": "backend",
+        "people": 55
+      },
+      {
+        "skill_id": 5,
+        "name": "Event Sourcing",
+        "family": "backend",
+        "people": 66
+      },
+      {
+        "skill_id": 6,
+        "name": "GraphQL",
+        "family": "backend",
+        "people": 60
+      },
+      {
+        "skill_id": 7,
+        "name": "Rust",
+        "family": "backend",
+        "people": 62
+      },
+      {
+        "skill_id": 8,
+        "name": "Go",
+        "family": "backend",
+        "people": 55
+      },
+      {
+        "skill_id": 9,
+        "name": "Elixir",
+        "family": "backend",
+        "people": 59
+      },
+      {
+        "skill_id": 10,
+        "name": "Data Engineering",
+        "family": "data",
+        "people": 37
+      },
+      {
+        "skill_id": 11,
+        "name": "Neo4j / Cypher",
+        "family": "data",
+        "people": 28
+      },
+      {
+        "skill_id": 12,
+        "name": "ETL Design",
+        "family": "data",
+        "people": 30
+      },
+      {
+        "skill_id": 13,
+        "name": "SQL Modeling",
+        "family": "data",
+        "people": 21
+      },
+      {
+        "skill_id": 14,
+        "name": "Data Viz",
+        "family": "data",
+        "people": 30
+      },
+      {
+        "skill_id": 15,
+        "name": "PostgreSQL",
+        "family": "data",
+        "people": 37
+      },
+      {
+        "skill_id": 16,
+        "name": "Redis",
+        "family": "data",
+        "people": 29
+      },
+      {
+        "skill_id": 17,
+        "name": "Kafka",
+        "family": "data",
+        "people": 29
+      },
+      {
+        "skill_id": 18,
+        "name": "React",
+        "family": "frontend",
+        "people": 39
+      },
+      {
+        "skill_id": 19,
+        "name": "TypeScript",
+        "family": "frontend",
+        "people": 32
+      },
+      {
+        "skill_id": 20,
+        "name": "UX Research",
+        "family": "frontend",
+        "people": 40
+      },
+      {
+        "skill_id": 21,
+        "name": "Kubernetes",
+        "family": "platform",
+        "people": 70
+      },
+      {
+        "skill_id": 22,
+        "name": "Terraform",
+        "family": "platform",
+        "people": 56
+      },
+      {
+        "skill_id": 23,
+        "name": "AWS",
+        "family": "platform",
+        "people": 58
+      },
+      {
+        "skill_id": 24,
+        "name": "Azure",
+        "family": "platform",
+        "people": 56
+      },
+      {
+        "skill_id": 25,
+        "name": "Message Queues",
+        "family": "platform",
+        "people": 56
+      },
+      {
+        "skill_id": 26,
+        "name": "Observability",
+        "family": "platform",
+        "people": 50
+      },
+      {
+        "skill_id": 27,
+        "name": "Security Review",
+        "family": "platform",
+        "people": 71
+      },
+      {
+        "skill_id": 28,
+        "name": "Performance Tuning",
+        "family": "platform",
+        "people": 58
+      },
+      {
+        "skill_id": 29,
+        "name": "Cost Optimization",
+        "family": "platform",
+        "people": 48
+      },
+      {
+        "skill_id": 30,
+        "name": "CI/CD",
+        "family": "platform",
+        "people": 48
+      },
+      {
+        "skill_id": 31,
+        "name": "Docker",
+        "family": "platform",
+        "people": 61
+      },
+      {
+        "skill_id": 32,
+        "name": "DSPy / LLM Ops",
+        "family": "ai",
+        "people": 20
+      },
+      {
+        "skill_id": 33,
+        "name": "Prompt Engineering",
+        "family": "ai",
+        "people": 19
+      },
+      {
+        "skill_id": 34,
+        "name": "Machine Learning",
+        "family": "ai",
+        "people": 22
+      },
+      {
+        "skill_id": 35,
+        "name": "Feature Engineering",
+        "family": "ai",
+        "people": 21
+      },
+      {
+        "skill_id": 36,
+        "name": "Project Management",
+        "family": "delivery",
+        "people": 87
+      },
+      {
+        "skill_id": 37,
+        "name": "Scrum Mastery",
+        "family": "delivery",
+        "people": 84
+      },
+      {
+        "skill_id": 38,
+        "name": "Business Analysis",
+        "family": "delivery",
+        "people": 89
+      },
+      {
+        "skill_id": 39,
+        "name": "Technical Writing",
+        "family": "delivery",
+        "people": 83
+      },
+      {
+        "skill_id": 40,
+        "name": "Testing / QA",
+        "family": "delivery",
+        "people": 78
+      }
+    ],
+    "roles": [
+      {
+        "category_id": 1,
+        "name": "Junior Developer",
+        "target_util_pct": 80
+      },
+      {
+        "category_id": 2,
+        "name": "Software Developer",
+        "target_util_pct": 80
+      },
+      {
+        "category_id": 3,
+        "name": "Senior Developer",
+        "target_util_pct": 78
+      },
+      {
+        "category_id": 4,
+        "name": "Principal Engineer",
+        "target_util_pct": 70
+      },
+      {
+        "category_id": 5,
+        "name": "Solutions Architect",
+        "target_util_pct": 65
+      },
+      {
+        "category_id": 6,
+        "name": "Data Engineer",
+        "target_util_pct": 78
+      },
+      {
+        "category_id": 7,
+        "name": "Machine Learning Engineer",
+        "target_util_pct": 72
+      },
+      {
+        "category_id": 8,
+        "name": "Delivery Lead",
+        "target_util_pct": 55
+      },
+      {
+        "category_id": 9,
+        "name": "Project Manager",
+        "target_util_pct": 60
+      },
+      {
+        "category_id": 10,
+        "name": "Business Analyst",
+        "target_util_pct": 75
+      },
+      {
+        "category_id": 11,
+        "name": "QA Engineer",
+        "target_util_pct": 80
+      },
+      {
+        "category_id": 12,
+        "name": "DevOps Engineer",
+        "target_util_pct": 76
+      },
+      {
+        "category_id": 13,
+        "name": "UX Designer",
+        "target_util_pct": 74
+      },
+      {
+        "category_id": 14,
+        "name": "Technical Writer",
+        "target_util_pct": 78
+      },
+      {
+        "category_id": 15,
+        "name": "Scrum Master",
+        "target_util_pct": 62
+      },
+      {
+        "category_id": 16,
+        "name": "Consultant",
+        "target_util_pct": 70
+      },
+      {
+        "category_id": 17,
+        "name": "Senior Consultant",
+        "target_util_pct": 68
+      },
+      {
+        "category_id": 18,
+        "name": "Engagement Manager",
+        "target_util_pct": 50
+      },
+      {
+        "category_id": 19,
+        "name": "Practice Lead",
+        "target_util_pct": 45
+      },
+      {
+        "category_id": 20,
+        "name": "Support Engineer",
+        "target_util_pct": 82
+      }
+    ],
+    "billing_cost_centers_missing_from_work": [
+      {
+        "n": 31
+      }
+    ],
+    "billing_cost_centers_multi_project": [
+      {
+        "n": 37
+      }
+    ],
+    "gold_write_precondition": [
+      {
+        "n": 0
+      }
+    ],
+    "engagements_wrong_status_domain": [
+      {
+        "n": 0
+      }
+    ],
+    "work_items_wrong_status_domain": [
+      {
+        "n": 0
+      }
+    ],
+    "bookings_wrong_status_domain": [
+      {
+        "n": 0
+      }
+    ],
+    "resource_requirements_wrong_status_domain": [
+      {
+        "n": 0
+      }
+    ],
+    "team_allocations_wrong_status_domain": [
+      {
+        "n": 0
+      }
+    ]
+  },
+  "semantic_documents": {
+    "people": {
+      "documents": 400,
+      "distinct_texts": 400,
+      "min_chars": 123,
+      "avg_chars": 132.21,
+      "max_chars": 146
+    },
+    "engagements": {
+      "documents": 150,
+      "distinct_texts": 141,
+      "min_chars": 123,
+      "avg_chars": 138.41,
+      "max_chars": 161
+    },
+    "risks": {
+      "documents": 373,
+      "distinct_texts": 10,
+      "min_chars": 71,
+      "avg_chars": 77.82,
+      "max_chars": 83
+    }
+  },
+  "semantic_documents_total": 923,
+  "summary_industries": {
+    "Travel & Hospitality": 15,
+    "Banking": 13,
+    "Automotive": 5,
+    "Energy & Utilities": 14,
+    "Telecom": 17,
+    "Manufacturing": 8,
+    "Insurance": 4,
+    "Retail": 17,
+    "Public Sector": 15,
+    "Pharmaceuticals": 9,
+    "Healthcare": 16,
+    "Media & Entertainment": 5,
+    "Logistics": 3,
+    "Technology": 6,
+    "Consumer Goods": 3
+  },
+  "summary_cities": {
+    "Dublin": 16,
+    "Chicago": 23,
+    "Austin": 8,
+    "London": 24,
+    "Manchester": 8,
+    "Sydney": 10,
+    "New York": 4,
+    "Toronto": 17,
+    "Sao Paulo": 6,
+    "Berlin": 3,
+    "Singapore": 13,
+    "Bengaluru": 10,
+    "Munich": 1,
+    "Amsterdam": 7
+  },
+  "summary_parse_failures": [],
+  "summary_party_mismatches": [],
+  "title_party_mismatches": [],
+  "leaf_aggregate_factor": 3.0,
+  "additional_checks": {
+    "booking_allocation_person_mismatch": [
+      {
+        "n": 2095
+      }
+    ],
+    "booking_allocation_project_mismatch": [
+      {
+        "n": 0
+      }
+    ],
+    "booking_allocation_example": [
+      {
+        "booking_id": 1,
+        "booked_person": 348,
+        "booked_project": 1,
+        "allocation_id": 4,
+        "allocation_person": 312,
+        "allocation_project": 1
+      },
+      {
+        "booking_id": 2,
+        "booked_person": 97,
+        "booked_project": 1,
+        "allocation_id": 3,
+        "allocation_person": 120,
+        "allocation_project": 1
+      },
+      {
+        "booking_id": 3,
+        "booked_person": 97,
+        "booked_project": 1,
+        "allocation_id": 2,
+        "allocation_person": 351,
+        "allocation_project": 1
+      }
+    ],
+    "booking_reqs": [
+      {
+        "n": 2620,
+        "requirements": 459
+      }
+    ],
+    "people_bio_default_role_mismatch": [],
+    "category_assignments_per_person": [
+      {
+        "roles": 1,
+        "people": 249
+      },
+      {
+        "roles": 2,
+        "people": 151
+      }
+    ],
+    "booking_overlap_gq01": [
+      {
+        "booking_id": 435,
+        "display_name": "Kevin Robinson",
+        "kind": "hard",
+        "code": "CMP",
+        "start": "2026-05-03 11:17:51",
+        "end": "2026-10-18 06:51:23",
+        "hours": 6.0
+      },
+      {
+        "booking_id": 442,
+        "display_name": "Kevin Robinson",
+        "kind": "hard",
+        "code": "CMP",
+        "start": "2026-05-15 06:31:14",
+        "end": "2026-10-28 04:30:09",
+        "hours": 4.0
+      },
+      {
+        "booking_id": 1284,
+        "display_name": "David Allen",
+        "kind": "hard",
+        "code": "HRD",
+        "start": "2026-04-02 13:19:04",
+        "end": "2026-08-12 19:48:51",
+        "hours": 6.0
+      },
+      {
+        "booking_id": 1287,
+        "display_name": "David Allen",
+        "kind": "hard",
+        "code": "HRD",
+        "start": "2026-01-19 08:01:20",
+        "end": "2026-05-21 07:47:10",
+        "hours": 8.0
+      },
+      {
+        "booking_id": 1290,
+        "display_name": "David Allen",
+        "kind": "hard",
+        "code": "HRD",
+        "start": "2026-01-22 11:40:14",
+        "end": "2026-08-29 07:09:54",
+        "hours": 12.0
+      },
+      {
+        "booking_id": 1573,
+        "display_name": "Anthony Thompson",
+        "kind": "hard",
+        "code": "CMP",
+        "start": "2026-04-30 02:38:33",
+        "end": "2027-02-07 10:00:31",
+        "hours": 10.0
+      },
+      {
+        "booking_id": 1625,
+        "display_name": "Kevin Robinson",
+        "kind": "hard",
+        "code": "HRD",
+        "start": "2025-09-06 15:55:57",
+        "end": "2026-03-03 12:22:53",
+        "hours": 8.0
+      }
+    ],
+    "billing_center_example": [
+      {
+        "cost_center_code": "CC-120",
+        "projects": 8,
+        "work_items": 568
+      },
+      {
+        "cost_center_code": "CC-117",
+        "projects": 8,
+        "work_items": 506
+      },
+      {
+        "cost_center_code": "CC-139",
+        "projects": 7,
+        "work_items": 407
+      }
+    ],
+    "booking_write_required_cols": [
+      {
+        "cid": 0,
+        "name": "booking_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 1
+      },
+      {
+        "cid": 1,
+        "name": "header_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 2,
+        "name": "person_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 3,
+        "name": "engagement_id",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 4,
+        "name": "allocation_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 5,
+        "name": "status_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 6,
+        "name": "kind",
+        "type": "TEXT",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 7,
+        "name": "category_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 8,
+        "name": "requirement_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 9,
+        "name": "start_ts",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 10,
+        "name": "end_ts",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 11,
+        "name": "minutes",
+        "type": "INTEGER",
+        "notnull": 0,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 12,
+        "name": "created_ts",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      },
+      {
+        "cid": 13,
+        "name": "updated_ts",
+        "type": "INTEGER",
+        "notnull": 1,
+        "dflt_value": null,
+        "pk": 0
+      }
+    ],
+    "money_negative": [
+      {
+        "negative_costs": 0
+      }
+    ],
+    "people_multiple_named": [
+      {
+        "person_id": 78,
+        "display_name": "Amanda Mitchell",
+        "location_region": "EMEA",
+        "bio": "Amanda Mitchell is a EMEA-based Software Developer with 6 years of experience delivering enterprise software and consulting engagements."
+      },
+      {
+        "person_id": 238,
+        "display_name": "Amanda Mitchell",
+        "location_region": "LATAM",
+        "bio": "Amanda Mitchell is a LATAM-based Solutions Architect with 13 years of experience delivering enterprise software and consulting engagements."
+      }
+    ],
+    "business_unit_industry_disagreement": [
+      {
+        "code": "ENG-2025-0015",
+        "industry": "Telecom",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2026-0019",
+        "industry": "Energy & Utilities",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2026-0022",
+        "industry": "Manufacturing",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2024-0023",
+        "industry": "Manufacturing",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2026-0024",
+        "industry": "Pharmaceuticals",
+        "business_unit": "RCG"
+      },
+      {
+        "code": "ENG-2024-0025",
+        "industry": "Healthcare",
+        "business_unit": "RCG"
+      },
+      {
+        "code": "ENG-2026-0027",
+        "industry": "Automotive",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2026-0028",
+        "industry": "Healthcare",
+        "business_unit": "ENR"
+      },
+      {
+        "code": "ENG-2025-0030",
+        "industry": "Pharmaceuticals",
+        "business_unit": "TMT"
+      },
+      {
+        "code": "ENG-2024-0031",
+        "industry": "Healthcare",
+        "business_unit": "FS"
+      },
+      {
+        "code": "ENG-2024-0036",
+        "industry": "Healthcare",
+        "business_unit": "RCG"
+      },
+      {
+        "code": "ENG-2025-0038",
+        "industry": "Public Sector",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2026-0048",
+        "industry": "Public Sector",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2026-0054",
+        "industry": "Energy & Utilities",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2024-0055",
+        "industry": "Healthcare",
+        "business_unit": "ENR"
+      },
+      {
+        "code": "ENG-2025-0057",
+        "industry": "Travel & Hospitality",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2025-0058",
+        "industry": "Travel & Hospitality",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2025-0059",
+        "industry": "Pharmaceuticals",
+        "business_unit": "ENR"
+      },
+      {
+        "code": "ENG-2024-0062",
+        "industry": "Automotive",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2024-0063",
+        "industry": "Technology",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2024-0066",
+        "industry": "Manufacturing",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2024-0067",
+        "industry": "Healthcare",
+        "business_unit": "RCG"
+      },
+      {
+        "code": "ENG-2025-0068",
+        "industry": "Healthcare",
+        "business_unit": "ENR"
+      },
+      {
+        "code": "ENG-2024-0080",
+        "industry": "Logistics",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2026-0082",
+        "industry": "Healthcare",
+        "business_unit": "RCG"
+      },
+      {
+        "code": "ENG-2024-0086",
+        "industry": "Banking",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2024-0088",
+        "industry": "Energy & Utilities",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2026-0089",
+        "industry": "Healthcare",
+        "business_unit": "FS"
+      },
+      {
+        "code": "ENG-2025-0095",
+        "industry": "Healthcare",
+        "business_unit": "PS"
+      },
+      {
+        "code": "ENG-2024-0100",
+        "industry": "Pharmaceuticals",
+        "business_unit": "PS"
+      },
+      {
+        "code": "ENG-2025-0102",
+        "industry": "Pharmaceuticals",
+        "business_unit": "FS"
+      },
+      {
+        "code": "ENG-2025-0106",
+        "industry": "Banking",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2024-0107",
+        "industry": "Pharmaceuticals",
+        "business_unit": "TMT"
+      },
+      {
+        "code": "ENG-2024-0108",
+        "industry": "Pharmaceuticals",
+        "business_unit": "ENR"
+      },
+      {
+        "code": "ENG-2024-0113",
+        "industry": "Travel & Hospitality",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2025-0115",
+        "industry": "Telecom",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2024-0117",
+        "industry": "Banking",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2025-0130",
+        "industry": "Public Sector",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2025-0133",
+        "industry": "Healthcare",
+        "business_unit": "PS"
+      },
+      {
+        "code": "ENG-2026-0141",
+        "industry": "Energy & Utilities",
+        "business_unit": "HLS"
+      },
+      {
+        "code": "ENG-2026-0142",
+        "industry": "Healthcare",
+        "business_unit": "PS"
+      },
+      {
+        "code": "ENG-2025-0144",
+        "industry": "Healthcare",
+        "business_unit": "ENR"
+      },
+      {
+        "code": "ENG-2025-0150",
+        "industry": "Healthcare",
+        "business_unit": "ENR"
+      }
+    ],
+    "gold06_by_tree_level": [
+      {
+        "node_type": "leaf",
+        "n": 21
+      }
+    ],
+    "distinct_cost_centers": [
+      {
+        "n": 39
+      }
+    ],
+    "date_entry_after_ref": [
+      {
+        "n": 13247
+      }
+    ],
+    "risk_duplicates_by_category": [
+      {
+        "description": "Budget overrun identified on this engagement; mitigation plan in progress.",
+        "n": 36,
+        "projects": 33
+      },
+      {
+        "description": "Data quality issues identified on this engagement; mitigation plan in progress.",
+        "n": 26,
+        "projects": 25
+      },
+      {
+        "description": "Environment instability identified on this engagement; mitigation plan in progress.",
+        "n": 40,
+        "projects": 34
+      },
+      {
+        "description": "Integration delay identified on this engagement; mitigation plan in progress.",
+        "n": 39,
+        "projects": 36
+      },
+      {
+        "description": "Key-person dependency identified on this engagement; mitigation plan in progress.",
+        "n": 36,
+        "projects": 34
+      },
+      {
+        "description": "Regulatory compliance identified on this engagement; mitigation plan in progress.",
+        "n": 41,
+        "projects": 36
+      },
+      {
+        "description": "Scope creep identified on this engagement; mitigation plan in progress.",
+        "n": 29,
+        "projects": 27
+      },
+      {
+        "description": "Staffing gap identified on this engagement; mitigation plan in progress.",
+        "n": 37,
+        "projects": 31
+      },
+      {
+        "description": "Unclear requirements identified on this engagement; mitigation plan in progress.",
+        "n": 57,
+        "projects": 46
+      },
+      {
+        "description": "Vendor dependency identified on this engagement; mitigation plan in progress.",
+        "n": 32,
+        "projects": 30
+      }
+    ],
+    "active_hls_vs_industry": [
+      {
+        "active_hls": 11,
+        "actual_healthcare_industry": 1
+      }
+    ]
+  }
+}
