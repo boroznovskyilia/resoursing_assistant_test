@@ -1,5 +1,6 @@
 """Idempotent local setup; does not make paid model calls or overwrite credentials."""
 
+import os
 from .config import ROOT, Settings
 from .data import initialize
 from .llm import encoding
@@ -7,8 +8,13 @@ from .llm import encoding
 
 def main():
     environment = ROOT / ".env"
-    if not environment.exists():
-        environment.write_text((ROOT / ".env.example").read_text())
+    try:
+        descriptor = os.open(environment, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    except FileExistsError:
+        pass
+    else:
+        with os.fdopen(descriptor, "w") as stream:
+            stream.write((ROOT / ".env.example").read_text())
     settings = Settings.from_env()
     encoding()
     source = initialize(settings)

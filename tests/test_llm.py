@@ -137,3 +137,26 @@ def test_azure_millisecond_retry_header_is_honored():
         == "ok"
     )
     assert delays == [1.5] and len(calls) == 2
+
+
+def test_ambient_hosted_tracing_is_disabled_in_fresh_process():
+    import os, subprocess, sys
+
+    env = {
+        **os.environ,
+        "LANGCHAIN_TRACING_V2": "true",
+        "LANGSMITH_TRACING": "true",
+        "LITELLM_LOCAL_MODEL_COST_MAP": "False",
+    }
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import resourcing_assistant,os; print(os.environ['LANGCHAIN_TRACING_V2'],os.environ['LANGSMITH_TRACING'],os.environ['LITELLM_LOCAL_MODEL_COST_MAP'])",
+        ],
+        env=env,
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+    assert result.stdout.strip() == "false false True"

@@ -9,8 +9,6 @@ import json
 import os
 import time
 
-os.environ.setdefault("LITELLM_LOCAL_MODEL_COST_MAP", "True")
-os.environ.setdefault("LANGCHAIN_TRACING_V2", "false")
 import dspy
 import tiktoken
 from pydantic import ValidationError
