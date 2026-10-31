@@ -169,3 +169,29 @@ def test_manual_review_is_bound_to_run_and_does_not_override_failed_facts():
     report["results"][0]["contract_checks"]["source_invariants"] = False
     apply_review(report, right)
     assert report["results"][0]["status"] == "failed"
+
+
+def test_blocked_count_alias_follows_visible_result_grain():
+    delivered = answer([{"blocked_critical_items_count": 21}])
+    leaders = {
+        "type": "table",
+        "rows": [
+            {
+                "engagement_id": 31,
+                "engagement_code": "ENG-2024-0031",
+                "blocked_critical_items_count": 2,
+            }
+        ],
+    }
+    delivered["blocks"].insert(1, leaders)
+    assert score(case("gq-06"), delivered)["status"] == "passed"
+    delivered["blocks"][0]["rows"][0]["blocked_critical_items_count"] = 22
+    assert score(case("gq-06"), delivered)["status"] == "failed"
+    delivered["blocks"][0]["rows"][0]["blocked_critical_items_count"] = 21
+    delivered["blocks"].insert(
+        1, {"type": "table", "rows": [{"total_blocked_critical_items": 21}]}
+    )
+    assert score(case("gq-06"), delivered)["status"] == "failed"
+    delivered["blocks"].pop(1)
+    leaders["rows"][0]["blocked_critical_items_count"] = 21
+    assert score(case("gq-06"), delivered)["status"] == "failed"

@@ -46,6 +46,25 @@ def rows(answer):
                 normalized, conflicts = {}, set()
                 for key, value in row.items():
                     key = ALIASES.get(key, key)
+                    # The visible result grain distinguishes a grand count from per-entity counts.
+                    if (
+                        key == "blocked_items"
+                        and len(block["rows"]) == 1
+                        and not any(
+                            k.endswith("_id")
+                            or k
+                            in (
+                                "code",
+                                "engagement",
+                                "engagement_code",
+                                "person",
+                                "display_name",
+                                "region",
+                            )
+                            for k in {**identity, **row}
+                        )
+                    ):
+                        key = "total_blocked_critical_items"
                     if key in normalized and normalized[key] != value:
                         conflicts.add(key)
                     normalized[key] = value

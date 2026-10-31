@@ -38,6 +38,12 @@ from resourcing_assistant.evaluation import invariants
             "LIMIT",
         ),
         (
+            "List people who are less than 60% hard-booked",
+            "SELECT person_id,display_name FROM people",
+            "SELECT p.person_id,p.display_name,COALESCE(SUM(b.minutes),0)/60.0 AS hard_booked_hours FROM people p LEFT JOIN bookings b ON b.person_id=p.person_id AND b.kind='hard' GROUP BY p.person_id,p.display_name",
+            "display hard_booked_hours",
+        ),
+        (
             "How many hours were logged?",
             "SELECT SUM(minutes)/60.0 AS total_hours FROM bookings",
             "SELECT SUM(minutes)/60.0 AS total_hours FROM time_entries",

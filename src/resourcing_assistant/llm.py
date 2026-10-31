@@ -218,6 +218,10 @@ class PlanReads(dspy.Signature):
     EXISTS to avoid duplicates. Include source identity with scoped measurements.
     Use at most four queries. A most/top ranking without an explicit size shows the top
     five ordered entries; respect explicit sizes. Keep requested full totals separate.
+    When filtering entities by a derived measure, display that measure and its component
+    units alongside identity (e.g. hard_booked_hours and 0-100 hard_booked_pct). Include
+    zero-booking people with COALESCE; kind=hard includes completed bookings. Do not add
+    unrequested status exclusions. Avoid unused CTEs or several abandoned alternatives.
     Never limit underlying rows before aggregates. ExplainResults cannot perform missing
     joins or arithmetic. Use the simplest query matching each result's grain.
 

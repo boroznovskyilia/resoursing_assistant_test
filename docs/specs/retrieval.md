@@ -58,6 +58,8 @@ need a delivered aggregate; duration and monetary totals use SUM rather than COU
 Requested grand totals must be visible one-row aggregates, not detail lists that ask
 the user to add values. Quantity scope comes from the original request, so a model
 paraphrase cannot introduce a count requirement.
+Percentage-filtered person lists must show the hard-booked hours used in that
+filter, including zero; names alone cannot substantiate the eligibility measure.
 Logged hours must read actual time_entries. These guards detect particular mistakes;
 they do not prove arbitrary generated SQL is semantically correct.
 

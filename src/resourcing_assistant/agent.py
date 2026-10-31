@@ -489,6 +489,10 @@ class Agent:
                 re.I,
             )
         )
+        hard_capacity_list = bool(
+            re.search(r"\bhard[- ]booked\b", state["text"], re.I)
+            and re.search(r"%|\bpercent(?:age)?\b", state["text"], re.I)
+        ) and not (scalar_count or scalar_total)
         schema = self.reader.schema
         if task.intent in ("semantic", "mixed"):
             user_text = "\n".join(
@@ -536,6 +540,8 @@ class Agent:
             and not (scalar_count or scalar_total)
         ):
             planning_question += "\nOutput policy: return ALL matching records, without LIMIT or intermediate/helper queries. Use the supplied code-computed period/capacity values."
+        if hard_capacity_list:
+            planning_question += "\nOutput policy: each eligible person's row MUST include person_id, person/name, hard_booked_hours and hard_booked_pct (0-100). The user must see the derived booking measure used in the filter, including zeros. Do not return only names/IDs. Use full intersecting kind=hard minutes and code-computed period/capacity; no unrequested status exclusions."
         if logged:
             planning_question += "\nLogged hours are ACTUAL time_entries minutes via work_items, never bookings or assignments."
         if task.intent == "factual" and scalar_total:
@@ -637,6 +643,18 @@ class Agent:
                                 query.query_id,
                                 query.purpose,
                             )
+                            if (
+                                hard_capacity_list
+                                and query is plan.answer
+                                and not {
+                                    "hard_booked_hours",
+                                    "hard_hours",
+                                }.intersection(result["columns"])
+                            ):
+                                raise ReadError(
+                                    "invalid_sql",
+                                    "Eligible person rows must display hard_booked_hours used by the percentage filter, including zero. Returning only names/IDs omits the requested measure.",
+                                )
                             if (
                                 query is plan.answer
                                 and logged

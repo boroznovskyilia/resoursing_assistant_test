@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-31T21:06:14.909064+00:00",
+  "updated_at": "2026-10-31T21:11:31.167936+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized."
   },
   "current_task": "T11.4",
-  "next_action": "Start complete genuine22-case run on next runtime checkpoint after explicit SQLite/one-result-grain planner fix. Full210122Z_5a22e6 ended14passed7review1failed gq06 (PGcastthenbatched/shared-CTE primary); allothercasesauto-valid, sourceIDfixgq05passed. Rewrote contradictory ALLmetricsprimary prompt: one SQLite statement perquery, onegrain perresult, grandcount+ranking separate independentqueries, repeatCTEs.59 targeted tests7.79s pass. Freshclone1aa8009 before this prompt-only change passedsetup/check/87backend43.34s/5Chromium4.2s/Ruff. Configuredkeyabsentfrom154Gitblobs+alldocs,.env0600;all4originalfilehashesequalDownloads. Need fullsingle22+actual7AI-assistedsourcereviewsnotindependenthuman, automated-results copy before reviewCLI, exit0allpassed. measure/export scripts in/tmp. Finishresults/history/docs/status/localcommit and mainAPIrestartPID96517exec30349oldcodepreserve.runtime. No publisher/demo video.",
+  "next_action": "Start single complete22actualAzure run on nextcheckpoint. Full210615Z_09f103 ended13passed7review2failed: gq01correctnamesbutmissingvisiblehardhours(realdefect),gq06correct21+leadersbutaggregategroupaliasambiguous(scorerfalse-negative). Fixedprimaryhard%-filteredlistmustdisplayhours withoneexistingrepair, generalderivedmeasurevisibilityprompt; scorercontextualaliasnormalizationusingactualvisibleentitygrain, no changednumbers/tolerances/oracles. Added guardregression andpositive/negative/conflictingcounttests;61targetedpassed7.91s then tightenedguardto primary(independentof IDalias), fullclonewillverify. Freshclone703cb76passedsetup/check/87backend39.78s/5Chromium4.3s/Ruff. Allfailedrunsremainunchanged. Need newfull22run+actualsourceinspection7AI-assistedreviews, copyautomated-resultsbeforeapply, CLIallpassedexit0, measure/exportscriptsin/private/tmp; finishdocs/status/handoff/localcommit/hash/keyscanandmain8000restartsame.runtime(oldPID96517exec30349c8). No demo/publication.",
   "blockers": [],
   "last_checks": [
     {

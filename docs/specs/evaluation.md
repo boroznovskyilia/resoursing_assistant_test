@@ -1,7 +1,8 @@
 # Verification layers, evaluation and scoring specification
 
 Status: owner-agreed scoring baseline with implemented runner and local scorer checks.
-Actual Azure answers remain unavailable. Source oracles were computed read-only; that is not agent performance.
+Actual Azure run/review evidence is linked from [README](../../README.md). Source
+oracles are computed read-only and are never agent prompts.
 Requirements: R-05–R-14/22/23/26–R-30.
 
 ## Four behavioral verification layers
@@ -54,6 +55,9 @@ or hide incomplete answers behind a narrow passing number.
   entity IDs to resolve name collisions without changing published visible expectations.
 - Scalars: use a visible one-row metric table. Do not replace an absent
   delivered total with a hidden oracle calculation and call the answer correct.
+- Aliases are normalized without changing values. A visible unscoped single-row
+  blocked-item count is a grand count; entity-keyed rows remain per-entity counts.
+  Duplicate/conflicting aggregates and missing delivered totals still fail.
 - Provenance: all relevant successful queries/values are exposed; no constant guessed
   answer, failed-query draft or source-incompatible join counts as proper grounding.
 - Semantic: score overlap separately from item-specific evidence and truthfulness.
