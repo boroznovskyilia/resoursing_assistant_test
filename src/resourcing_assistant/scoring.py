@@ -5,6 +5,7 @@ import re
 
 ALIASES = {
     "display_name": "person",
+    "person_name": "person",
     "location_region": "region",
     "code": "engagement",
     "engagement_code": "engagement",
@@ -45,7 +46,11 @@ def rows(answer):
             for row in block["rows"]:
                 normalized, conflicts = {}, set()
                 for key, value in row.items():
-                    key = ALIASES.get(key, key)
+                    key = (
+                        "person"
+                        if key == "name" and "person_id" in {**identity, **row}
+                        else ALIASES.get(key, key)
+                    )
                     # The visible result grain distinguishes a grand count from per-entity counts.
                     if (
                         key == "blocked_items"

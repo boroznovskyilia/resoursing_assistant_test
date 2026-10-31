@@ -195,3 +195,22 @@ def test_blocked_count_alias_follows_visible_result_grain():
     delivered["blocks"].pop(1)
     leaders["rows"][0]["blocked_critical_items_count"] = 21
     assert score(case("gq-06"), delivered)["status"] == "failed"
+
+
+def test_person_name_alias_needs_visible_person_scope_and_cannot_hide_conflicts():
+    data = [
+        {
+            "person_id": i + 1,
+            "name": r["person"],
+            "hard_booked_hours": r["hard_booked_hours"],
+        }
+        for i, r in enumerate(case("gq-01")["expected"]["rows"])
+    ]
+    assert score(case("gq-01"), answer(data))["status"] == "passed"
+    data[0]["person"] = "Wrong person"
+    assert score(case("gq-01"), answer(data))["status"] == "failed"
+    from resourcing_assistant.scoring import rows
+
+    assert rows(answer([{"engagement_id": 1, "name": "Project"}])) == [
+        {"engagement_id": 1, "name": "Project"}
+    ]

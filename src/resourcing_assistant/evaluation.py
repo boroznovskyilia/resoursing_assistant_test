@@ -401,6 +401,33 @@ def apply_review(report, review):
     return report
 
 
+def rescore_saved(report, directory):
+    """Recompute every available answer; retain recorded external write/source observations."""
+    specs = {c["id"]: c for c in cases()}
+    for row in report["results"]:
+        path = directory / f"{row['id']}-answer.json"
+        if not path.exists():
+            continue  # A missing/failed inference cannot become a fabricated answer.
+        spec = specs[row["id"]]
+        checks = row.get("contract_checks", {})
+        behavior = None
+        if spec["type"] == "write" or row["id"] == "own-12":
+            behavior = {
+                k: v
+                for k, v in checks.items()
+                if k not in {"source_invariants", "response_complete", "executed_sql"}
+            }
+        fresh = score(
+            spec,
+            json.loads(path.read_text()),
+            behavior=behavior,
+            source_invariants=checks.get("source_invariants") is True,
+        )
+        row.pop("reviews", None)
+        row.update(fresh)
+    return report
+
+
 def usage_stats(path):
     total = {
         "chat_attempts": 0,
@@ -424,11 +451,35 @@ def usage_stats(path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--review-report", type=Path)
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--review-report", type=Path)
+    modes.add_argument("--rescore-report", type=Path)
     parser.add_argument("--reviews", type=Path)
     parser.add_argument("--case", action="append", dest="selected")
     parser.add_argument("--output", type=Path, default=ROOT / ".runtime/evaluation")
     args = parser.parse_args()
+    if args.rescore_report:
+        if args.reviews:
+            parser.error("--reviews requires --review-report")
+        original = args.rescore_report.read_bytes()
+        report = rescore_saved(json.loads(original), args.rescore_report.parent)
+        report["rescoring"] = {
+            "original_report_sha256": hashlib.sha256(original).hexdigest(),
+            "scorer_sha256": hashlib.sha256(
+                (ROOT / "src/resourcing_assistant/scoring.py").read_bytes()
+            ).hexdigest(),
+            "at": datetime.now(timezone.utc).isoformat(),
+            "method": "All saved answers from this run, unchanged. Recorded source/write observations retained; no inference or write replay. Free-text reviews reset to required.",
+            "answer_sha256": {
+                p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in sorted(args.rescore_report.parent.glob("*-answer.json"))
+            },
+        }
+        output = args.rescore_report.with_name("rescored-" + args.rescore_report.name)
+        output.write_text(json.dumps(report, indent=2))
+        output.with_suffix(".md").write_text(markdown(report))
+        print("Rescored report:", output)
+        return 0 if all(r["status"] == "passed" for r in report["results"]) else 2
     if args.review_report:
         if not args.reviews:
             parser.error("--review-report requires --reviews")

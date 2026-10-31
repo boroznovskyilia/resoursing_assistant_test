@@ -144,6 +144,21 @@ Test genuine process termination/startup with stable file paths, plus injected f
 before/after transactional commit. Recreating a Python object is useful but not the
 same proof as an actual subprocess/API restart.
 
+## Offline whole-run rescoring
+
+`python -m resourcing_assistant.evaluation --rescore-report PATH/results.json` writes
+`rescored-results.json` beside the immutable original report, with scorer/report/answer
+hashes and a timestamp. It evaluates every available saved answer from that run using
+current scoring, without model calls or write replay. Recorded source invariants and
+write observations are retained; failed observations cannot be made passing. Missing
+inference artifacts stay failed/not-run. Free-text approvals are cleared and require
+explicit inspection again. This supports scorer corrections such as equivalent visible
+column aliases; it cannot invent a missing total or combine cases from different runs.
+
+Record inference and scoring checkpoints separately when they differ. Retain the initial
+report and all answer bytes so a corrected score is auditable. This is offline grading
+of recorded effects, not a new database-effect measurement or a new agent execution.
+
 ## Measurements and repeatability
 
 Report question ID/type, score, safety/contract checks, failure reason, elapsed time,

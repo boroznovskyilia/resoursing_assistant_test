@@ -233,3 +233,94 @@ def test_case_failure_is_reported_and_does_not_stop_next_case(
     assert [r["status"] for r in report["results"]] == ["failed", "passed"]
     assert report["results"][0]["reason"] == "provider_unavailable"
     assert (report_path.parent / "own-01/proposal-or-answer.json").exists()
+
+
+def test_offline_rescore_retains_source_write_failures_and_resets_reviews(tmp_path):
+    fact = {
+        "request_status": "completed",
+        "blocks": [
+            {"type": "table", "rows": [{"people_count": 11}]},
+            {"type": "sql", "sql": "SELECT COUNT(*) FROM people"},
+        ],
+    }
+    refusal = {
+        "request_status": "completed",
+        "blocks": [{"type": "text", "text": "No weather data"}],
+    }
+    (tmp_path / "own-01-answer.json").write_text(json.dumps(fact))
+    (tmp_path / "own-10-answer.json").write_text(json.dumps(refusal))
+    (tmp_path / "gq-10-answer.json").write_text(json.dumps(refusal))
+    report = {
+        "results": [
+            {"id": "own-01", "contract_checks": {"source_invariants": False}},
+            {
+                "id": "own-10",
+                "contract_checks": {
+                    "source_invariants": True,
+                    "response_complete": True,
+                    "reject_succeeded": False,
+                },
+            },
+            {
+                "id": "gq-10",
+                "contract_checks": {"source_invariants": True},
+                "reviews": [{"accepted": True}],
+            },
+            {
+                "id": "gq-03",
+                "status": "failed",
+                "reason": "No saved answer",
+                "contract_checks": {},
+            },
+        ]
+    }
+    ev.rescore_saved(report, tmp_path)
+    by_id = {r["id"]: r for r in report["results"]}
+    assert by_id["own-01"]["status"] == by_id["own-10"]["status"] == "failed"
+    assert (
+        by_id["gq-10"]["status"] == "review_required"
+        and "reviews" not in by_id["gq-10"]
+    )
+    assert by_id["gq-03"]["reason"] == "No saved answer"
+    by_id["own-01"]["contract_checks"]["source_invariants"] = True
+    ev.rescore_saved(report, tmp_path)
+    assert by_id["own-01"]["status"] == "passed"
+
+
+def test_rescore_cli_preserves_original_and_never_loads_credentials(
+    tmp_path, monkeypatch
+):
+    saved = {
+        "request_status": "completed",
+        "blocks": [
+            {"type": "table", "rows": [{"people_count": 11}]},
+            {"type": "sql", "sql": "SELECT COUNT(*) FROM people"},
+        ],
+    }
+    (tmp_path / "own-01-answer.json").write_text(json.dumps(saved))
+    original = {
+        "run_id": "offline",
+        "source_sha256": "source",
+        "reference_date": "2026-04-01",
+        "results": [
+            {
+                "id": "own-01",
+                "type": "factual",
+                "contract_checks": {"source_invariants": True},
+            }
+        ],
+    }
+    report = tmp_path / "results.json"
+    report.write_text(json.dumps(original))
+    before = report.read_bytes()
+    monkeypatch.setattr(sys, "argv", ["evaluation", "--rescore-report", str(report)])
+
+    def forbidden():
+        raise AssertionError("Offline scoring must not load provider configuration")
+
+    monkeypatch.setattr(ev.Settings, "from_env", forbidden)
+    assert ev.main() == 0
+    assert report.read_bytes() == before
+    result = json.loads((tmp_path / "rescored-results.json").read_text())
+    assert result["results"][0]["status"] == "passed"
+    assert result["rescoring"]["answer_sha256"].keys() == {"own-01-answer.json"}
