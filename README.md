@@ -81,6 +81,9 @@ with isolated durable files. gq-09 includes separate Confirm/Reject and genuine 
 subcases. Source oracles are scorer inputs only, never agent prompts. Reports and
 answer/review evidence are under `.runtime/evaluation/<run_id>/`. JSON includes score,
 contract_checks, review_status, timings, model settings and available call/token usage.
+Step responses, decision receipts and restored history are retained inside each case
+directory, including HTTP error responses. Read-only cases must leave every source
+row unchanged; write cases check visible dates, exact persisted terms and receipts.
 Exit0 means every case fully passed; exit2 means failed, partial-credit, not-run or
 review-required cases remain. It never fills a missing answer from an oracle.
 
@@ -93,8 +96,9 @@ uv run python -m resourcing_assistant.evaluation --review-report PATH/results.js
 
 Review file shape: `{"run_id":"actual-run-id","reviewer":"reviewer-name","cases":{"gq-07":{"accepted":true,"notes":"source-grounded review findings"}}}`.
 Reviews cannot override failed automated/source-safety checks. [Evaluation contract](docs/specs/evaluation.md).
+This includes own-12: unchanged data alone cannot prove that the deletion refusal is truthful.
 
-Latest preflight run `20261031T184224Z_59f5f4`: all22 cases **not_run** because endpoint/key
+Latest preflight run `20261031T192453Z_9f3790`: all22 cases **not_run** because endpoint/key
 are absent. No accuracy or pass-rate claim is available:
 
 | Case | Type | Score | Status |

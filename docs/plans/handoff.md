@@ -44,9 +44,13 @@ separate from the product's LangGraph conversation state.
   generated SQL and fixed confirmed soft-booking writer, immutable action+receipt.
 - Locked Python3.12/uv and Node26/npm. Model settings/reference date in .env.example;
   assignment/eval April1 2026, audit actual UTC, unset reference UTC-now.
-- Actual Azure endpoint/key are absent as last checked. Inspect configuration presence
-  without printing values after the owner adds access. Remaining live eval/smoke/demo
-  and manual evidence review are external blockers, not failed local implementation.
+- Azure access was supplied and saved in ignored0600 .env. Genuine DSPy chat and1536-dim
+  embedding smoke passed; no access blocker remains. Full evaluation is running in
+  .runtime/evaluation/20261031T192702Z_226c92 (exec89510). Initial failures: Query.parameters
+  optional default led to missing binds; over-clarification, semantic intent/entity errors,
+  guessed numeric IDs from engagement codes, and incorrect categorical status filters.
+  Preserve this baseline before changes; fix general contracts, never load gold answers
+  into runtime or weaken scoring. Current task and exact evidence are in progress.json.
 - Source obligations, accepted choices and88 scenario inventory are in specs/decisions;
   old Russian review drafts in parent workspace are historical, not new architecture.
 
@@ -61,7 +65,8 @@ Local HTTP ports/browser launches and downloads need tool sandbox escalation; au
 has allowed them. No approval-review rejection occurred. Test servers shut down. Production API/UI currently runs on127.0.0.1:8000,
 PID73771 / exec session4246; confirm health before reusing or restarting. Adding Azure
 credentials requires restarting it with the same runtime. Service details are in progress.json.
-No background goal/automation/subagent or paid model call has been started.
+No background goal/automation/subagent exists. Genuine Azure smoke/evaluation calls
+are now authorized and active; credentials must never appear in reports or tracked files.
 
 The latest actual checks and local Git commits are in progress.json/Git. Do not rerun
 past installation steps without cause. No tool exposed here forces Codex compaction;

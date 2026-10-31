@@ -16,6 +16,24 @@ def create_app():
         def call(self, name, **inputs):
             with (runtime / "test-model-calls").open("a") as stream:
                 stream.write(name + "\n")
+            if name == "InterpretRequest" and inputs["message"] in ("book8", "book16"):
+                result = super().call(name, **{**inputs, "message": "book"})
+                hours, start, end = (
+                    (8.0, "2026-04-02", "2026-04-02")
+                    if inputs["message"] == "book8"
+                    else (16.0, "2026-05-04", "2026-05-05")
+                )
+                return result.model_copy(
+                    update={
+                        "slots": result.slots.model_copy(
+                            update={
+                                "hours": hours,
+                                "start_date": start,
+                                "end_date": end,
+                            }
+                        )
+                    }
+                )
             if name == "InterpretRequest" and inputs["message"] == "fail":
                 raise AppError("provider_unavailable", "Injected test-only outage", 503)
             if (

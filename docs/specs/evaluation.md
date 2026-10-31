@@ -133,6 +133,9 @@ boundary, null, duplicate and FX-conflict situations without changing supplied s
 
 Record initial source hash and relevant row counts. For writes compare source tables,
 allowing only the intended confirmed booking row; original supplied file never changes.
+Read-only, ambiguity and Reject cases permit no appended bookings either. A missing
+working file fails verification. Validate visible proposal dates and receipt-linked
+row terms again after process restart, not only the final booking count.
 Test genuine process termination/startup with stable file paths, plus injected failure
 before/after transactional commit. Recreating a Python object is useful but not the
 same proof as an actual subprocess/API restart.
@@ -178,4 +181,8 @@ Implemented checks cover a subset; see the linked tests and verification limits 
 ## Implemented check coverage
 
 See [topic checks](../../tests/test_scoring.py) and [current verification](../development/verification.md).
+The [runner checks](../../tests/test_evaluation.py) execute isolated real API processes
+with an explicit test-only model. They cover all five write-case branches, unexpected
+read-side inserts, corrupted proposal/restart terms, CLI reports, review gates,
+failure continuation and startup cleanup. These are harness tests, not model scores.
 Real Azure quality and any scenario not explicitly mapped there remain unverified.

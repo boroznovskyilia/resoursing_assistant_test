@@ -58,7 +58,7 @@ def score(case, answer, *, behavior=None, source_invariants=True):
     reason = "Delivered values did not meet the case contract"
     if behavior is not None:
         checks.update(behavior)
-        value = float(all(behavior.values()))
+        value = float(bool(behavior) and all(v is True for v in behavior.values()))
     elif case_id == "gq-01":
         delivered = [r for r in data if "person" in r and "hard_booked_hours" in r]
         mapping = {r["person"]: r for r in delivered}
@@ -89,7 +89,9 @@ def score(case, answer, *, behavior=None, source_invariants=True):
         value = float(close(metric(data, "total_usd"), expected["total_usd"], 1))
         checks["engagement_count"] = close(metric(data, "engagement_count"), 11)
     elif case_id == "gq-04":
-        actual = {r["region"]: r.get("people") for r in data if "region" in r}
+        delivered = [r for r in data if "region" in r]
+        actual = {r["region"]: r.get("people") for r in delivered}
+        checks["unique_regions"] = len(actual) == len(delivered)
         target = {r["region"]: r["people"] for r in expected["rows"]}
         value = float(
             all(close(actual.get(k), v) for k, v in target.items())
@@ -143,21 +145,38 @@ def score(case, answer, *, behavior=None, source_invariants=True):
         target = expected.get("rows", [])
         if rule.get("match") == "fields":
             tolerance = rule.get("numeric_tolerance", {})
+            delivered = [r for r in data if target and set(r) & set(target[0])]
             value = float(
                 bool(target)
-                and any(
+                and len(delivered) == 1
+                and all(
                     all(
                         close(r.get(k), v, tolerance.get(k, 0))
                         if isinstance(v, (int, float))
                         else r.get(k) == v
                         for k, v in target[0].items()
                     )
-                    for r in data
+                    for r in delivered
                 )
             )
         else:
             actual = [r[key] for r in data if key in r]
             wanted = {r[key] for r in target}
+            keyed_blocks = [
+                b
+                for b in answer.get("blocks", [])
+                if b["type"] == "table"
+                and (
+                    any(key in r for r in b["rows"])
+                    or any(
+                        ALIASES.get(c["key"], c["key"]) == key
+                        for c in b.get("columns", [])
+                    )
+                )
+            ]
+            checks["keyed_result_present"] = bool(keyed_blocks) and all(
+                key in r for b in keyed_blocks for r in b["rows"]
+            )
             value = float(set(actual) == wanted and len(actual) == len(set(actual)))
         if case["type"] == "semantic":
             review = "review_required"
@@ -174,6 +193,8 @@ def score(case, answer, *, behavior=None, source_invariants=True):
             )
     elif case["type"] == "out_of_scope":
         value = float(any(b["type"] == "text" for b in answer.get("blocks", [])))
+        review = "review_required"
+    if case_id == "own-12":
         review = "review_required"
     hard_failed = any(v is False for v in checks.values())
     if not source_invariants:

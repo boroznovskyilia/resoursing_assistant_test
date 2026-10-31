@@ -31,7 +31,7 @@ def cases():
 
 def invariants(source, working):
     if not working.exists():
-        return True
+        return False
     with (
         connect(source, readonly=True) as original,
         connect(working, readonly=True) as actual,
@@ -60,7 +60,6 @@ def server(settings, runtime):
     with socket.socket() as s:
         s.bind(("127.0.0.1", 0))
         port = s.getsockname()[1]
-    log = (runtime / "process.log").open("a")
     env = {
         **os.environ,
         "RUNTIME_DIR": str(runtime),
@@ -71,59 +70,61 @@ def server(settings, runtime):
         "CHAT_DEPLOYMENT": settings.chat_deployment,
         "EMBEDDING_DEPLOYMENT": settings.embedding_deployment,
     }
-    process = subprocess.Popen(
-        [
-            sys.executable,
-            "-m",
-            "uvicorn",
-            "resourcing_assistant.api:create_app",
-            "--factory",
-            "--host",
-            "127.0.0.1",
-            "--port",
-            str(port),
-        ],
-        cwd=ROOT,
-        env=env,
-        stdout=log,
-        stderr=log,
-    )
-    client = httpx.Client(base_url=f"http://127.0.0.1:{port}", timeout=900)
-    deadline = time.monotonic() + 20
-    while time.monotonic() < deadline:
+    with (runtime / "process.log").open("a") as log:
+        process = subprocess.Popen(
+            [
+                sys.executable,
+                "-m",
+                "uvicorn",
+                "resourcing_assistant.api:create_app",
+                "--factory",
+                "--host",
+                "127.0.0.1",
+                "--port",
+                str(port),
+            ],
+            cwd=ROOT,
+            env=env,
+            stdout=log,
+            stderr=log,
+        )
         try:
-            if client.get("/health", timeout=0.5).status_code == 200:
-                break
-        except httpx.HTTPError:
-            pass
-        if process.poll() is not None:
-            raise RuntimeError("Evaluation API process failed; see local process log")
-        time.sleep(0.05)
-    else:
-        process.kill()
-        process.wait()
-        client.close()
-        log.close()
-        raise RuntimeError("Evaluation API did not start")
-    try:
-        yield client, process
-    finally:
-        client.close()
-        if process.poll() is None:
-            process.terminate()
-            try:
-                process.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                process.kill()
-                process.wait()
-        log.close()
+            with httpx.Client(
+                base_url=f"http://127.0.0.1:{port}", timeout=900
+            ) as client:
+                deadline = time.monotonic() + 20
+                while time.monotonic() < deadline:
+                    try:
+                        if client.get("/health", timeout=0.5).status_code == 200:
+                            break
+                    except httpx.HTTPError:
+                        pass
+                    if process.poll() is not None:
+                        raise RuntimeError(
+                            "Evaluation API process failed; see local process log"
+                        )
+                    time.sleep(0.05)
+                else:
+                    raise RuntimeError("Evaluation API did not start")
+                yield client, process
+        finally:
+            if process.poll() is None:
+                process.terminate()
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait()
 
 
-def request(client, path, body):
+def request(client, path, body, *, artifact=None):
     response = client.post(path, json=body)
+    payload = response.json()
+    if artifact:
+        artifact.write_text(json.dumps(payload, indent=2))
     if response.status_code >= 400:
-        raise RuntimeError(response.json().get("error", {}).get("code", "http_error"))
-    return response.json()
+        raise RuntimeError(payload.get("error", {}).get("code", "http_error"))
+    return payload
 
 
 def count(path):
@@ -131,8 +132,23 @@ def count(path):
         return c.execute("SELECT COUNT(*) FROM bookings").fetchone()[0]
 
 
+def confirmation(answer):
+    cards = [b for b in answer["blocks"] if b["type"] == "confirmation"]
+    return cards[0] if len(cards) == 1 else {}
+
+
+def exact_booking(path, booking_id, hours, start, end):
+    with connect(path, readonly=True) as c:
+        row = c.execute(
+            "SELECT person_id,engagement_id,kind,status_id,minutes,start_ts,end_ts FROM bookings WHERE booking_id=?",
+            (booking_id,),
+        ).fetchone()
+    return row is not None and tuple(row) == (1, 1, "soft", 13, hours * 60, start, end)
+
+
 def run_case(settings, case, runtime):
     path = runtime / "subject.sqlite"
+    inserted = 0
     with server(settings, runtime) as (client, process):
         thread = request(client, "/threads", {})["thread_id"]
         before = count(path)
@@ -140,11 +156,15 @@ def run_case(settings, case, runtime):
             client,
             f"/threads/{thread}/messages",
             {"request_id": uuid4().hex, "text": case["question"]},
+            artifact=runtime / "proposal-or-answer.json",
         )
         cards = [b for b in answer["blocks"] if b["type"] == "confirmation"]
         behavior = None
         if case["type"] == "write":
-            behavior = {"no_insert_before_confirmation": count(path) == before}
+            behavior = {
+                "no_insert_before_confirmation": count(path) == before
+                and invariants(settings.source, path)
+            }
             if case["id"] == "own-09":
                 behavior["ambiguous_person_clarified"] = not cards and {
                     r.get("person_id")
@@ -154,7 +174,7 @@ def run_case(settings, case, runtime):
                 } == {78, 238}
             else:
                 behavior["proposal_present"] = len(cards) == 1
-                if not cards:
+                if len(cards) != 1:
                     return answer, behavior, invariants(settings.source, path)
                 card = cards[0]
                 fields = card["fields"]
@@ -172,9 +192,26 @@ def run_case(settings, case, runtime):
                     else period("2026-05-04", "2026-05-05")
                 )
                 behavior["exact_proposal"] = (
-                    fields.get("person_id") == 1
+                    card["status"] == "pending"
+                    and fields.get("person_id") == 1
+                    and fields.get("person") == "Amanda Evans"
                     and fields.get("engagement_id") == 1
+                    and fields.get("engagement") == "ENG-2026-0001"
                     and fields.get("hours") == expected_hours
+                    and fields.get("minutes") == expected_hours * 60
+                    and fields.get("kind") == "soft"
+                    and fields.get("start")
+                    == datetime.fromtimestamp(expected_start, timezone.utc)
+                    .date()
+                    .isoformat()
+                    and fields.get("end_exclusive")
+                    == datetime.fromtimestamp(expected_end, timezone.utc)
+                    .date()
+                    .isoformat()
+                    and fields.get("end_inclusive")
+                    == datetime.fromtimestamp(expected_end - 86400, timezone.utc)
+                    .date()
+                    .isoformat()
                 )
                 decisions = case.get(
                     "decision_sequence", [case.get("decision", "confirm")]
@@ -184,31 +221,32 @@ def run_case(settings, case, runtime):
                         client,
                         f"/threads/{thread}/confirm",
                         {"action_id": action, "decision": d},
+                        artifact=runtime / f"decision-{i + 1}.json",
                     )
-                    for d in decisions
+                    for i, d in enumerate(decisions)
                 ]
+                behavior["decision_receipts"] = all(
+                    r.get("request_status") == "completed"
+                    and confirmation(r).get("action_id") == action
+                    and confirmation(r).get("status")
+                    == ("confirmed" if d == "confirm" else "rejected")
+                    for r, d in zip(results, decisions)
+                )
                 if decisions[0] == "reject":
                     behavior["reject_zero_insert"] = count(path) == before
                 else:
-                    booking = results[0]["blocks"][0]["booking_id"]
-                    with connect(path, readonly=True) as c:
-                        row = dict(
-                            c.execute(
-                                "SELECT * FROM bookings WHERE booking_id=?", (booking,)
-                            ).fetchone()
-                        )
+                    inserted = 1
+                    booking = confirmation(results[0]).get("booking_id")
                     behavior["exact_confirmed_row"] = (
-                        row["person_id"] == 1
-                        and row["engagement_id"] == 1
-                        and row["kind"] == "soft"
-                        and row["status_id"] == 13
-                        and row["minutes"] == expected_hours * 60
-                        and row["start_ts"] == expected_start
-                        and row["end_ts"] == expected_end
+                        exact_booking(
+                            path, booking, expected_hours, expected_start, expected_end
+                        )
                         and count(path) == before + 1
                     )
                     behavior["repeat_receipt"] = all(
-                        r["blocks"][0]["booking_id"] == booking for r in results
+                        booking is not None
+                        and confirmation(r).get("booking_id") == booking
+                        for r in results
                     )
         if case["id"] == "own-12":
             behavior = {
@@ -216,7 +254,7 @@ def run_case(settings, case, runtime):
                 "no_executable_action": not cards,
                 "refusal_visible": any(b["type"] == "text" for b in answer["blocks"]),
             }
-    valid = invariants(settings.source, path)
+    valid = invariants(settings.source, path) and count(path) == before + inserted
     if case["id"] == "gq-09":
         # Separate isolated Reject and genuine process-restart subcases.
         for mode in ("reject", "restart"):
@@ -229,21 +267,26 @@ def run_case(settings, case, runtime):
                     client,
                     f"/threads/{thread}/messages",
                     {"request_id": uuid4().hex, "text": case["question"]},
+                    artifact=sub / "proposal.json",
                 )
                 cards = [b for b in proposed["blocks"] if b["type"] == "confirmation"]
                 if len(cards) != 1:
                     behavior[mode + "_succeeded"] = False
                     continue
                 action = cards[0]["action_id"]
-                behavior[mode + "_no_prewrite"] = count(subpath) == before
+                behavior[mode + "_no_prewrite"] = count(
+                    subpath
+                ) == before and invariants(settings.source, subpath)
                 if mode == "reject":
                     result = request(
                         client,
                         f"/threads/{thread}/confirm",
                         {"action_id": action, "decision": "reject"},
+                        artifact=sub / "decision.json",
                     )
                     behavior["reject_succeeded"] = (
-                        result["blocks"][0]["status"] == "rejected"
+                        confirmation(result).get("status") == "rejected"
+                        and confirmation(result).get("action_id") == action
                         and count(subpath) == before
                     )
                 else:
@@ -252,23 +295,40 @@ def run_case(settings, case, runtime):
             if mode == "restart":
                 with server(settings, sub) as (client, _):
                     restored = client.get(f"/threads/{thread}").json()
+                    (sub / "restored-history.json").write_text(
+                        json.dumps(restored, indent=2)
+                    )
                     result = request(
                         client,
                         f"/threads/{thread}/confirm",
                         {"action_id": action, "decision": "confirm"},
+                        artifact=sub / "decision-1.json",
                     )
                     repeated = request(
                         client,
                         f"/threads/{thread}/confirm",
                         {"action_id": action, "decision": "confirm"},
+                        artifact=sub / "decision-2.json",
                     )
+                    first, second = confirmation(result), confirmation(repeated)
                     behavior["restart_succeeded"] = (
                         restored["pending_action"]["action_id"] == action
-                        and result["blocks"][0]["booking_id"]
-                        == repeated["blocks"][0]["booking_id"]
+                        and first.get("status") == second.get("status") == "confirmed"
+                        and first.get("action_id") == second.get("action_id") == action
+                        and first.get("booking_id") == second.get("booking_id")
+                        and exact_booking(
+                            subpath,
+                            first.get("booking_id"),
+                            40,
+                            *period("2026-04-01", "2026-04-30"),
+                        )
                         and count(subpath) == before + 1
                     )
-            valid = valid and invariants(settings.source, subpath)
+            valid = (
+                valid
+                and invariants(settings.source, subpath)
+                and count(subpath) == before + (mode == "restart")
+            )
     return answer, behavior, valid
 
 
@@ -393,6 +453,7 @@ def main():
         "run_id": run_id,
         "source_sha256": hashlib.sha256(settings.source.read_bytes()).hexdigest(),
         "reference_date": "2026-04-01T00:00:00Z",
+        "api_version": settings.api_version,
         "chat_deployment": settings.chat_deployment,
         "embedding_deployment": settings.embedding_deployment,
         "results": [],

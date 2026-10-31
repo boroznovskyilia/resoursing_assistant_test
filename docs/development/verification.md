@@ -41,6 +41,11 @@ path is `/private/tmp/resourcing-browsers` via PLAYWRIGHT_BROWSERS_PATH.
   not_run because Azure endpoint/key are absent. No agent accuracy/recall score exists.
 - Original source/reference SHA-256 and8 additional read-only oracles matched during
   specification consolidation. Runtime source copy is fingerprint/version checked.
+- Subsequent evaluation-harness hardening added12 runner tests and2 scorer regressions.
+  The complete backend suite passed64 tests; this includes real API subprocesses with
+  an explicit test-only model, negative fault injection and the report/review CLI.
+  Production preflight `20261031T192453Z_9f3790` still reports all22 cases not_run and
+  exits2 without Azure configuration. Source and gold SHA-256 remain unchanged.
 
 These counts are time-stamped evidence, not claims about unrun checks after future edits.
 Final checks/status are recorded in progress.json. No provider quota exhaustion was observed.
@@ -59,6 +64,7 @@ Final checks/status are recorded in progress.json. No provider quota exhaustion 
 | [Semantics](../../tests/test_semantic.py) | S-033/034/036/079/080: memberships, reuse, fallback full scan, uncertainty, fabricated quote rejection, genuine-success recovery | Similarity recall/ranking with actual embeddings unverified |
 | [Faults](../../tests/test_faults.py) | S-017/018/024/028/044/073/078/079/088: shared repair, source invariants, compaction, logs, lost commit ack/checkpoint lag | Not every possible OS/storage failure injected |
 | [Scoring](../../tests/test_scoring.py) | S-068–S-070/072: tolerances, order, partial credit, absent total, review-required and run-bound manual review | Real22-case answers/manual checks unavailable |
+| [Evaluation runner](../../tests/test_evaluation.py) | S-070–S-074: five write-case branches through actual API subprocesses, restart receipts/exact terms, read-only source changes, startup cleanup, reports/review exit codes and failure continuation | Explicit test-only model; no Azure accuracy claim |
 | [Browser](../../frontend/e2e/chat.spec.ts) | S-059–S-064: rendering/history, pending/decision flow, network retry, mobile/markup | One Chromium engine; not universal accessibility certification |
 | [Continuity tooling](../../scripts/test_check_progress.py) | Fresh-process status restore, invalid state rejection, inventory/gate/evidence checks | Does not trigger Codex compact or prove app behavior |
 
@@ -73,6 +79,10 @@ API subprocesses with isolated source/app files; gq-09 has separate Confirm/Reje
 restart subcases. It checks delivered blocks and database invariants. Reports include
 settings, hashes, timing, attempts/tokens where available and review status. Score0.5
 is partial_credit, not a full pass. Exit2 also covers not_run/review-required results.
+Each case retains step responses, decisions and restart history, including failed HTTP
+responses. Read-only/ambiguity/Reject cases allow no source inserts; confirmed and
+restarted bookings must match exact terms. Scorers reject contradictory aggregate
+rows and missing keyed results that would otherwise look like valid empty sets.
 
 Free-text review can be applied only to a matching run_id via --review-report/--reviews;
 it cannot override a failed automated/source-safety check. No paid model probe occurs

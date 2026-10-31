@@ -76,6 +76,30 @@ def test_weather_and_deletion_need_review_or_observable_behavior():
     assert (
         score(case("own-12"), answer([]), behavior={"no_changes": False})["score"] == 0
     )
+    assert (
+        score(case("own-12"), answer([]), behavior={"no_changes": True})["status"]
+        == "review_required"
+    )
+    assert score(case("gq-09"), answer([]), behavior={})["status"] == "failed"
+
+
+def test_duplicate_or_conflicting_aggregate_cannot_pass():
+    regions = case("gq-04")["expected"]["rows"]
+    assert score(case("gq-04"), answer(regions))["status"] == "passed"
+    assert score(case("gq-04"), answer(regions + regions[:1]))["status"] == "failed"
+    spec = case("own-01")
+    assert score(spec, answer([{"people": 11}]))["status"] == "passed"
+    assert score(spec, answer([{"people": 1}, {"people": 11}]))["status"] == "failed"
+
+
+def test_empty_set_needs_an_actual_keyed_result():
+    spec = case("own-02")
+    missing = answer([])
+    assert score(spec, missing)["status"] == "failed"
+    missing["blocks"][0]["columns"] = [{"key": "person_id", "label": "Person ID"}]
+    assert score(spec, missing)["status"] == "passed"
+    missing["blocks"][0]["rows"] = [{"unrelated_field": 1}]
+    assert score(spec, missing)["status"] == "failed"
 
 
 def test_manual_review_is_bound_to_run_and_does_not_override_failed_facts():

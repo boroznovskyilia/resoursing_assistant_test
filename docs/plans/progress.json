@@ -1,19 +1,13 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-31T19:10:45+00:00",
+  "updated_at": "2026-10-31T19:27:03.526570+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized."
   },
-  "current_task": null,
-  "next_action": "Await local Azure endpoint/key, restart production API to load them, then complete T02.4 smoke and T11.1/T11.4 real22-case evaluation+manual review, T12.4 measurements and T13.4 real-model demo. Local implementation/setup/verification completed; publication/submission remains separately scoped.",
-  "blockers": [
-    {
-      "id": "azure_access",
-      "scope": "Real Azure smoke tests and end-to-end model evaluation only",
-      "detail": "Owner will supply endpoint/key locally later. Do not ask for secrets in chat or read/print credentials. Independent local work can continue once development is authorized."
-    }
-  ],
+  "current_task": "T11.1",
+  "next_action": "Full genuine22-case evaluation running. Inspect report and actual source-grounded answers; fix root causes and rerun affected cases while retaining original reports. Then review semantic/refusal cases and consolidate final results.",
+  "blockers": [],
   "last_checks": [
     {
       "command": "make setup && make check in actual fresh Git clone ab8ba9f",
@@ -110,9 +104,11 @@
     },
     {
       "id": "T02.4",
-      "status": "blocked",
-      "evidence": [],
-      "blocker": "Actual Azure chat/embedding smoke needs local endpoint/key; adapter/retry/config code and offline checks exist."
+      "status": "done",
+      "evidence": [
+        "Genuine Azure DSPy InterpretRequest passed (1 attempt,1617 tokens); genuine text-embedding-3-small passed (1536 dimensions,5 tokens). .runtime/evaluation/provider-smoke/results.json. No credential values in evidence."
+      ],
+      "blocker": null
     },
     {
       "id": "T03.1",
@@ -396,15 +392,18 @@
     },
     {
       "id": "T11.1",
-      "status": "blocked",
+      "status": "in_progress",
       "evidence": [],
-      "blocker": "22-case real-API runner implemented and preflight verified; actual case execution needs Azure endpoint/key."
+      "blocker": null
     },
     {
       "id": "T11.2",
       "status": "done",
       "evidence": [
-        "Full isolated real-API runner/scorer/report/review workflow implemented; tests/test_scoring.py passed; all22 live cases honestly reported not_run due missing Azure."
+        "Full isolated real-API runner/scorer/report/review workflow implemented; tests/test_scoring.py passed; all22 live cases honestly reported not_run due missing Azure.",
+        "Owner requested end-to-end evaluation validation; local endpoint/key presence checked absent. Reopening harness verification independently of real-model blockers.",
+        "Added12 real-process runner tests and2 scorer regressions;64 backend tests passed37.05s before final prewrite-invariant strengthening. Source and gold unchanged; final regression in progress.",
+        "Final regression after all harness changes:64 backend tests passed38.81s."
       ],
       "blocker": null
     },
@@ -418,9 +417,9 @@
     },
     {
       "id": "T11.4",
-      "status": "blocked",
+      "status": "not_started",
       "evidence": [],
-      "blocker": "Genuine Azure answers and subsequent manual semantic/refusal review remain unavailable."
+      "blocker": null
     },
     {
       "id": "T12.1",
@@ -448,9 +447,9 @@
     },
     {
       "id": "T12.4",
-      "status": "blocked",
+      "status": "not_started",
       "evidence": [],
-      "blocker": "Real provider latency/token-cost/semantic recall measurements require Azure access; local functional limits tested."
+      "blocker": null
     },
     {
       "id": "T13.1",
@@ -478,9 +477,9 @@
     },
     {
       "id": "T13.4",
-      "status": "blocked",
+      "status": "not_started",
       "evidence": [],
-      "blocker": "Three model-backed demonstration conversations/recording await genuine Azure access; mechanics covered by real local API/browser/restart tests."
+      "blocker": null
     },
     {
       "id": "T13.5",

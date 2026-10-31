@@ -4,16 +4,17 @@ Updated 2026-10-31. Local implementation, locked environment, source/tokenizer a
 API/UI, repository progress recovery and an isolated22-case evaluation runner exist.
 Actual task evidence is in [progress.json](docs/plans/progress.json).
 
-## External blockers
+## Remaining acceptance work
 
-- Azure resource endpoint/key are not configured. Actual chat/embedding compatibility,
-  real semantic recall, factual interpretation, end-to-end scores and provider latency/
-  token-cost measurements remain unverified. All22 evaluation entries are not_run,
-  never passed. The owner will add access locally later; no secrets are requested in chat.
+- Azure access is configured locally. Genuine DSPy chat and1536-dimensional embedding
+  smoke checks passed. The first complete real-model evaluation is in progress; initial
+  failures expose missing query binds, unnecessary clarification and incorrect semantic
+  routing/source status assumptions. These must be fixed and rerun before acceptance.
+  Actual runs are retained; test-double passes never replace model scores.
 - Manual free-text semantic/refusal review follows the genuine run. Automated overlap
   alone cannot make those cases pass. The runner supports run-bound review records.
 - Final three model-backed demo conversations/recording, including actual API restart
-  before confirmation, remain pending genuine access. Process/UI tests prove mechanics
+  before confirmation, remain pending successful real-model validation. Process/UI tests prove mechanics
   using explicit test doubles; they are not the submission's model-quality demo.
 - No remote repository URL/publication or submission has been performed. Publishing,
   sharing, recipient/time clarification and sending anything need applicable owner scope.
