@@ -174,7 +174,7 @@ class Agent:
                 "InterpretRequest",
                 message=state["text"],
                 context=json.dumps(context),
-                source_schema=self.reader.prompt_schema(),
+                source_schema=self.reader.prompt_schema(question=state["text"]),
             )
             return max(planner, interpreter)
 
@@ -240,7 +240,7 @@ class Agent:
                 "InterpretRequest",
                 message=state["text"],
                 context=json.dumps(state["context"]),
-                source_schema=self.reader.prompt_schema(),
+                source_schema=self.reader.prompt_schema(question=state["text"]),
             )
         if value.intent in ("semantic", "mixed"):
             head = re.split(

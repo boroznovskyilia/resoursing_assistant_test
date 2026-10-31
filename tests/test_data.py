@@ -258,3 +258,11 @@ def test_materialized_cte_reads_do_not_grant_private_objects(data):
         with pytest.raises(ReadError) as error:
             reader.read(sql)
         assert error.value.code == "sql_policy"
+
+
+def test_supplied_project_codes_resolve_before_interpretation(data):
+    _, _, reader = data
+    schema = reader.prompt_schema(question="Who logged hours for eng-2026-0001?")
+    assert '"engagement_id": 1, "code": "ENG-2026-0001"' in schema
+    assert "do not ask the user to supply their IDs" in schema
+    assert "ENG-2099-9999" not in reader.prompt_schema(question="Unknown ENG-2099-9999")

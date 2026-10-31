@@ -43,6 +43,10 @@ Exact code renders values and conversions; DSPy explains provided evidence. Answ
 all requested parts, including totals beyond top-N rows. Independent failed parts can
 yield explicit partial data. Failed explanation must not erase successful rows/SQL.
 
+Supplied engagement codes are looked up with bound exact SQL before interpretation;
+matching source IDs/titles accompany the schema instead of asking the user for IDs.
+This context is included in the prompt-budget estimate. Unknown codes are not guessed.
+
 The interpreter receives the same compact source vocabulary to distinguish structured
 severity/status/critical-path questions from description meaning. Non-ranking factual
 lists must not silently add a top-level LIMIT; unspecified rankings show five with a

@@ -188,7 +188,7 @@ class Reader:
                         )
                     ]
 
-    def prompt_schema(self, schema=None):
+    def prompt_schema(self, schema=None, *, question=""):
         lines = []
         for table in self.schema if schema is None else schema:
             lines.append(
@@ -217,6 +217,21 @@ class Reader:
                 )
             if table.get("notes"):
                 lines.append(table["notes"])
+        codes = sorted(set(re.findall(r"\bENG-\d{4}-\d+\b", question, re.I)))
+        if codes:
+            with connect(self.path, readonly=True) as c:
+                mentions = [
+                    dict(r)
+                    for code in codes
+                    for r in c.execute(
+                        "SELECT engagement_id,code,title FROM engagements WHERE code=? COLLATE NOCASE",
+                        (code,),
+                    )
+                ]
+            lines.append(
+                "Resolved supplied project codes (actual source identities; do not ask the user to supply their IDs): "
+                + json.dumps(mentions)
+            )
         return "\n".join(lines)
 
     def eligibility_columns(self, kind, question):
