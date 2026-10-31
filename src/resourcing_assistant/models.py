@@ -149,7 +149,9 @@ class Binding(StrictModel):
 class Query(StrictModel):
     query_id: str = Field(pattern=r"^[A-Za-z0-9_-]{1,64}$")
     purpose: str
-    sql: str
+    sql: str = Field(
+        description="Exactly one SQLite SELECT/WITH statement; no scripts, PostgreSQL casts or shared CTE scope across queries."
+    )
     parameters: list[Binding] = Field(
         description="Every :placeholder needs one {name, value} item with its actual scalar value. Name omits the colon. Use separate placeholders for IN lists; [] only when SQL has no placeholders."
     )
@@ -168,7 +170,7 @@ class Query(StrictModel):
 
 class ReadPlan(StrictModel):
     answer: Query = Field(
-        description="One independently complete PRIMARY ANSWER, combining every requested filter and measure. Never a lookup/helper/intermediate query."
+        description="Primary requested result at ONE grain, with every relevant filter. Other requested grains (such as a grand total beside a ranking) belong in additional_answers. Never a lookup/helper/intermediate query."
     )
     additional_answers: list[Query] = Field(
         default_factory=list,

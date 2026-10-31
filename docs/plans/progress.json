@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-31T21:01:22.704542+00:00",
+  "updated_at": "2026-10-31T21:06:14.909064+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized."
   },
   "current_task": "T11.4",
-  "next_action": "Start finalfull22 genuine Azure run on next runtime checkpoint. Full205637Z_c79d47 finished14passed7review1failed (gq05 false clarification asking numeric engagement ID despite code). Fixedsourceprelookup: prompt_schema(question=rawtext) adds exact actual ID/code/title for supplied ENG codes; both interpreter and compaction estimator use it, unknowncodesnotguessed.37 data/agent/LLM tests6.01s pass. Prior86 full backend39.81s+5 Chromium4.4s passed on13659d1. All other cases auto-valid in latestfull; never stitch. Need newfullsingle22, actual source inspection all7reviews + runboundAI-assisted notes, reviewCLIexit0, /private/tmp/measure_evaluation.py then /private/tmp/export_evaluation.py RUNPATH COMMIT (requires copiedautomated-results.json beforeapplyingreviews). Export historyallruns. FinaldocsREADMEtable/NOT_DONE/verification/status/handoff and fulltests/checks/hash/keyscan; restartmain8000PID96517exec30349 preserving.runtime. Nopush/noexternalmessages/no demo video. Credentialsprivate.env0600.",
+  "next_action": "Start complete genuine22-case run on next runtime checkpoint after explicit SQLite/one-result-grain planner fix. Full210122Z_5a22e6 ended14passed7review1failed gq06 (PGcastthenbatched/shared-CTE primary); allothercasesauto-valid, sourceIDfixgq05passed. Rewrote contradictory ALLmetricsprimary prompt: one SQLite statement perquery, onegrain perresult, grandcount+ranking separate independentqueries, repeatCTEs.59 targeted tests7.79s pass. Freshclone1aa8009 before this prompt-only change passedsetup/check/87backend43.34s/5Chromium4.2s/Ruff. Configuredkeyabsentfrom154Gitblobs+alldocs,.env0600;all4originalfilehashesequalDownloads. Need fullsingle22+actual7AI-assistedsourcereviewsnotindependenthuman, automated-results copy before reviewCLI, exit0allpassed. measure/export scripts in/tmp. Finishresults/history/docs/status/localcommit and mainAPIrestartPID96517exec30349oldcodepreserve.runtime. No publisher/demo video.",
   "blockers": [],
   "last_checks": [
     {
@@ -103,6 +103,11 @@
       "command": "Complete genuine Azure run205637Z_c79d47 and identity-context regression",
       "result": "failed",
       "scope": "14 passed,7 pending review,1 failed gq05 false technical-ID clarification. Own03/05 aggregates now passed; gq01 percent scale corrected. Exact supplied-code prelookup added;37 targeted tests passed6.01s."
+    },
+    {
+      "command": "Fresh Git clone1aa8009 /private/tmp/resourcing-final-rehearsal.AuHpxg",
+      "result": "passed",
+      "scope": "make setup/check,87 backend43.34s,5 Chromium4.2s,Ruff. No inherited.env/dependencies/runtime; genuine calls checked separately. All4 supplied-file hashes equal Downloads originals."
     }
   ],
   "tasks": [

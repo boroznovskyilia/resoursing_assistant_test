@@ -200,19 +200,26 @@ class InterpretRequest(dspy.Signature):
 
 
 class PlanReads(dspy.Signature):
-    """Generate one COMPLETE primary SQL answer and only independently requested extra answers.
+    """Generate a SQLite SELECT plan with one independently complete query per requested result.
 
-    The answer field must combine ALL filters/metrics in one statement. additional_answers
-    is [] unless a separate complete answer/total was explicitly requested. NEVER emit
-    separate lookup, capacity, date or data-preparation queries. Every statement must
-    directly answer its requested result at the correct grain; there
-    is no downstream joining or feeding one query into another. Join catalogue names or
-    use subqueries/CTEs in the same SQL; never guess an ID. Entity lists MUST use DISTINCT
-    or EXISTS to avoid join duplicates. Each scoped metric includes its entity ID too.
-    Use at most four complete detail/aggregate/ranking queries. For a most/top ranking
-    without an explicit size, show the top five ordered entries, with any requested full
-    total in a separate query. Include all ties where appropriate. Never hide an aggregate
-    behind a detail LIMIT. ExplainResults cannot perform missing joins or calculations.
+    SQLite is the database engine. Each sql field must contain exactly ONE executable
+    SQLite SELECT/WITH statement. Use CAST(value AS INTEGER/TEXT), NEVER PostgreSQL ::
+    casts, scripts, multiple statements or temporary tables. CTEs exist only within one
+    statement: repeat the required CTEs in each query, never reference another query's CTE.
+
+    answer is the primary requested result at ONE grain; additional_answers holds other
+    explicitly requested results. Apply ALL relevant filters in EACH result. In particular,
+    a count/total AND a ranking need TWO queries: one single-row full aggregate and one
+    ordered per-entity ranking. Do not UNION a TOTAL row into entity rows or duplicate the
+    grand total in multiple queries. Do not force measures at different grains into one
+    answer. No downstream joining/calculation: each query answers its own part completely.
+    No lookup, capacity, date or data-preparation queries. Join catalogue names or use
+    subqueries/CTEs within that result; never guess an ID. Entity lists use DISTINCT or
+    EXISTS to avoid duplicates. Include source identity with scoped measurements.
+    Use at most four queries. A most/top ranking without an explicit size shows the top
+    five ordered entries; respect explicit sizes. Keep requested full totals separate.
+    Never limit underlying rows before aggregates. ExplainResults cannot perform missing
+    joins or arithmetic. Use the simplest query matching each result's grain.
 
     Active project means project/ACT only, never the broader open group. FX rates ARE
     stored in rate_cards.fx_rate: group by currency_id with MAX(fx_rate) before joining

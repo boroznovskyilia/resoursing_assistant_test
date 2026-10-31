@@ -26,7 +26,10 @@ keys/relationships, grain, units, domain statuses and calculation rules. Not the
 verbatim dictionary, source rows/BLOBs, auth IDs or application/checkpoint schema.
 
 Output contains one complete primary `answer` and up to three `additional_answers`.
-Each is `{query_id, purpose, sql, parameters}`; helper lookups are not user answers.
+Each is `{query_id, purpose, sql, parameters}` at one result grain; helper lookups
+are not user answers. A requested total/count plus a ranking uses separate complete
+queries. Each SQL field is exactly one SQLite SELECT/WITH statement; CTEs cannot be
+shared between query fields. PostgreSQL casts and concatenated scripts are invalid.
 Independent requested totals can use separate queries instead of a fragile mega-join.
 Engineering default: at most four statements per plan. Oversize/malformed output uses
 the same one planner-repair allowance as a later syntax/schema correction; no silent
