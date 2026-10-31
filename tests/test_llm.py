@@ -98,3 +98,42 @@ def test_real_dspy_adapter_typed_contract_repair_and_budget(monkeypatch):
     with pytest.raises(AppError) as error:
         lm(messages=[{"role": "user", "content": "large " * 12000}])
     assert error.value.code == "context_budget_exceeded" and len(calls) == 2
+
+
+def test_http_date_retry_after_over_ten_seconds_is_not_retried():
+    from datetime import datetime, timezone, timedelta
+    from email.utils import format_datetime
+
+    calls = []
+
+    def operation():
+        calls.append(1)
+        raise ProviderError(
+            429,
+            format_datetime(
+                datetime.now(timezone.utc) + timedelta(seconds=60), usegmt=True
+            ),
+        )
+
+    with pytest.raises(ProviderError):
+        retry_call(operation, stage="chat", deployment="test", sleep=lambda _: None)
+    assert len(calls) == 1
+
+
+def test_azure_millisecond_retry_header_is_honored():
+    calls = []
+    delays = []
+
+    def operation():
+        calls.append(1)
+        if len(calls) == 1:
+            error = ProviderError(429)
+            error.response.headers = {"x-ms-retry-after-ms": "1500"}
+            raise error
+        return "ok"
+
+    assert (
+        retry_call(operation, stage="chat", deployment="test", sleep=delays.append)
+        == "ok"
+    )
+    assert delays == [1.5] and len(calls) == 2

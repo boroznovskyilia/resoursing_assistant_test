@@ -621,16 +621,18 @@ class Agent:
         )
         references = state.get("displayed_references", [])
         if task.intent == "factual":
-            references = []
+            newer = []
             for result in results:
                 for kind, key in [
                     ("person", "person_id"),
                     ("project", "engagement_id"),
                 ]:
-                    if result["rows"] and all(key in r for r in result["rows"]):
-                        references.append(
+                    if key in result["columns"]:
+                        newer.append(
                             {"kind": kind, "ids": [r[key] for r in result["rows"]]}
                         )
+            if newer:
+                references = newer
         return {
             "response": self.response(state, blocks, issues, task.assumptions),
             "displayed_references": references,

@@ -206,3 +206,17 @@ def test_exhaustive_semantic_source_set(service):
     assert matches.completeness["complete"] is True
     assert matches.completeness["eligible"] == 60
     assert matches.completeness["processed"] == 60
+
+
+def test_scalar_followup_keeps_last_entity_order(service):
+    s, _ = service
+    thread = s.store.create_thread()["thread_id"]
+    s.message(thread, "semantic", "semantic")
+    before = s.agent.graph.get_state(s.agent.config(thread)).values[
+        "displayed_references"
+    ]
+    s.message(thread, "count", "count")
+    after = s.agent.graph.get_state(s.agent.config(thread)).values[
+        "displayed_references"
+    ]
+    assert before == after and before[0]["ids"]

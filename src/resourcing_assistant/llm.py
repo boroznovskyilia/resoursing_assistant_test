@@ -1,6 +1,9 @@
 """Typed DSPy stages and one observable retry/budget boundary."""
 
 from functools import lru_cache
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
+import math
 import hashlib
 import json
 import os
@@ -76,9 +79,22 @@ def retry_call(fn, *, stage, deployment, sleep=time.sleep):
                 )
             )
             headers = getattr(getattr(error, "response", None), "headers", {}) or {}
+            header = headers.get("retry-after")
             try:
-                delay = float(headers.get("retry-after", 1))
+                delay = (
+                    float(header)
+                    if header is not None
+                    else float(headers.get("x-ms-retry-after-ms", 1000)) / 1000
+                )
             except (ValueError, TypeError):
+                try:
+                    moment = parsedate_to_datetime(header)
+                    if moment.tzinfo is None:
+                        moment = moment.replace(tzinfo=timezone.utc)
+                    delay = (moment - datetime.now(timezone.utc)).total_seconds()
+                except (ValueError, TypeError, OverflowError):
+                    delay = 1
+            if not math.isfinite(delay):
                 delay = 1
             event(
                 "provider_attempt",
