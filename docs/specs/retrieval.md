@@ -47,7 +47,10 @@ The interpreter receives the same compact source vocabulary to distinguish struc
 severity/status/critical-path questions from description meaning. Non-ranking factual
 lists must not silently add a top-level LIMIT; unspecified rankings show five with a
 visible assumption. Explicit requested sizes take precedence. Exact count requests
-need a delivered aggregate, while duration questions use SUM rather than COUNT.
+need a delivered aggregate; duration and monetary totals use SUM rather than COUNT.
+Requested grand totals must be visible one-row aggregates, not detail lists that ask
+the user to add values. Quantity scope comes from the original request, so a model
+paraphrase cannot introduce a count requirement.
 Logged hours must read actual time_entries. These guards detect particular mistakes;
 they do not prove arbitrary generated SQL is semantically correct.
 

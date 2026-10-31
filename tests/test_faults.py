@@ -26,6 +26,18 @@ from resourcing_assistant.evaluation import invariants
             "duplicated",
         ),
         (
+            "What is the total value of invoices?",
+            "SELECT doc_id,amount_cents/100.0 AS amount FROM billing_documents",
+            "SELECT SUM(amount_cents)/100.0 AS total FROM billing_documents",
+            "total",
+        ),
+        (
+            "How many hard-booked hours does person ID 348 have?",
+            "SELECT minutes FROM bookings WHERE person_id=348 LIMIT 1",
+            "SELECT SUM(minutes)/60.0 AS hard_booked_hours FROM bookings WHERE person_id=348 AND kind='hard'",
+            "LIMIT",
+        ),
+        (
             "How many hours were logged?",
             "SELECT SUM(minutes)/60.0 AS total_hours FROM bookings",
             "SELECT SUM(minutes)/60.0 AS total_hours FROM time_entries",

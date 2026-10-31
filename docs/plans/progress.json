@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-31T20:51:08.809336+00:00",
+  "updated_at": "2026-10-31T20:56:37.670019+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized."
   },
   "current_task": "T11.4",
-  "next_action": "Start one complete22-case actual Azure acceptance run on the latest code. Target204907Z_398bd2: gq03 andown01 passed;gq08 review_required;gq07 failed ranking ID contract. Fixed ranking to select explicit requested_count from each finite pool with unique/subset validation, tested40 local cases. Prior full203003Z_f107e4 counts {'passed': 13, 'failed': 4, 'review_required': 5}. All failed/partial runs retained. Earlier83 full backend39.12s and5 Chromium4.5s passed; rerun after latest ranking edit. Must source-inspect semantic/refusal answers and save explicitly AI-assisted review, no oracle prompts/scoring loosening. Export final results/all-run history, update stale docs/handoff, hash/secret/checks, restart old main8000PID73771 with same.runtime (nowAzure configured privately).",
+  "next_action": "Full genuine run205112Z_fe9cfc finished13 passed,7 review_required,2failed (own03 omitted SUM total;own05 valid initial SUM wrongly rejected by count guard because hard-booked adjective). All10 public cases auto-valid; actually inspected gq07/gq08/gq10 source and saved explicitly AI-assisted reviews.json but did not claim full acceptance. Fix: raw request quantity scope, duration adjectives excluded from COUNT, measured totals require visible one-row SUM; no ALL-details policy on aggregate questions. Tests48 subset7.83s plus26 final3.16s pass. Start new full22 on next checkpoint; preserve every run. README/DESIGN/specs partially refreshed but stale tables/NOT_DONE/verification/handoff still require final actual results. Main8000 restartedPID96517 exec30349 on c8ca3e5; existing.runtime preserved; after latest fixes restartagain. Need finalfull tests/browser/checks+hash/keyscan and English evaluation export/history/metrics/reviews.",
   "blockers": [],
   "last_checks": [
     {
@@ -88,6 +88,16 @@
       "command": "backend/browser and targeted actual Azure regression204907Z_398bd2",
       "result": "failed",
       "scope": "83 backend39.12s and5 Chromium4.5s passed before ranking correction; actual gq03/own01 passed,gq08 review_required,gq07 failed ranking.40 targeted tests3.49s passed after explicit selection-count correction. All artifacts retained."
+    },
+    {
+      "command": ".venv/bin/pytest -q tests; Ruff checks; five Chromium tests",
+      "result": "passed",
+      "scope": "84 backend tests40.64s and Ruff passed on c8ca3e5.5 Chromium scenarios4.5s before last backend ranking change; no frontend changes."
+    },
+    {
+      "command": "Full genuine Azure run205112Z_fe9cfc",
+      "result": "failed",
+      "scope": "13 passed,7 pending review,2 failed; all10 public auto-contracts valid. Own03 omitted total, own05 false COUNT rule rejected correct SUM. Fixed output-scope guard;48 regression tests7.83s and26 final3.16s passed. Never stitch selected results."
     }
   ],
   "tasks": [
@@ -538,10 +548,9 @@
   "runtime_services": [
     {
       "url": "http://127.0.0.1:8000",
-      "pid": 73771,
-      "exec_session_id": 4246,
-      "purpose": "Production local API/UI for review; no fake provider; no model credentials configured",
-      "restart_after_credentials": "Stop this server then run make run in the repository; do not reset .runtime"
+      "pid": 96517,
+      "exec_session_id": 30349,
+      "purpose": "Production local API/UI on c8ca3e5, configured Azure; existing .runtime preserved. Health configured, no paid health probes."
     }
   ]
 }

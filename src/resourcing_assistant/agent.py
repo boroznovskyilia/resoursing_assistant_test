@@ -468,11 +468,26 @@ class Agent:
             re.search(r"\b(logged|time entries|actual hours)\b", state["text"], re.I)
         )
         scalar_count = bool(
-            re.search(r"\bhow many\b|\bcount\b|\bnumber of\b", task.question, re.I)
+            re.search(r"\bhow many\b|\bcount\b|\bnumber of\b", state["text"], re.I)
         ) and not re.search(
-            r"\b(each|per|by)\b|\bbroken down\b|\bhow many\s+(?:hours|minutes|days|weeks|months|dollars)\b",
-            task.question,
+            r"\b(each|per|by)\b|\bbroken down\b|\bhow many\s+(?:[\w-]+\s+){0,3}(?:hours|minutes|days|weeks|months|dollars)\b",
+            state["text"],
             re.I,
+        )
+        scalar_total = bool(
+            re.search(r"\b(total|sum)\b", state["text"], re.I)
+            and re.search(
+                r"\b(cost|value|amount|hours|minutes|effort|revenue|price)\b",
+                state["text"],
+                re.I,
+            )
+        ) and not re.search(r"\b(each|per|by)\b|\bbroken down\b", state["text"], re.I)
+        scalar_total = scalar_total or bool(
+            re.search(
+                r"\bhow many\s+(?:[\w-]+\s+){0,3}(?:hours|minutes|dollars)\b",
+                state["text"],
+                re.I,
+            )
         )
         schema = self.reader.schema
         if task.intent in ("semantic", "mixed"):
@@ -515,10 +530,16 @@ class Agent:
             task.assumptions.append(
                 "Rankings without an explicit size show the top five for context."
             )
-        elif task.intent == "factual" and not explicit_size:
+        elif (
+            task.intent == "factual"
+            and not explicit_size
+            and not (scalar_count or scalar_total)
+        ):
             planning_question += "\nOutput policy: return ALL matching records, without LIMIT or intermediate/helper queries. Use the supplied code-computed period/capacity values."
         if logged:
             planning_question += "\nLogged hours are ACTUAL time_entries minutes via work_items, never bookings or assignments."
+        if task.intent == "factual" and scalar_total:
+            planning_question += "\nOutput policy: deliver each requested TOTAL as a visible one-row SUM aggregate with the complete requested filters. A detail list and an instruction for the user to sum it are NOT a total. Return optional detail separately."
         if task.intent == "factual" and scalar_count:
             planning_question += "\nOutput policy: return a visible one-row COUNT aggregate for the requested entity count. Listing entity rows without the requested count is incomplete. Separate any requested rankings/details from the full count."
         if (
@@ -641,6 +662,20 @@ class Agent:
                         issues.append(
                             {"code": error.code, "message": str(error), "stage": "sql"}
                         )
+                if (
+                    task.intent == "factual"
+                    and scalar_total
+                    and not issues
+                    and not any(
+                        len(r["rows"]) == 1
+                        and re.search(r"\b(?:SUM|TOTAL)\s*\(", r["sql"], re.I)
+                        for r in results
+                    )
+                ):
+                    raise ReadError(
+                        "invalid_sql",
+                        "A full total was requested. Return a visible one-row SUM aggregate; listing detail rows or asking the user to add them is incomplete.",
+                    )
                 if (
                     task.intent == "factual"
                     and scalar_count
