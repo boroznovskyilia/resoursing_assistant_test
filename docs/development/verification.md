@@ -26,7 +26,8 @@ path is `/private/tmp/resourcing-browsers` via PLAYWRIGHT_BROWSERS_PATH.
 
 ## Current evidence
 
-- Focused backend suite currently passes43 tests, excluding2 real-process tests.
+- Complete backend suite passed50 tests in14.47s in the actual clean Git clone,
+  including2 real-process tests.
 - The2 real HTTP process tests passed: kill/reopen before Confirm and kill mid-node,
   GET without inference, explicit Resume with one user history message.
 - TypeScript/Vite build passed. Five Chromium checks against the real API passed:
@@ -34,7 +35,8 @@ path is `/private/tmp/resourcing-browsers` via PLAYWRIGHT_BROWSERS_PATH.
   Reject/mobile/untrusted markup; terminal-error new attempt identity. Desktop/mobile screenshots inspected.
 - A clean filesystem copy without env/dependencies/runtime successfully ran `make setup`
   using cached installation packages; no source path outside checkout was needed.
-  A final Git-clone rehearsal, final rerun and precise evidence are tracked in progress.json.
+  Actual Git clone ab8ba9f also passed make setup/check, Ruff, all50 backend tests and
+  all5 Chromium checks. Exact final evidence is tracked in progress.json.
 - Real evaluation preflight processed22 configured case definitions, writing all as
   not_run because Azure endpoint/key are absent. No agent accuracy/recall score exists.
 - Original source/reference SHA-256 and8 additional read-only oracles matched during
@@ -49,6 +51,7 @@ Final checks/status are recorded in progress.json. No provider quota exhaustion 
 | --- | --- | --- |
 | [Data](../../tests/test_data.py) | S-003/006/012/023–S-029/081: conversions/capacity, COUNT/CTE, permissions, time/row/byte limits, huge scalar, pages, source copy | General model join correctness requires actual eval |
 | [Store](../../tests/test_storage.py) | S-037–S-043/046/047/083/087: no prewrite, exact fields, Reject, repeat/racing Confirm, supersede, request IDs, persisted state | Real interpretation quality separate |
+| [Setup](../../tests/test_setup.py) | Private/exclusive env creation and preservation of credentials/source state | Genuine provider setup awaits credentials |
 | [LM](../../tests/test_llm.py) | S-022/074/077: retry boundaries, no-config, actual DSPy adapter typed repair and input budget | Genuine Azure transport and reported tokens unverified |
 | [Graph](../../tests/test_agent.py) | S-013/015/016/018/034/035/086: source factual/semantic transitions, ambiguity, pending reads, checkpoint reopen, partial explanation | Uses named scripted provider, not real model |
 | [API](../../tests/test_api.py) | S-050–S-056/061/082/083: typed routes/errors, request/action replay, unknown fields, busy/other thread | Browser/restart checked separately |

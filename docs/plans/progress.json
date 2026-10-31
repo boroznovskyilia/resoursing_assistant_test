@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-31T19:04:09+00:00",
+  "updated_at": "2026-10-31T19:10:45+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized."
   },
-  "current_task": "T13.1",
-  "next_action": "Commit final English specification/status/tooling, clone the actual local Git repository into a clean temp directory, run documented setup/check/tests/build there, then record final evidence. Azure tasks remain blocked; do not claim a genuine evaluation/demo passed.",
+  "current_task": null,
+  "next_action": "Await local Azure endpoint/key, restart production API to load them, then complete T02.4 smoke and T11.1/T11.4 real22-case evaluation+manual review, T12.4 measurements and T13.4 real-model demo. Local implementation/setup/verification completed; publication/submission remains separately scoped.",
   "blockers": [
     {
       "id": "azure_access",
@@ -16,34 +16,39 @@
   ],
   "last_checks": [
     {
-      "command": "make check",
+      "command": "make setup && make check in actual fresh Git clone ab8ba9f",
       "result": "passed",
-      "scope": "9 repository-tooling tests, links and durable status inventory"
+      "scope": "Python3.12 locked setup, private/idempotent .env, local source/tokenizer and React build;9 tooling tests and task/link checks"
     },
     {
-      "command": ".venv/bin/pytest -q tests",
+      "command": ".venv/bin/pytest -q tests (fresh Git clone)",
       "result": "passed",
-      "scope": "45 backend checks before Retry-After date/millisecond fix; targeted follow-up checks plus final clone run will supersede this count"
+      "scope": "50 backend tests in14.47s, including actual subprocess kill/restart, provider adapter/budgets, immutable receipts, post-commit failure, semantics/scoring/faults"
     },
     {
-      "command": "npm --prefix frontend run build",
+      "command": "PLAYWRIGHT_BROWSERS_PATH=/private/tmp/resourcing-browsers npm --prefix frontend run test:e2e (fresh Git clone)",
       "result": "passed",
-      "scope": "TypeScript/Vite production build"
+      "scope": "5 actual Chromium scenarios against real API with explicit test-only provider; production contains no fake mode"
     },
     {
-      "command": "PLAYWRIGHT_BROWSERS_PATH=/private/tmp/resourcing-browsers npm --prefix frontend run test:e2e",
+      "command": ".venv/bin/ruff check src tests scripts --select F && .venv/bin/ruff format --check src tests scripts",
       "result": "passed",
-      "scope": "5 real Chromium checks against actual API with explicit test-only provider"
+      "scope": "Static undefined/unused checks and formatting;31 files checked in fresh clone"
     },
     {
-      "command": "make setup in /private/tmp/resourcing-fresh-checkout",
+      "command": "GET / and /health on production API at127.0.0.1:8000",
       "result": "passed",
-      "scope": "Clean filesystem copy without env/dependencies/runtime; actual Git-clone rehearsal pending"
+      "scope": "Built chat served200; health alive, model/embedding not_configured, reference2026-04-01; no paid calls"
+    },
+    {
+      "command": "Reference/source hashes,88 scenario IDs, tracked-file/key-pattern inspection",
+      "result": "passed",
+      "scope": "Original SQLite and supplied reference hashes unchanged; no .env/runtime/dependencies tracked; no actual OpenAI key-prefix pattern in tracked source/docs"
     },
     {
       "command": ".venv/bin/python -m resourcing_assistant.evaluation",
       "result": "not_run",
-      "scope": "Preflight report has all22 cases not_run; no Azure credentials, no model-quality result"
+      "scope": "All22 actual-model cases explicitly not_run; preflight report .runtime/evaluation/20261031T184224Z_59f5f4/results.md; endpoint/key absent"
     }
   ],
   "tasks": [
@@ -449,8 +454,10 @@
     },
     {
       "id": "T13.1",
-      "status": "in_progress",
-      "evidence": [],
+      "status": "done",
+      "evidence": [
+        "Actual local Git clone ab8ba9f at /private/tmp/resourcing-git-rehearsal-20261031: documented make setup/check, Ruff checks, all50 backend tests and5 Chromium tests passed from no inherited env/dependencies/runtime."
+      ],
       "blocker": null
     },
     {
@@ -480,6 +487,15 @@
       "status": "blocked",
       "evidence": [],
       "blocker": "Local submission draft/checklist prepared; actual remote repository/demo links and sending/publication require owner scope and completed real demo."
+    }
+  ],
+  "runtime_services": [
+    {
+      "url": "http://127.0.0.1:8000",
+      "pid": 73771,
+      "exec_session_id": 4246,
+      "purpose": "Production local API/UI for review; no fake provider; no model credentials configured",
+      "restart_after_credentials": "Stop this server then run make run in the repository; do not reset .runtime"
     }
   ]
 }

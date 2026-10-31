@@ -58,7 +58,9 @@ In restricted tools set UV_CACHE_DIR=/private/tmp/resourcing-uv-cache for existi
 cached packages; Make otherwise uses writable .cache/uv. Chromium installed at
 /private/tmp/resourcing-browsers; set PLAYWRIGHT_BROWSERS_PATH for this host.
 Local HTTP ports/browser launches and downloads need tool sandbox escalation; auto-review
-has allowed them. No approval-review rejection occurred. Test servers shut down.
+has allowed them. No approval-review rejection occurred. Test servers shut down. Production API/UI currently runs on127.0.0.1:8000,
+PID73771 / exec session4246; confirm health before reusing or restarting. Adding Azure
+credentials requires restarting it with the same runtime. Service details are in progress.json.
 No background goal/automation/subagent or paid model call has been started.
 
 The latest actual checks and local Git commits are in progress.json/Git. Do not rerun
