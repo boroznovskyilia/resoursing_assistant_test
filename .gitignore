@@ -6,3 +6,12 @@ __pycache__/
 *.py[cod]
 .venv/
 node_modules/
+
+.runtime/
+.cache/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/

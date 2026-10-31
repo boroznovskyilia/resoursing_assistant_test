@@ -1,0 +1,1 @@
+"""Local conversational resourcing assistant."""

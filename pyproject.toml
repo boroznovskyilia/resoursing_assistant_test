@@ -1,0 +1,27 @@
+[project]
+name = "resoursing-assistant-test"
+version = "0.1.0"
+description = "A local, source-grounded conversational resourcing assistant"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "dspy>=3.1,<4", "fastapi>=0.115,<1", "uvicorn>=0.34,<1",
+  "langgraph>=1,<2", "langgraph-checkpoint-sqlite>=3,<4",
+  "pydantic>=2.10,<3", "python-dotenv>=1,<2", "openai>=1.68,<3", "tiktoken>=0.9,<1"
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8,<10",
+    "httpx>=0.28,<1",
+    "ruff>=0.17.3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/resourcing_assistant"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
