@@ -211,5 +211,6 @@ duplicate names, conflicting FX, boundary timestamps and nulls. Creating those t
 fixtures later does not authorize changing the supplied database in the application.
 
 The golden SQL has been checked against the supplied file, but this is not evidence
-of future agent quality. Data checks exist in tests/test_data.py; actual model quality is unverified. Calculations, edge fixtures
+of future agent quality. Data checks exist in tests/test_data.py; known-case model results are in
+[evaluation evidence](../evaluation/README.md). Calculations, edge fixtures
 and write invariants are assigned to [work packages](../plans/implementation.md).

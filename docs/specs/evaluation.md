@@ -204,4 +204,5 @@ The [runner checks](../../tests/test_evaluation.py) execute isolated real API pr
 with an explicit test-only model. They cover all five write-case branches, unexpected
 read-side inserts, corrupted proposal/restart terms, CLI reports, review gates,
 failure continuation and startup cleanup. These are harness tests, not model scores.
-Real Azure quality and any scenario not explicitly mapped there remain unverified.
+Actual Azure known-case results and explicit review are in [evaluation evidence](../evaluation/README.md).
+Unseen quality and any scenario not explicitly mapped remain unverified.

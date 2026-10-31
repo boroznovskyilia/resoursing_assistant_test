@@ -1,46 +1,45 @@
-# Not done and remaining verification
+# Remaining delivery work and limits
 
-Updated 2026-10-31. Local implementation, locked environment, source/tokenizer assets,
-API/UI, repository progress recovery and an isolated22-case evaluation runner exist.
-Actual task evidence is in [progress.json](docs/plans/progress.json).
+The complete genuine Azure 22-case run and explicit AI-assisted source review are
+recorded in [evaluation evidence](docs/evaluation/README.md). All delivered values,
+required booking behaviors and source invariants passed from that one run, after an
+offline scorer correction for a visible name alias. Original answers/reports are preserved;
+no inference or writes were replayed. Earlier failed development runs are retained. This does not establish universal accuracy.
 
-## Remaining acceptance work
+## Remaining delivery work
 
-- Azure access is configured locally. Genuine DSPy chat and1536-dimensional embedding
-  smoke checks passed. The first complete real-model evaluation is in progress; initial
-  failures expose missing query binds, unnecessary clarification and incorrect semantic
-  routing/source status assumptions. These must be fixed and rerun before acceptance.
-  Actual runs are retained; test-double passes never replace model scores.
-- Manual free-text semantic/refusal review follows the genuine run. Automated overlap
-  alone cannot make those cases pass. The runner supports run-bound review records.
-- Final three model-backed demo conversations/recording, including actual API restart
-  before confirmation, remain pending successful real-model validation. Process/UI tests prove mechanics
-  using explicit test doubles; they are not the submission's model-quality demo.
-- No remote repository URL/publication or submission has been performed. Publishing,
-  sharing, recipient/time clarification and sending anything need applicable owner scope.
+- Record the submission's three representative conversations and demo video, including
+  an actual API restart before booking confirmation. Evaluation already exercises the
+  model-backed restart/Confirm/Reject paths, but no submission video has been recorded.
+- No remote repository publication, deployment, sharing or submission has occurred.
+  Those require the owner's applicable scope and real repository/demo links.
+- Free-text review was performed by Codex through AI-assisted inspection of actual
+  source records and all delivered reasons. No independent human review, held-out
+  benchmark, repeated-run reliability estimate or production-load test was performed.
+- Actual Azure billed cost was not measured. Token usage, attempts, latency, public
+  strong-match vector recall and representative storage growth were measured.
 
-## Deliberate limits
+## Deliberate prototype limits
 
-Local single-user/common dataset, one API worker; no auth/tenants/Store/streaming,
+One local user/common dataset and one API worker; no auth/tenants/Store/streaming,
 external vector/monitoring service, optimizer, admin CRUD or extra chat-management UI.
 Source fingerprint is pinned to the supplied mock; arbitrary datasets/schema migration
-are not supported. Working state is preserved or fails clearly, never silently reset.
+are unsupported. Existing working state is preserved or fails clearly, never reset.
 
-No automatic retention or checkpoint pruning. SQLite/local logs can grow. Weekday8h
-capacity lacks leave/holidays/FTE; intersecting full booking minutes are not daily
-availability. Over-capacity is a warning for soft bookings. Rates are fixture constants,
-not a dated FX service. Production needs identity/authorization, concurrency/storage,
-retention/calendar/FX policy, monitoring and broader held-out evaluation.
+Generated SQL still needs semantic verification for joins, output units and omitted
+conditions; permissions are not correctness. Scope guards cover observed failures,
+not arbitrary English. The narrow semantic eligibility compiler handles known exact
+filter forms; unseen compound/numeric filters and paraphrases need additional tests.
+The 22 known development/acceptance questions do not prove those broader cases.
 
-Large exhaustive result sets use deterministic source-ID order when a single global
-suitability ranking would exceed the model budget; this is identified in metadata.
-Recommendation rankings use finite candidate groups, still requiring real recall/ranking
-validation. Input tokens are estimated with the bundled model-matching tokenizer plus
-format overhead; provider-reported usage should be checked against estimates with access.
+No automatic retention/checkpoint pruning. SQLite/local logs and evaluation archives
+can grow. Weekday eight-hour capacity omits leave/holidays/FTE; full intersecting booking
+minutes are not daily availability. Soft over-capacity is a warning. FX constants are
+fixture data, not a dated FX service. Production needs real identity/authorization,
+concurrency/storage, retention/calendar/FX policy and broader evaluation.
 
-## Acceptance honesty
-
-Written88 scenarios are an inventory, not a claim of88 passing tests. Current exact
-checks and unmapped/unverified scope are in [verification](docs/development/verification.md).
-No safety failure may be averaged away. Update this file after actual validation rather
-than retaining obsolete no-application claims or inventing a complete delivery.
+Large exhaustive sets use declared source-ID order if global ranking exceeds budget.
+Recommendations use finite candidate groups. Provider outages/retry/degraded recovery
+were fault-tested; no actual Azure outage/quota exhaustion was induced. Written 88
+scenarios remain an inventory, not 88 independently passing tests. See [verification](docs/development/verification.md)
+and [current task evidence](docs/plans/progress.json).

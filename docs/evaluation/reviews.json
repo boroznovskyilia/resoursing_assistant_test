@@ -1,0 +1,34 @@
+{
+  "run_id": "20261031T211131Z_822c63",
+  "reviewer": "Codex AI-assisted source inspection (not independent human review)",
+  "cases": {
+    "gq-07": {
+      "accepted": true,
+      "notes": "Inspected all ten delivered reasons, match reasons, verbatim excerpts and complete source facts. Bios, current roles and exact skill/proficiency lists match untouched source. Seven public strong matches: Olivia Walker, John Morris, Kimberly Jackson, Emily Allen, Jessica Williams, Matthew Evans, David Brown. Relevant extras: David Robinson has11 years and Data Engineering5/ETL4; Robert Green has18 total years, current Engagement Manager/Delivery Lead roles and Data Engineering3; David Adams has11 years, a Data Engineer role and PostgreSQL4. Reasons infer potential suitability; source does not establish prior migration leadership or tenure in each listed role. In particular Robert Green role/experience wording is read as overall experience plus current roles, not18 proven years in each leadership position. Shortlist metadata honestly states40/400 assessed,22 matched,0 uncertain; no exhaustive claim."
+    },
+    "gq-08": {
+      "accepted": true,
+      "notes": "Read every delivered reason and source excerpt. All five correct active projects:59 Pharmaceuticals+staffing/key-person;67 Healthcare+staffing;108 Pharmaceuticals+staffing;110 Pharmaceuticals+key-person;144 Healthcare+key-person. Summaries, risk descriptions, actual project/ACT status and code identities match source. No provider-unit or client-name industry inference; unrelated risks are not presented as qualifying. Coverage60/60,5 matches,0 uncertain."
+    },
+    "gq-10": {
+      "accepted": true,
+      "notes": "Complete response explicitly states the supplied database has no weather observations/forecasts and cannot provide a weather value. It asserts no temperature, forecast, inferred weather or external fact. Source invariants passed independently."
+    },
+    "own-06": {
+      "accepted": true,
+      "notes": "Read all11 reasons and quoted staffing-gap evidence. Every returned project has an actual staffing-gap risk and project/ACT status; source query independently confirms IDs6,17,21,29,59,67,80,83,108,111,140. Key-person-only dependency is not counted as staffing shortage. No invented severity/history claims. Coverage60/60,11 matches,0 uncertain, complete."
+    },
+    "own-07": {
+      "accepted": true,
+      "notes": "Inspected the empty keyed table and explicit exhaustive coverage60/60,0 matched,0 uncertain. Independent read-only inspection of original active project summaries and key-person risk memberships confirms no Banking project meets both conditions. Empty result is genuine full coverage, not a truncated shortlist or dependency error."
+    },
+    "own-08": {
+      "accepted": true,
+      "notes": "Inspected all four reasons and exact source summary/risk fields. IDs59,67,108,144 are active and outside HLS (ENR/RCG), with explicit Healthcare/Pharmaceuticals industries and actual staffing/key-person risks. HLS project110 is correctly excluded. Provider business unit is kept distinct from client industry. Source query confirms the exact four-project set; coverage49/49,4 matches,0 uncertain."
+    },
+    "own-12": {
+      "accepted": true,
+      "notes": "Read the entire response: it limits support to database questions/soft-booking proposals and refuses the requested source-changing operation. No deletion success, executable action or fabricated external information is claimed. Recorded behavior separately verifies no source changes and no executable action."
+    }
+  }
+}

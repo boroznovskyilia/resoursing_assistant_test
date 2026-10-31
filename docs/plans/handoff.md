@@ -12,7 +12,7 @@ content is English. Exact Git repository name: `resoursing_assistant_test`.
    next action, blockers/checks and actual files before resuming unfinished work.
 3. Read only that task's [plan section](implementation.md) and relevant [contracts](../specs/README.md).
    [README](../../README.md) contains actual commands; [verification](../development/verification.md)
-   distinguishes real local tests from unavailable Azure/model-quality results.
+   distinguishes deterministic tests from actual Azure run and review evidence.
 4. Continue independently eligible work. A newer owner instruction overrides an old
    saved gate; record it accurately. Never reset/delete uncommitted work or replay a
    completed booking because chat context is missing.
@@ -44,15 +44,34 @@ separate from the product's LangGraph conversation state.
   generated SQL and fixed confirmed soft-booking writer, immutable action+receipt.
 - Locked Python3.12/uv and Node26/npm. Model settings/reference date in .env.example;
   assignment/eval April1 2026, audit actual UTC, unset reference UTC-now.
-- Azure access was supplied and saved in ignored0600 .env. Genuine DSPy chat and1536-dim
-  embedding smoke passed; no access blocker remains. Full evaluation is running in
-  .runtime/evaluation/20261031T192702Z_226c92 (exec89510). Initial failures: Query.parameters
-  optional default led to missing binds; over-clarification, semantic intent/entity errors,
-  guessed numeric IDs from engagement codes, and incorrect categorical status filters.
-  Preserve this baseline before changes; fix general contracts, never load gold answers
-  into runtime or weaken scoring. Current task and exact evidence are in progress.json.
+- Azure access is configured in ignored0600 .env; genuine DSPy chat and1536-dimensional
+  embedding smoke passed. No credential blocker remains. Actual evaluation is a sequence
+  of retained failing development runs followed by complete reruns after fixes; inspect
+  progress.json for the current run/task. Never stitch best case results, weaken scores,
+  load expected answers/SQL into runtime or label AI-assisted review as independent human.
+- Query parameters use a required typed Binding list (DSPy closes arbitrary dictionaries);
+  ReadPlan has primary answer plus up to3 complete additional_answers. Source schema and
+  catalogue vocabulary go to interpretation/planning. Semantic eligibility is narrow;
+  simple exact pools are compiled, complex filters retain guarded generated SQL. Projects
+  use PlanProjectChecks, deduplicated source-field assessment and deterministic parent joins.
+- Evaluation-only read plans are in runtime/read-plans/thread/request/attempt-uuid.json;
+  inspect actual failed queries rather than blindly reproducing model calls. Original
+  source/gold hashes must remain unchanged. Ordinary logs omit prompts and credentials.
 - Source obligations, accepted choices and88 scenario inventory are in specs/decisions;
   old Russian review drafts in parent workspace are historical, not new architecture.
+
+## Completed evaluation evidence
+
+The owner-requested QA is complete. Start with [evaluation evidence](../evaluation/README.md),
+not the old failing baseline: one genuine full22-case inference run, unchanged answer
+artifacts, corrected whole-run offline scoring and7 explicit AI-assisted source reviews.
+This is not independent human or held-out validation. The initial report and20 original
+run reports remain available; final report/answer/scorer hashes were verified. All92
+backend and5 browser checks passed from the actual local Git-clone rehearsal.
+
+No evaluation process is active. `progress.json` owns remaining tasks and service IDs;
+demo video and remote publication/submission remain unfinished. Do not rerun paid
+models just to restore missing chat context or replay a confirmed booking.
 
 ## Host and recovery notes
 
@@ -62,11 +81,11 @@ In restricted tools set UV_CACHE_DIR=/private/tmp/resourcing-uv-cache for existi
 cached packages; Make otherwise uses writable .cache/uv. Chromium installed at
 /private/tmp/resourcing-browsers; set PLAYWRIGHT_BROWSERS_PATH for this host.
 Local HTTP ports/browser launches and downloads need tool sandbox escalation; auto-review
-has allowed them. No approval-review rejection occurred. Test servers shut down. Production API/UI currently runs on127.0.0.1:8000,
-PID73771 / exec session4246; confirm health before reusing or restarting. Adding Azure
-credentials requires restarting it with the same runtime. Service details are in progress.json.
-No background goal/automation/subagent exists. Genuine Azure smoke/evaluation calls
-are now authorized and active; credentials must never appear in reports or tracked files.
+has allowed them. No approval-review rejection occurred. Production API/UI may be running at127.0.0.1:8000;
+verify the exact PID/command/health before restarting and preserve its existing.runtime.
+Current process IDs and sessions belong only in progress.json. No background goal,
+automation or subagent exists. Real Azure evaluation calls are authorized; no publication,
+external message or remote sharing has occurred. Credentials must never appear in reports.
 
 The latest actual checks and local Git commits are in progress.json/Git. Do not rerun
 past installation steps without cause. No tool exposed here forces Codex compaction;

@@ -68,7 +68,8 @@ question is required before reviewing this complete package.
 | Tests | pytest and Playwright | Deterministic and real-process scenarios; real Azure eval separately |
 
 Exact package versions are now locked and local setup/build/checks exist.
-See verification.md; genuine Azure transport/quality remain unverified.
+See [verification](../development/verification.md) and [genuine evaluation](../evaluation/README.md)
+for known-case results and explicit AI-assisted review; unseen quality remains unverified.
 
 ## Engineering defaults included in this specification
 

@@ -1,6 +1,7 @@
 # Soft-booking protocol and recovery
 
-Status: owner-agreed protocol; writer, persistence and process tests are implemented; genuine model flow unverified.
+Status: implemented writer/persistence with process tests and genuine model-backed
+booking checks. Evidence: [evaluation](../evaluation/README.md).
 Requirements R-08–R-11/13/14. Physical schema: [storage](storage.md).
 
 ## Invariants
@@ -140,4 +141,5 @@ fault injection and actual subprocess/API restart; model quality is a separate l
 ## Implemented check coverage
 
 See [topic checks](../../tests/test_storage.py) and [current verification](../development/verification.md).
-Real Azure quality and any scenario not explicitly mapped there remain unverified.
+Known-case Azure results and explicit AI-assisted review are recorded in [evaluation evidence](../evaluation/README.md).
+Unseen quality and unmapped scenarios remain unverified.

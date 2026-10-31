@@ -1,20 +1,24 @@
 # Resourcing Assistant — design summary
 
-Implemented locally; real Azure quality is unverified until endpoint/key arrive.
+Implemented locally with genuine Azure chat/embedding checks. Evaluation evidence is
+reported in [README](README.md); unexecuted delivery work remains explicit.
 Detailed contracts: [specifications](docs/specs/README.md). [Limits](NOT_DONE.md).
 
 **Graph and DSPy.** Controlled LangGraph StateGraph: context -> interpretation -> exact
 resolution/clarification -> factual reads or semantic matching -> composition; booking
 preparation persists immutable terms then interrupts. Typed DSPy signatures cover
-InterpretRequest, PlanReads, AssessCandidates, RankCandidates, ExplainResults and
+InterpretRequest, PlanReads, PlanProjectChecks, AssessCandidates, RankCandidates, ExplainResults and
 SummarizeHistory. Fixed decision execution needs no model. No free tool loop/optimizer.
 
-**Reads and semantics.** Model-generated named-parameter SELECT plans use compact
+**Reads and semantics.** Model-generated primary/additional-answer SELECT plans use typed named bindings and compact
 allowed schema/rules; a dedicated RO SQLite connection enforces table/column/function
 permissions, single statements and time/output limits. Tests/eval still must establish
 join/units correctness. Exact data/SQL render in code. Local vectors from Azure index
 whole bio+role+skill-name, project summary and risk documents with model/text hashes and
-full source memberships. Source assessment/ranking validates IDs/quotes; exact skills
+full source memberships. Simple semantic eligibility pools are compiled; complex exact filters retain guarded
+generated reads. Project summary/industry and risk checks are assessed on deduplicated
+source fields, then joined by parent identity with explicit AND/OR. Source assessment
+and count-bounded ranking validate IDs/quotes; exact skills
 come from SQL. All/count visits every eligible entity via bounded pages/batches, tracking
 uncertainty; top-k is never a total. Large full sets can use declared source-ID order.
 
@@ -44,7 +48,9 @@ capacity Mon-Fri×8h, warnings permit soft bookings. Convert full precision then
 final money. Optional booking links NULL without evidence. No invented leadership.
 
 **Evidence and production.** pytest/SQLite/API, actual kill/restart, Playwright and scorer
-checks exist;22 actual-model cases remain not_run, with manual wording review required.
+checks exist. Genuine22-case model results and explicit AI-assisted source review
+are reported separately from test-double checks in README. No independent human
+review or unseen-question accuracy claim is implied.
 Production needs real identity/isolation, persistence/concurrency, calendar/FX/retention
 policy and broader evals. AI assistance inspected data, developed implementation/tests
 and documentation; doubles-backed results are explicitly separated from real quality.

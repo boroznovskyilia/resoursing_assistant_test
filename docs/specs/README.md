@@ -3,7 +3,7 @@
 Status: behavioral acceptance inventory with an implemented local application and
 linked checks. Written scenarios are not automatically executable/passed; consult
 [current coverage and limits](../development/verification.md) and
-[task evidence](../plans/progress.json). Actual Azure evaluation remains unavailable.
+[task evidence](../plans/progress.json). Actual Azure run/review evidence is linked from [README](../../README.md).
 
 ## Primary specifications
 
@@ -27,7 +27,8 @@ this is not a claim of 88 implemented or independently executed tests.
 
 Deterministic pytest checks, real SQLite/API integration, actual process/restart and
 Chromium UI tests are linked in [verification](../development/verification.md).
-The actual-model22-case runner exists but records not_run until Azure is configured.
+The actual-model22-case runner uses isolated production API subprocesses; results
+and explicit review status are linked from [README](../../README.md).
 Each future behavior change updates relevant existing checks and this scenario map;
 do not claim an unrun scenario passed or change expected behavior to hide a failure.
 

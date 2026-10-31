@@ -1,6 +1,7 @@
 # Architecture and end-to-end flows
 
-Status: owner-selected architecture, consolidated on 2026-10-31; implementation present; actual model quality unverified.
+Status: owner-selected architecture, consolidated on 2026-10-31; implementation present; known-case model evidence
+recorded in [evaluation](../evaluation/README.md).
 [Decisions](../decisions/README.md) distinguish accepted policy from engineering defaults.
 
 ## Components and trust boundaries
@@ -124,6 +125,7 @@ clarification and the critical human decision without an unrestricted agent loop
 ## Evidence limits
 
 Locked dependencies, local graph/API/SQLite checks, real process restart and Chromium
-checks exist. Actual Azure compatibility, model quality and real latency/cost remain
-unverified. Written scenarios and [the task plan](../plans/implementation.md) remain
+checks exist. Genuine Azure compatibility and individual model runs are recorded in
+[verification](../development/verification.md); broader held-out quality and actual
+Azure billing cost remain unverified. Written scenarios and [the task plan](../plans/implementation.md) remain
 contracts; [verification](../development/verification.md) records actual evidence.

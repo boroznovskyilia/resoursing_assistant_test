@@ -1,6 +1,7 @@
 # Resource limits, failures and local diagnostics
 
-Status: accepted policies plus labeled engineering defaults; runtime checks exist; full Azure behavior unverified.
+Status: accepted policies plus labeled engineering defaults; runtime checks and genuine
+known-case Azure evaluation exist; outages/load and unseen quality remain unverified.
 Requirements R-04/06/11/13/14/20/24/25. Complements [retrieval](retrieval.md),
 [agent](agent.md) and [API/UI](api-ui.md).
 
@@ -119,4 +120,5 @@ initial settings, not performance guarantees or evidence of a current provider o
 ## Implemented check coverage
 
 See [topic checks](../../tests/test_faults.py) and [current verification](../development/verification.md).
-Real Azure quality and any scenario not explicitly mapped there remain unverified.
+Known-case Azure results and explicit AI-assisted review are recorded in [evaluation evidence](../evaluation/README.md).
+Unseen quality and unmapped scenarios remain unverified.

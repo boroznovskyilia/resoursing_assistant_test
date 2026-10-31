@@ -1,0 +1,42 @@
+{
+  "run_id": "20261031T211131Z_822c63",
+  "method": "Observed production API case timings and request_finished provider usage; no pricing estimate. Recall recomputed read-only from cached genuine query/person vectors and public strong-match identities; no model calls/oracle runtime injection.",
+  "usage": {
+    "chat_attempts": 66,
+    "embedding_attempts": 7,
+    "chat_tokens": 247401,
+    "embedding_tokens": 18073
+  },
+  "elapsed_seconds": {
+    "total": 258.442,
+    "median": 9.271,
+    "p95_nearest_rank": 17.957,
+    "max": 50.996
+  },
+  "public_strong_match_recall": {
+    "gq-07": {
+      "vector_candidates": 40,
+      "gold_strong_matches": 10,
+      "recalled": 9,
+      "recalled_names": [
+        "David Brown",
+        "Emily Allen",
+        "Jessica Williams",
+        "John Morris",
+        "Kimberly Jackson",
+        "Matthew Evans",
+        "Olivia Walker",
+        "Robert Garcia",
+        "Sarah Anderson"
+      ],
+      "delivered_overlap": 7
+    }
+  },
+  "storage_bytes": {
+    "cold_initialized_two_db_baseline": 9617408,
+    "gq07_after_one_cold_semantic_request": 23814144,
+    "growth": 14196736,
+    "scope": "SQLite file sizes after clean close; includes source copy, transcript/checkpoints and derived vectors. Logs/answer artifacts and prior-run archives excluded."
+  },
+  "limits": "One development/acceptance set run, not held-out accuracy, repeated-run reliability, production load, independent human review or Azure billed cost."
+}

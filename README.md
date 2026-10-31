@@ -3,9 +3,8 @@
 Local conversational Resourcing Assistant: persistent LangGraph agent, typed DSPy
 steps, FastAPI and React chat over the supplied professional-services SQLite database.
 
-**Implementation is present and locally tested. Actual Azure model quality is not yet
-verified: the endpoint/key have not been supplied.** No scripted provider exists in
-production; deterministic providers are confined to tests.
+**Implementation is present and locally tested. Real Azure evaluation is recorded
+below.** Scripted providers are confined to tests.
 
 ## Setup and run
 
@@ -31,7 +30,8 @@ REFERENCE_DATE=2026-04-01T00:00:00Z
 RUNTIME_DIR=.runtime
 ```
 
-Endpoint/key compatibility will be validated when access is available. Do not commit
+The supplied endpoint/API version passed genuine chat and embedding smoke checks.
+`AZURE_API_BASE` is also accepted as an endpoint alias. Do not commit
 secrets. Start one local worker and open http://127.0.0.1:8000:
 
 ```sh
@@ -87,6 +87,11 @@ row unchanged; write cases check visible dates, exact persisted terms and receip
 Exit0 means every case fully passed; exit2 means failed, partial-credit, not-run or
 review-required cases remain. It never fills a missing answer from an oracle.
 
+If the scorer is corrected, `uv run python -m resourcing_assistant.evaluation --rescore-report PATH/results.json`
+grades every saved answer from that run offline into `rescored-results.json`, preserving
+the original and recorded source/write observations. It makes no model calls, never
+fills missing metrics and clears prior free-text approvals. Review the new report.
+
 Semantic/refusal wording needs manual review. After inspecting saved answers/source
 records, a reviewer can apply a run-bound review JSON without calling models again:
 
@@ -98,33 +103,38 @@ Review file shape: `{"run_id":"actual-run-id","reviewer":"reviewer-name","cases"
 Reviews cannot override failed automated/source-safety checks. [Evaluation contract](docs/specs/evaluation.md).
 This includes own-12: unchanged data alone cannot prove that the deletion refusal is truthful.
 
-Latest preflight run `20261031T192453Z_9f3790`: all22 cases **not_run** because endpoint/key
-are absent. No accuracy or pass-rate claim is available:
+Genuine Azure run `20261031T211131Z_822c63` on runtime checkpoint `ae6e196`: **22/22 passed**
+from one complete genuine inference run, after corrected offline whole-run scoring
+and **AI-assisted source review** of 7 free-text cases. Original reports/answers are preserved.
+Inference runtime `ae6e196`, scorer `ebd3f14`; no case stitching or write replay.
+After corrected scoring, before review: 15 passed, 7 review_required. This is the known development/acceptance set,
+not an independent human review, held-out benchmark or repeated-run reliability claim.
+[Full evidence, answers, measurements and all-run history](docs/evaluation/README.md).
 
-| Case | Type | Score | Status |
-| --- | --- | --- | --- |
-| gq-01 | factual | — | not_run |
-| gq-02 | factual | — | not_run |
-| gq-03 | factual | — | not_run |
-| gq-04 | factual | — | not_run |
-| gq-05 | factual | — | not_run |
-| gq-06 | factual | — | not_run |
-| gq-07 | semantic | — | not_run |
-| gq-08 | semantic | — | not_run |
-| gq-09 | write | — | not_run |
-| gq-10 | out_of_scope | — | not_run |
-| own-01 | factual | — | not_run |
-| own-02 | factual | — | not_run |
-| own-03 | factual | — | not_run |
-| own-04 | factual | — | not_run |
-| own-05 | factual | — | not_run |
-| own-06 | semantic | — | not_run |
-| own-07 | semantic | — | not_run |
-| own-08 | semantic | — | not_run |
-| own-09 | write | — | not_run |
-| own-10 | write | — | not_run |
-| own-11 | write | — | not_run |
-| own-12 | out_of_scope | — | not_run |
+| Case | Type | Score | Status | Review |
+| --- | --- | --- | --- | --- |
+| gq-01 | factual | 1.0 | passed | not_required |
+| gq-02 | factual | 1.0 | passed | not_required |
+| gq-03 | factual | 1.0 | passed | not_required |
+| gq-04 | factual | 1.0 | passed | not_required |
+| gq-05 | factual | 1.0 | passed | not_required |
+| gq-06 | factual | 1.0 | passed | not_required |
+| gq-07 | semantic | 1.0 | passed | approved |
+| gq-08 | semantic | 1.0 | passed | approved |
+| gq-09 | write | 1.0 | passed | not_required |
+| gq-10 | out_of_scope | 1.0 | passed | approved |
+| own-01 | factual | 1.0 | passed | not_required |
+| own-02 | factual | 1.0 | passed | not_required |
+| own-03 | factual | 1.0 | passed | not_required |
+| own-04 | factual | 1.0 | passed | not_required |
+| own-05 | factual | 1.0 | passed | not_required |
+| own-06 | semantic | 1.0 | passed | approved |
+| own-07 | semantic | 1.0 | passed | approved |
+| own-08 | semantic | 1.0 | passed | approved |
+| own-09 | write | 1.0 | passed | not_required |
+| own-10 | write | 1.0 | passed | not_required |
+| own-11 | write | 1.0 | passed | not_required |
+| own-12 | out_of_scope | 1.0 | passed | approved |
 
 ## Design and continued development
 

@@ -146,4 +146,5 @@ process restart/fault injection; in-memory object recreation is insufficient evi
 ## Implemented check coverage
 
 See [topic checks](../../tests/test_process.py) and [current verification](../development/verification.md).
-Real Azure quality and any scenario not explicitly mapped there remain unverified.
+Known-case Azure results and explicit AI-assisted review are recorded in [evaluation evidence](../evaluation/README.md).
+Unseen quality and unmapped scenarios remain unverified.

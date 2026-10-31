@@ -51,6 +51,6 @@ question. See [data rules](../specs/data.md) and [evaluation](../specs/evaluatio
 - [DSPy signatures](https://dspy.ai/current/diving-deeper/signatures-in-depth): typed input/output task contracts.
 - [Python sqlite3](https://docs.python.org/3/library/sqlite3.html): binding, single-statement execution, read-only URI, authorizer, progress handler, and transactions.
 
-Technical references were consulted for design feasibility, not verified by installing
-libraries. Exact compatible versions, rendered prompt budgets, and integration behavior
-remain unverified until implementation is explicitly authorized.
+These references informed the design. Compatible versions are now locked and actual
+setup, rendered-prompt boundaries, persistence, API/UI and Azure checks are recorded in
+[verification](../development/verification.md); broader unseen behavior remains unverified.

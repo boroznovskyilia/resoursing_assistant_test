@@ -1,6 +1,7 @@
 # Graph, DSPy tasks and conversation memory
 
-Status: owner-selected behavior and implementation contract; graph implemented; real model quality unverified.
+Status: owner-selected contract and implemented graph. Known-case real-model results
+and explicit AI-assisted review: [evaluation evidence](../evaluation/README.md).
 Requirements R-03/04/07/09/11/12/28, O-02/03. Exact library interfaces are verified during
 implementation; policies are defined here and in [operations](operations.md).
 
@@ -168,4 +169,5 @@ tests, not a claim of execution or correctness.
 ## Implemented check coverage
 
 See [topic checks](../../tests/test_agent.py) and [current verification](../development/verification.md).
-Real Azure quality and any scenario not explicitly mapped there remain unverified.
+Known-case Azure results and explicit AI-assisted review are recorded in [evaluation evidence](../evaluation/README.md).
+Unseen quality and unmapped scenarios remain unverified.

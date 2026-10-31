@@ -1,113 +1,58 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-31T21:11:31.167936+00:00",
+  "updated_at": "2026-10-31T21:20:41.627956+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized."
   },
-  "current_task": "T11.4",
-  "next_action": "Start single complete22actualAzure run on nextcheckpoint. Full210615Z_09f103 ended13passed7review2failed: gq01correctnamesbutmissingvisiblehardhours(realdefect),gq06correct21+leadersbutaggregategroupaliasambiguous(scorerfalse-negative). Fixedprimaryhard%-filteredlistmustdisplayhours withoneexistingrepair, generalderivedmeasurevisibilityprompt; scorercontextualaliasnormalizationusingactualvisibleentitygrain, no changednumbers/tolerances/oracles. Added guardregression andpositive/negative/conflictingcounttests;61targetedpassed7.91s then tightenedguardto primary(independentof IDalias), fullclonewillverify. Freshclone703cb76passedsetup/check/87backend39.78s/5Chromium4.3s/Ruff. Allfailedrunsremainunchanged. Need newfull22run+actualsourceinspection7AI-assistedreviews, copyautomated-resultsbeforeapply, CLIallpassedexit0, measure/exportscriptsin/private/tmp; finishdocs/status/handoff/localcommit/hash/keyscanandmain8000restartsame.runtime(oldPID96517exec30349c8). No demo/publication.",
+  "current_task": null,
+  "next_action": "The owner-requested evaluation QA is complete. One full genuine inference run20261031T211131Z_822c63 (production runtimeae6e196) has22/22 passed after whole-run offline scoringebd3f14 and7 explicit AI-assisted source reviews; no answer changes, case stitching or write replay. Evidence and all20 original run reports: docs/evaluation/README.md. All92 backend and5 Chromium tests passed in the actual fresh local clone; final hashes/key/static/doc checks passed. MainAPI/UI runs at127.0.0.1:8000 PID3546 exec23525 with existing.runtime and privateAzure configuration. No evaluation process/goal/automation/subagent remains active. Next remaining delivery task is T13.4: record the three actual demo conversations/video including API restart; video is not done. T13.5 publication/sharing/submission remains separately gated. No new implementation permission is needed within the already authorized scope.",
   "blockers": [],
   "last_checks": [
     {
-      "command": "make setup && make check in actual fresh Git clone ab8ba9f",
+      "command": "Genuine Azure DSPy chat and embedding smoke",
       "result": "passed",
-      "scope": "Python3.12 locked setup, private/idempotent .env, local source/tokenizer and React build;9 tooling tests and task/link checks"
+      "scope": "Actual chat one attempt1617 tokens; embeddings1536 dimensions5 tokens. Private .runtime/evaluation/provider-smoke/results.json; no credential values recorded."
     },
     {
-      "command": ".venv/bin/pytest -q tests (fresh Git clone)",
-      "result": "passed",
-      "scope": "50 backend tests in14.47s, including actual subprocess kill/restart, provider adapter/budgets, immutable receipts, post-commit failure, semantics/scoring/faults"
-    },
-    {
-      "command": "PLAYWRIGHT_BROWSERS_PATH=/private/tmp/resourcing-browsers npm --prefix frontend run test:e2e (fresh Git clone)",
-      "result": "passed",
-      "scope": "5 actual Chromium scenarios against real API with explicit test-only provider; production contains no fake mode"
-    },
-    {
-      "command": ".venv/bin/ruff check src tests scripts --select F && .venv/bin/ruff format --check src tests scripts",
-      "result": "passed",
-      "scope": "Static undefined/unused checks and formatting;31 files checked in fresh clone"
-    },
-    {
-      "command": "GET / and /health on production API at127.0.0.1:8000",
-      "result": "passed",
-      "scope": "Built chat served200; health alive, model/embedding not_configured, reference2026-04-01; no paid calls"
-    },
-    {
-      "command": "Reference/source hashes,88 scenario IDs, tracked-file/key-pattern inspection",
-      "result": "passed",
-      "scope": "Original SQLite and supplied reference hashes unchanged; no .env/runtime/dependencies tracked; no actual OpenAI key-prefix pattern in tracked source/docs"
-    },
-    {
-      "command": ".venv/bin/python -m resourcing_assistant.evaluation",
-      "result": "not_run",
-      "scope": "All22 actual-model cases explicitly not_run; preflight report .runtime/evaluation/20261031T184224Z_59f5f4/results.md; endpoint/key absent"
-    },
-    {
-      "command": "genuine Azure evaluation baseline20261031T192702Z_226c92",
+      "command": "Original full genuine inference run20261031T211131Z_822c63",
       "result": "failed",
-      "scope": "All22 executed against actual API/models:2 passed,18 failed,2 pending review. Root causes diagnosed; no failed score hidden. Code4271d38."
+      "scope": "Original scorer:14 passed,7 review_required,1 false negative caused by person_id+name alias; original report preserved in docs/evaluation/inference-results.json. Production runtimeae6e196; all22 executed."
     },
     {
-      "command": "real targeted regressions20261031T193204Z_b4d5b4 /193403Z_3fcbcf /193549Z_59fd97",
-      "result": "failed",
-      "scope": "Progressively diagnosed closed nested bind dictionaries and semantic eligibility/AND predicates. gq02,gq04,gq09 passed in third run;gq01 passed in fourth. All artifacts retained; no score substitution."
-    },
-    {
-      "command": ".venv/bin/pytest -q tests",
+      "command": "Offline --rescore-report and run-bound --review-report, scorer ebd3f14",
       "result": "passed",
-      "scope": "68 backend tests passed38.70s after query binding, schema vocabulary, explicit planning mode and authoritative clock fixes."
+      "scope": "Same22 unchanged answers:15 automatic passes then7 explicit AI-assisted source approvals =>22/22. No independent human review, inference replay, case stitching or write replay; recorded source/write observations retained. All artifact hashes verified."
     },
     {
-      "command": "PLAYWRIGHT_BROWSERS_PATH=/private/tmp/resourcing-browsers npm --prefix frontend run test:e2e",
+      "command": ".venv/bin/pytest -q tests (final actual Git-clone rehearsal)",
       "result": "passed",
-      "scope": "All5 Chromium API/UI scenarios passed5.4s with explicit test provider."
+      "scope": "92 tests39.94s on ebd3f14; source/write safety, real API restart, DSPy adapter/budgets, semantics, scorer and credential-free immutable offline rescoring."
     },
     {
-      "command": "targeted local tests after semantic eligibility guard",
+      "command": "PLAYWRIGHT_BROWSERS_PATH=/private/tmp/resourcing-browsers npm --prefix frontend run test:e2e (clone)",
       "result": "passed",
-      "scope": "44 tests passed6.76s. Initial fixture failures corrected: scripted active filters must be named by user test input. Actual model-run failure remains separate."
+      "scope": "All5 Chromium scenarios4.2s against real local API with explicit test-only provider; no production fake mode."
     },
     {
-      "command": ".venv/bin/pytest -q tests",
+      "command": "make setup/build and idempotent setup in fresh local Git clone",
       "result": "passed",
-      "scope": "74 backend tests38.94s after field-semantic matching and config alias support; test double checks are not model accuracy."
+      "scope": "Python3.12/uv locked packages, source/tokenizer assets, private env preservation and TypeScript/Vite build; no inherited credentials/runtime or model calls. Same locks throughout final runtime/scorer checks."
     },
     {
-      "command": "Chromium e2e suite",
+      "command": "make check; Ruff check/format; git diff --check",
       "result": "passed",
-      "scope": "5 tests5.5s after latest backend changes."
+      "scope": "9 repository-tooling tests, local links/progress inventory,32 Python files formatted/static checks. Final documentation-only commit follows these checks."
     },
     {
-      "command": "targeted backend after stronger factual plan",
+      "command": "Original-source and grading-lineage hashes; configured-key scan",
       "result": "passed",
-      "scope": "53 tests6.88s. Full74 tests and5 browser were green before this factual-plan refinement; rerun full checks after final fixes."
+      "scope": "All4 supplied-file SHA256 equal Downloads; immutable original report and all22 answer digests match exported values; scorer digest matches code. Configured key absent from171 Git blobs and all documentation/exported JSON; .env0600 ignored."
     },
     {
-      "command": "backend/browser and targeted actual Azure regression204907Z_398bd2",
-      "result": "failed",
-      "scope": "83 backend39.12s and5 Chromium4.5s passed before ranking correction; actual gq03/own01 passed,gq08 review_required,gq07 failed ranking.40 targeted tests3.49s passed after explicit selection-count correction. All artifacts retained."
-    },
-    {
-      "command": ".venv/bin/pytest -q tests; Ruff checks; five Chromium tests",
+      "command": "GET /health, / and built JS at127.0.0.1:8000 after final restart",
       "result": "passed",
-      "scope": "84 backend tests40.64s and Ruff passed on c8ca3e5.5 Chromium scenarios4.5s before last backend ranking change; no frontend changes."
-    },
-    {
-      "command": "Full genuine Azure run205112Z_fe9cfc",
-      "result": "failed",
-      "scope": "13 passed,7 pending review,2 failed; all10 public auto-contracts valid. Own03 omitted total, own05 false COUNT rule rejected correct SUM. Fixed output-scope guard;48 regression tests7.83s and26 final3.16s passed. Never stitch selected results."
-    },
-    {
-      "command": "Complete genuine Azure run205637Z_c79d47 and identity-context regression",
-      "result": "failed",
-      "scope": "14 passed,7 pending review,1 failed gq05 false technical-ID clarification. Own03/05 aggregates now passed; gq01 percent scale corrected. Exact supplied-code prelookup added;37 targeted tests passed6.01s."
-    },
-    {
-      "command": "Fresh Git clone1aa8009 /private/tmp/resourcing-final-rehearsal.AuHpxg",
-      "result": "passed",
-      "scope": "make setup/check,87 backend43.34s,5 Chromium4.2s,Ruff. No inherited.env/dependencies/runtime; genuine calls checked separately. All4 supplied-file hashes equal Downloads originals."
+      "scope": "API alive, UI/JS HTTP200, reference2026-04-01, private credentials configured. Per-process chat configured_unverified/embedding unknown is expected without paid health probes; actual model evidence is isolated evaluation. Existing.runtime preserved."
     }
   ],
   "tasks": [
@@ -291,7 +236,7 @@
       "id": "T06.1",
       "status": "done",
       "evidence": [
-        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Actual-model quality remains blocked."
+        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Known-case real-model results are now in docs/evaluation/README.md."
       ],
       "blocker": null
     },
@@ -299,7 +244,7 @@
       "id": "T06.2",
       "status": "done",
       "evidence": [
-        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Actual-model quality remains blocked."
+        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Known-case real-model results are now in docs/evaluation/README.md."
       ],
       "blocker": null
     },
@@ -307,7 +252,7 @@
       "id": "T06.3",
       "status": "done",
       "evidence": [
-        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Actual-model quality remains blocked."
+        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Known-case real-model results are now in docs/evaluation/README.md."
       ],
       "blocker": null
     },
@@ -315,7 +260,7 @@
       "id": "T06.4",
       "status": "done",
       "evidence": [
-        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Actual-model quality remains blocked."
+        "PlanReads and reader/response paths implemented; tests verify actual source reads, SQL evidence, one shared repair, permission failure, empty/partial behavior. Known-case real-model results are now in docs/evaluation/README.md."
       ],
       "blocker": null
     },
@@ -459,7 +404,8 @@
       "id": "T11.1",
       "status": "done",
       "evidence": [
-        "Executed multiple genuine complete22-case runs plus targeted regressions, all retained under .runtime/evaluation; no oracle data in runtime. Quality fixes/review continue in T11.4."
+        "Executed multiple genuine complete22-case runs plus targeted regressions, all retained under .runtime/evaluation; no oracle data in runtime. Quality fixes/review continue in T11.4.",
+        "Executed all22 questions against genuine Azure via isolated production APIs in run20261031T211131Z_822c63, runtimeae6e196. All20 completed original reports, including failures and targeted/preflight runs, are exported in docs/evaluation/history.json."
       ],
       "blocker": null
     },
@@ -470,7 +416,8 @@
         "Full isolated real-API runner/scorer/report/review workflow implemented; tests/test_scoring.py passed; all22 live cases honestly reported not_run due missing Azure.",
         "Owner requested end-to-end evaluation validation; local endpoint/key presence checked absent. Reopening harness verification independently of real-model blockers.",
         "Added12 real-process runner tests and2 scorer regressions;64 backend tests passed37.05s before final prewrite-invariant strengthening. Source and gold unchanged; final regression in progress.",
-        "Final regression after all harness changes:64 backend tests passed38.81s."
+        "Final regression after all harness changes:64 backend tests passed38.81s.",
+        "Delivered-value scorer and effects checks validated, including equivalent aliases by visible entity grain, missing/contradictory totals, source failures, no prewrite/Reject insert and exact receipt terms. No oracle/SQL in runtime and no scoring tolerance changes. Final92 backend suite passed."
       ],
       "blocker": null
     },
@@ -478,21 +425,24 @@
       "id": "T11.3",
       "status": "done",
       "evidence": [
-        "Full isolated real-API runner/scorer/report/review workflow implemented; tests/test_scoring.py passed; all22 live cases honestly reported not_run due missing Azure."
+        "Full isolated real-API runner/scorer/report/review workflow implemented; tests/test_scoring.py passed; all22 live cases honestly reported not_run due missing Azure.",
+        "docs/evaluation exports immutable original report, corrected automatic report, final reviewed report, all22 complete answers,7 review records, metrics and all20 original reports. Original-report/scorer/all22 answer hashes verified. Offline rescoring records lineage and retains external observations; no model/write replay."
       ],
       "blocker": null
     },
     {
       "id": "T11.4",
-      "status": "in_progress",
-      "evidence": [],
+      "status": "done",
+      "evidence": [
+        "Final run20261031T211131Z_822c63:22/22 passed after corrected whole-run scorer ebd3f14 and7 explicit Codex AI-assisted source reviews (not independent human). Original raw report had14 passed,7 pending review,1 name-alias false negative; original and every answer remain unchanged. All source/write checks retained; no selected-case stitching. See docs/evaluation/results.json and reviews.json."
+      ],
       "blocker": null
     },
     {
       "id": "T12.1",
       "status": "done",
       "evidence": [
-        "Integrated backend/fault/scorer/DSPy-boundary tests, real process tests and Chromium checks passed; local safe JSON/rotation/fallback/recovery events present. Provider measurements remain blocked."
+        "Integrated backend/fault/scorer/DSPy-boundary tests, real process tests and Chromium checks passed; local safe JSON/rotation/fallback/recovery events present. Provider measurements are now in docs/evaluation/measurements.json."
       ],
       "blocker": null
     },
@@ -500,7 +450,7 @@
       "id": "T12.2",
       "status": "done",
       "evidence": [
-        "Integrated backend/fault/scorer/DSPy-boundary tests, real process tests and Chromium checks passed; local safe JSON/rotation/fallback/recovery events present. Provider measurements remain blocked."
+        "Integrated backend/fault/scorer/DSPy-boundary tests, real process tests and Chromium checks passed; local safe JSON/rotation/fallback/recovery events present. Provider measurements are now in docs/evaluation/measurements.json."
       ],
       "blocker": null
     },
@@ -508,21 +458,24 @@
       "id": "T12.3",
       "status": "done",
       "evidence": [
-        "Integrated backend/fault/scorer/DSPy-boundary tests, real process tests and Chromium checks passed; local safe JSON/rotation/fallback/recovery events present. Provider measurements remain blocked."
+        "Integrated backend/fault/scorer/DSPy-boundary tests, real process tests and Chromium checks passed; local safe JSON/rotation/fallback/recovery events present. Provider measurements are now in docs/evaluation/measurements.json."
       ],
       "blocker": null
     },
     {
       "id": "T12.4",
-      "status": "not_started",
-      "evidence": [],
+      "status": "done",
+      "evidence": [
+        "Measured on that one run:66 chat/7 embedding attempts,247401 chat/18073 embedding tokens; median9.271s,p95-nearest-rank17.957s,total258.442s,max50.996s. Cached genuine vector recall@40=9/10 public strong matches, delivered7/10(min4). Cold two-DB baseline9617408 bytes; after one semantic request23814144,growth14196736. Logs/archive excluded; actual Azure bill/held-out quality/load unmeasured. docs/evaluation/measurements.json."
+      ],
       "blocker": null
     },
     {
       "id": "T13.1",
       "status": "done",
       "evidence": [
-        "Actual local Git clone ab8ba9f at /private/tmp/resourcing-git-rehearsal-20261031: documented make setup/check, Ruff checks, all50 backend tests and5 Chromium tests passed from no inherited env/dependencies/runtime."
+        "Actual local Git clone ab8ba9f at /private/tmp/resourcing-git-rehearsal-20261031: documented make setup/check, Ruff checks, all50 backend tests and5 Chromium tests passed from no inherited env/dependencies/runtime.",
+        "Actual local Git clone /private/tmp/resourcing-final-rehearsal.AuHpxg initially had no env/dependencies/runtime. Locked setup/build and idempotent setup passed. Final scorer checkpointebd3f14 passed make check,92 backend39.94s,5 Chromium4.2s,Ruff. Genuine evaluation ran separately with private credentials; clone checks use explicit test providers."
       ],
       "blocker": null
     },
@@ -530,7 +483,8 @@
       "id": "T13.2",
       "status": "done",
       "evidence": [
-        "README/DESIGN/NOT_DONE/specifications and submission guide updated in English; coherent local implementation commits recorded. Final clone rehearsal is current task."
+        "README/DESIGN/NOT_DONE/specifications and submission guide updated in English; coherent local implementation commits recorded. Final clone rehearsal is current task.",
+        "English README per-case table and commands, DESIGN, NOT_DONE, specs/verification/handoff and exported evaluation lineage/history updated. Known-set/AI-review limits and remaining demo/publication are explicit."
       ],
       "blocker": null
     },
@@ -538,7 +492,8 @@
       "id": "T13.3",
       "status": "done",
       "evidence": [
-        "README/DESIGN/NOT_DONE/specifications and submission guide updated in English; coherent local implementation commits recorded. Final clone rehearsal is current task."
+        "README/DESIGN/NOT_DONE/specifications and submission guide updated in English; coherent local implementation commits recorded. Final clone rehearsal is current task.",
+        "Coherent local checkpoint commits4271d38,c8ca3e5,13659d1,1aa8009,703cb76,ae6e196,ebd3f14 preserve QA changes. Configured key absent from171 Git history blobs and all docs including exported evidence; ignored.env0600. All4 supplied-file hashes unchanged. No push/publication."
       ],
       "blocker": null
     },
@@ -558,9 +513,9 @@
   "runtime_services": [
     {
       "url": "http://127.0.0.1:8000",
-      "pid": 96517,
-      "exec_session_id": 30349,
-      "purpose": "Production local API/UI on c8ca3e5, configured Azure; existing .runtime preserved. Health configured, no paid health probes."
+      "pid": 3546,
+      "exec_session_id": 23525,
+      "purpose": "Final production local API/UI, genuine Azure configured, existing.runtime preserved; health makes no model probes. Production behavior identical to accepted inference runtimeae6e196; scorer tools at ebd3f14."
     }
   ]
 }
