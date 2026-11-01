@@ -46,6 +46,22 @@ health/history/UI still work. No automatic background model calls or health prob
 For UI development, run the API above and `npm --prefix frontend run dev`; Vite proxies
 API requests to port8000. The production build is served by FastAPI at the same origin.
 
+## Backend organization
+
+Synchronous FastAPI/LangGraph with pydantic-settings and SQLAlchemy repositories.
+API schemas, model-task schemas and ORM records are separate. The application factory
+is `resourcing_assistant.app:create_app`; `make run` uses this entry point.
+Read-only model SQL retains the native SQLite authorizer/limits; the ORM does not
+replace that security boundary. Existing runtime files and checkpoints are preserved.
+See the [module map and transaction boundaries](docs/architecture/overview.md#backend-module-boundaries).
+
+Settings validate timezone-aware reference dates and positive limits before startup.
+Explicit settings override environment, environment overrides dotenv, then defaults.
+Empty environment values are ignored so endpoint aliases can work. An absent reference
+date means UTC now; setup/evaluation explicitly select the assignment date. Secrets
+use SecretStr and are not printed. Limits retain the agreed defaults and can be set
+through their uppercase field names; see [Settings](src/resourcing_assistant/config.py).
+
 ## Verification
 
 ```sh

@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS threads(thread_id TEXT PRIMARY KEY, created_ts INTEGER NOT NULL, updated_ts INTEGER NOT NULL);
+            CREATE TABLE IF NOT EXISTS requests(thread_id TEXT NOT NULL REFERENCES threads, request_id TEXT NOT NULL, text TEXT NOT NULL, fingerprint TEXT NOT NULL, status TEXT NOT NULL CHECK(status IN ('processing','completed','partial','failed','interrupted')), reference_date TEXT NOT NULL, response TEXT, error TEXT, created_ts INTEGER NOT NULL, updated_ts INTEGER NOT NULL, PRIMARY KEY(thread_id,request_id));
+            CREATE TABLE IF NOT EXISTS messages(message_id TEXT PRIMARY KEY, thread_id TEXT NOT NULL REFERENCES threads, request_id TEXT NOT NULL, role TEXT NOT NULL, content TEXT NOT NULL, created_ts INTEGER NOT NULL, UNIQUE(thread_id,request_id,role));
+CREATE TABLE IF NOT EXISTS semantic_vectors(cache_key TEXT PRIMARY KEY, model TEXT NOT NULL, text_hash TEXT NOT NULL, dimension INTEGER NOT NULL, vector TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS semantic_memberships(source_ref TEXT PRIMARY KEY, cache_key TEXT NOT NULL REFERENCES semantic_vectors);

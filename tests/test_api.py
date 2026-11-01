@@ -1,7 +1,9 @@
-from concurrent.futures import ThreadPoolExecutor
 import threading
+from concurrent.futures import ThreadPoolExecutor
+
 from fastapi.testclient import TestClient
-from resourcing_assistant.api import create_app
+
+from resourcing_assistant.app import create_app
 from resourcing_assistant.config import Settings
 from tests.test_agent import ScriptedGateway
 

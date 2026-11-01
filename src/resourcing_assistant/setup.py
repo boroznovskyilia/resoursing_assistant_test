@@ -1,9 +1,10 @@
 """Idempotent local setup; does not make paid model calls or overwrite credentials."""
 
 import os
-from .config import ROOT, Settings
-from .data import initialize
-from .llm import encoding
+
+from resourcing_assistant.config import ROOT, Settings
+from resourcing_assistant.db.source import initialize
+from resourcing_assistant.llm.tokens import encoding
 
 
 def main():
@@ -20,7 +21,7 @@ def main():
     source = initialize(settings)
     print("Local source and tokenizer ready:", source)
     print("Reference date:", settings.reference().isoformat())
-    print("Azure configured:", bool(settings.endpoint and settings.api_key))
+    print("Azure configured:", settings.azure_configured)
     print("Existing credentials and working state preserved. No model requests made.")
 
 

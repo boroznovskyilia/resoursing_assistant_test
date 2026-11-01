@@ -23,6 +23,39 @@ must run off the event loop or through supported async integration. Locks serial
 thread only, not every chat. The process is local by default; thread UUIDs are identity
 references, not authentication. There is no multi-user security claim.
 
+## Backend module boundaries
+
+Owner approved the synchronous SQLAlchemy refactor on 2026-11-01. The public HTTP
+contract, eight graph node names and dictionary checkpoint fields remain unchanged.
+
+| Package | Responsibility | Boundary |
+| --- | --- | --- |
+| [app](../../src/resourcing_assistant/app.py) | Compose dependencies and own lifespan | Services receive dependencies instead of constructing storage/model clients |
+| [config](../../src/resourcing_assistant/config.py) | Validated pydantic-settings, aliases, secrets and resource budgets | Explicit dotenv loading does not mutate the process environment; invalid dates/limits fail before startup |
+| api | Routes, public schemas, error responses and answer-block construction | HTTP models are separate from model-task schemas and ORM records |
+| agent | Stable graph, state, ContextBuilder, ReadService and ReadPolicy | Graph delegates context/SQL work; one shared read-plan repair owner |
+| llm | DSPy signatures, chat transport, embedding client and token accounting | Secrets are revealed only at SDK/subprocess credential boundaries; source text remains untrusted |
+| services | Conversation admission/recovery, BookingService, RetrievalService and SourceDocuments | Business workflows do not execute ad hoc SQL or create database tables |
+| db | Synchronous ORM repositories, fixed source Core queries, owned schema setup and protected native reader | Session per operation; no shared Session or writer transaction across a model call |
+| domain | UTC periods, durations and capacity rules | Pure calculations independent of settings, HTTP and persistence |
+| evaluation | CLI runner, scoring and run-bound review | Oracles remain outside inference |
+
+App history/actions/cache use synchronous SQLAlchemy ORM; fixed source queries and the
+booking INSERT use Core. Source tables are reflected without schema creation or edits.
+Only owned auxiliary tables are created when absent; existing schemas/data are preserved
+and incompatible owned-column layouts fail explicitly. This refactor needs no destructive
+migration. LangGraph continues to own its saver tables through SqliteSaver.
+
+Model-authored SQL runs only in the native reader: read-only URI, authorizer, progress
+handler and result limits are retained. A writer session obtains BEGIN IMMEDIATE before
+reading an action; booking and receipt commit together. API routes remain synchronous
+and execute blocking operations in the framework thread pool; this is not an async migration.
+
+Document facts are read in one snapshot using three SELECTs for people, two for projects
+and one for risks, including all requested eligible entities. Tests compare every document
+against pre-refactor source digests. Vector/cache and embedding transport are injected
+separately, so cache, outages and fallback can be tested without patching Azure internals.
+
 ## Graph overview
 
 ```mermaid

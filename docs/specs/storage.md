@@ -17,6 +17,17 @@ incompatible state rather than reset. Original source tables gain no UPDATE/DELE
 and no INSERT except allowed bookings in the working copy. Own auxiliary tables may
 be inserted/updated; that permission does not extend to source rows.
 
+Synchronous SQLAlchemy repositories own app records, booking actions and vectors.
+Fixed source queries/writes use Core. The app factory creates one engine per working
+database; each operation gets its own short Session with foreign_keys=ON. NullPool
+closes connections after operations. Writer sessions begin with BEGIN IMMEDIATE before
+reading action state; the booking and receipt share that same session/transaction.
+Owned table definitions match existing layouts, validated before use; no source-table
+create_all, destructive migration or checkpoint-table ORM mapping is performed.
+Native read-only connections still enforce the model SQL policy, and SqliteSaver
+continues to own checkpoints. Legacy schema/history/pending-checkpoint compatibility
+and rollback-after-INSERT are checked in [refactor tests](../../tests/test_refactor.py).
+
 Use explicit short transactions and foreign_keys=ON on writers. Connections must obey
 the chosen thread/async ownership rules. Never keep a writer transaction or event-loop
 block around an LLM call. One backend worker with per-thread operation admission is

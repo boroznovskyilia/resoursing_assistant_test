@@ -25,7 +25,7 @@ ports/browser launch and dependency downloads require allowed sandbox escalation
 normal local terminals do not have that sandbox restriction. Its installed browser
 path is `/private/tmp/resourcing-browsers` via PLAYWRIGHT_BROWSERS_PATH.
 
-## Current evidence
+## Previous release evidence (before the backend refactor)
 
 - Runtime checkpoint `ae6e196` was checked in a genuine local Git clone at
   `/private/tmp/resourcing-final-rehearsal.AuHpxg`, initially without .env/dependencies/runtime.
@@ -80,7 +80,7 @@ hidden test-double results appear in real-model score tables.
 
 ## Live evaluation and review
 
-The runner in [evaluation.py](../../src/resourcing_assistant/evaluation.py) starts actual
+The runner in [evaluation runner](../../src/resourcing_assistant/evaluation/runner.py) starts actual
 API subprocesses with isolated source/app files; gq-09 has separate Confirm/Reject and
 restart subcases. It checks delivered blocks and database invariants. Reports include
 settings, hashes, timing, attempts/tokens where available and review status. Score0.5
@@ -93,3 +93,27 @@ rows and missing keyed results that would otherwise look like valid empty sets.
 Free-text review can be applied only to a matching run_id via --review-report/--reviews;
 it cannot override a failed automated/source-safety check. No paid model probe occurs
 in GET /health or history. Remaining evidence is listed in [NOT_DONE](../../NOT_DONE.md).
+
+## Backend refactor verification (2026-11-01)
+
+The owner approved all structural review items using synchronous SQLAlchemy.
+Current checks and the new model-run status are tracked in progress.json; the previous
+release evidence above remains historical and is not relabeled as new-runtime evidence.
+
+- [Configuration checks](../../tests/test_config.py): invalid/naive dates, positive limits,
+  aliases/precedence, dotenv isolation and masked secret representations/errors.
+- [Refactor checks](../../tests/test_refactor.py): all923 source documents retain old
+  digests; SELECT counts3/2/1 for people/projects/risks, empty eligibility, legacy-owned
+  schema/history/action/checkpoint continuation, and booking/receipt rollback together.
+- Existing receipt-race, lost-commit-ack, graph/API/process/recovery, model adapter,
+  reader permissions and semantic/fallback tests run against the new dependencies.
+- Unit checks clear host Settings environment variables; the test-only API process
+  explicitly sets blank credentials. Real-model evaluation is a separate command.
+- Application factory moved to resourcing_assistant.app:create_app; evaluation CLI
+  remains python -m resourcing_assistant.evaluation. Both subprocess paths are exercised.
+
+Local refactor results:100 backend checks41.43s;5 Chromium scenarios5.4s;9 tooling
+checks; Ruff check/format across60 Python files. A temporary backup of the actual
+existing runtime opened both saved chats, history and checkpoints without changing
+thread/message/booking/action rows. This rehearsal did not modify the original files.
+The new Azure run is recorded separately when complete.

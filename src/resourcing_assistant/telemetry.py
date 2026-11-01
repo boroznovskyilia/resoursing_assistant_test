@@ -3,9 +3,9 @@
 import contextvars
 import json
 import logging
-from logging.handlers import RotatingFileHandler
 import sys
 import time
+from logging.handlers import RotatingFileHandler
 
 LOG = logging.getLogger("resourcing")
 USAGE = contextvars.ContextVar("usage", default=None)

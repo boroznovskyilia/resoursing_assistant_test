@@ -1,5 +1,5 @@
+from resourcing_assistant import setup
 from resourcing_assistant.config import Settings
-import resourcing_assistant.setup as setup
 
 
 def test_setup_creates_private_env_once_and_preserves_existing_state(

@@ -1,7 +1,7 @@
 """Score only delivered values; free-text truth remains an explicit review item."""
 
-from decimal import Decimal, InvalidOperation
 import re
+from decimal import Decimal, InvalidOperation
 
 ALIASES = {
     "display_name": "person",

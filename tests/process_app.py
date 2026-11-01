@@ -1,11 +1,12 @@
 """Test-only API factory; no production fake-provider switch exists."""
 
 import os
-from pathlib import Path
 import time
-from resourcing_assistant.api import create_app as production_app
+from pathlib import Path
+
+from resourcing_assistant.app import create_app as production_app
 from resourcing_assistant.config import Settings
-from resourcing_assistant.models import AppError
+from resourcing_assistant.errors import AppError
 from tests.test_agent import ScriptedGateway
 
 
@@ -46,6 +47,11 @@ def create_app():
             return super().call(name, **inputs)
 
     return production_app(
-        Settings(runtime=runtime, reference_date="2026-04-01T00:00:00Z"),
+        Settings(
+            runtime=runtime,
+            reference_date="2026-04-01T00:00:00Z",
+            endpoint="",
+            api_key="",
+        ),
         ProcessGateway(),
     )

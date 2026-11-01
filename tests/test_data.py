@@ -1,10 +1,13 @@
-from dataclasses import replace
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from hashlib import sha256
+
 import pytest
 
-from resourcing_assistant.config import Settings, period, to_minutes, capacity
-from resourcing_assistant.data import initialize, Reader, ReadError, connect
+from resourcing_assistant.config import Settings
+from resourcing_assistant.db.reader import Reader, ReadError
+from resourcing_assistant.db.session import connect
+from resourcing_assistant.db.source import initialize
+from resourcing_assistant.domain.calculations import capacity, period, to_minutes
 
 
 @pytest.fixture
@@ -20,10 +23,7 @@ def test_clock_minutes_and_inclusive_end():
         with pytest.raises(ValueError):
             to_minutes(value)
     start, end = period("2026-04-01", "2026-04-30")
-    assert (
-        datetime.fromtimestamp(end, timezone.utc).isoformat()
-        == "2026-05-01T00:00:00+00:00"
-    )
+    assert datetime.fromtimestamp(end, UTC).isoformat() == "2026-05-01T00:00:00+00:00"
     assert capacity(*period("2026-03-01", "2026-05-31")) == 520
     assert capacity(*period("2026-04-04", "2026-04-05")) == 0
     assert Settings().reference().tzinfo is not None
@@ -44,7 +44,7 @@ def test_comments_cte_count_and_bindings(data):
 
 
 def test_limit_scope_ignores_quoted_text_and_comments():
-    from resourcing_assistant.data import has_limit
+    from resourcing_assistant.db.reader import has_limit
 
     assert has_limit("SELECT person_id FROM people LIMIT 5")
     assert has_limit(
@@ -168,11 +168,11 @@ def test_forbidden_sources_writes_and_multiple_statements(data):
 
 def test_limits_and_source_grounding(data):
     settings, path, reader = data
-    reader = Reader(replace(settings, row_limit=2), path)
+    reader = Reader(Settings(**(settings.model_dump() | {"row_limit": 2})), path)
     result = reader.read("SELECT person_id FROM people ORDER BY person_id")
     assert len(result["rows"]) == 2 and result["truncated"]
     assert reader.read("SELECT COUNT(*) AS n FROM people")["rows"] == [{"n": 400}]
-    reader = Reader(replace(settings, sql_timeout=0.001), path)
+    reader = Reader(Settings(**(settings.model_dump() | {"sql_timeout": 0.001})), path)
     with pytest.raises(ReadError) as error:
         reader.read(
             "WITH RECURSIVE a(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM a WHERE n<10000000) SELECT SUM(n) AS n FROM a CROSS JOIN people"
@@ -198,7 +198,7 @@ def test_correct_source_grains_and_idempotent_initialization(data):
 
 def test_candidate_pages_cover_full_set_without_expanding_privileges(data):
     settings, path, _ = data
-    reader = Reader(replace(settings, row_limit=2), path)
+    reader = Reader(Settings(**(settings.model_dump() | {"row_limit": 2})), path)
     pages = reader.read_pages(
         "SELECT person_id FROM people WHERE person_id<=:n",
         {"n": 5},
@@ -232,7 +232,7 @@ def test_large_single_scalar_and_byte_budget(data):
             "SELECT group_concat(a.display_name || b.display_name || c.display_name,'') AS huge FROM people a CROSS JOIN people b CROSS JOIN people c"
         )
     assert error.value.code == "sql_limit"
-    small = Reader(replace(settings, byte_limit=5000), path)
+    small = Reader(Settings(**(settings.model_dump() | {"byte_limit": 5000})), path)
     result = small.read("SELECT person_id,bio FROM people ORDER BY person_id")
     assert result["truncated"] and len(result["rows"]) < 400
 

@@ -1,5 +1,5 @@
-from resourcing_assistant.evaluation import cases
-from resourcing_assistant.scoring import score, close
+from resourcing_assistant.evaluation.runner import cases
+from resourcing_assistant.evaluation.scoring import close, score
 
 
 def answer(rows, **extra):
@@ -141,8 +141,9 @@ def test_empty_set_needs_an_actual_keyed_result():
 
 
 def test_manual_review_is_bound_to_run_and_does_not_override_failed_facts():
-    from resourcing_assistant.evaluation import ManualReview, apply_review
     import pytest
+
+    from resourcing_assistant.evaluation.runner import ManualReview, apply_review
 
     report = {
         "run_id": "one",
@@ -209,7 +210,7 @@ def test_person_name_alias_needs_visible_person_scope_and_cannot_hide_conflicts(
     assert score(case("gq-01"), answer(data))["status"] == "passed"
     data[0]["person"] = "Wrong person"
     assert score(case("gq-01"), answer(data))["status"] == "failed"
-    from resourcing_assistant.scoring import rows
+    from resourcing_assistant.evaluation.scoring import rows
 
     assert rows(answer([{"engagement_id": 1, "name": "Project"}])) == [
         {"engagement_id": 1, "name": "Project"}

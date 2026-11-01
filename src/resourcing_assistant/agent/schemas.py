@@ -1,98 +1,10 @@
-"""Explicit typed boundaries for API and DSPy tasks."""
+"""Typed interpretation, planning and semantic task boundaries."""
 
-from typing import Any, Annotated, Literal
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from typing import Any, Literal
 
+from pydantic import Field, field_validator
 
-class StrictModel(BaseModel):
-    model_config = ConfigDict(extra="forbid", allow_inf_nan=False, strict=True)
-
-
-class AppError(Exception):
-    def __init__(self, code, message, status=409, retryable=False):
-        super().__init__(message)
-        self.code, self.status, self.retryable = code, status, retryable
-
-
-Identifier = Annotated[str, Field(pattern=r"^[A-Za-z0-9_-]{1,100}$")]
-Scalar = str | int | float | bool | None
-
-
-class MessageInput(StrictModel):
-    request_id: Identifier
-    text: str = Field(min_length=1, max_length=40000)
-
-
-class DecisionInput(StrictModel):
-    action_id: Identifier
-    decision: Literal["confirm", "reject"]
-
-
-class EmptyInput(StrictModel):
-    pass
-
-
-class Issue(StrictModel):
-    code: str
-    message: str
-    stage: str
-    retryable: bool = False
-
-
-class TextBlock(StrictModel):
-    type: Literal["text"] = "text"
-    text: str
-    evidence: list[dict[str, Any]] = Field(default_factory=list)
-
-
-class Column(StrictModel):
-    key: str
-    label: str
-    unit: str | None = None
-
-
-class TableBlock(StrictModel):
-    type: Literal["table"] = "table"
-    block_id: str
-    title: str
-    columns: list[Column]
-    rows: list[dict[str, Scalar]]
-    completeness: dict[str, Any] = Field(default_factory=dict)
-    evidence: list[dict[str, Any]] = Field(default_factory=list)
-
-
-class ConfirmationBlock(StrictModel):
-    type: Literal["confirmation"] = "confirmation"
-    action_id: str
-    status: Literal["pending", "confirmed", "rejected", "superseded"]
-    fields: dict[str, Any]
-    booking_id: int | None = None
-
-
-class SqlBlock(StrictModel):
-    type: Literal["sql"] = "sql"
-    query_id: str = Field(pattern=r"^[A-Za-z0-9_-]{1,128}$")
-    purpose: str
-    sql: str
-    parameters: dict[str, Scalar]
-
-
-Block = Annotated[
-    TextBlock | TableBlock | ConfirmationBlock | SqlBlock, Field(discriminator="type")
-]
-
-
-class Response(StrictModel):
-    thread_id: str
-    request_id: str
-    response_message_id: str | None = None
-    request_status: Literal[
-        "processing", "completed", "partial", "interrupted", "failed"
-    ]
-    blocks: list[Block] = Field(default_factory=list)
-    issues: list[Issue] = Field(default_factory=list)
-    effective_reference_date: str
-    assumptions: list[str] = Field(default_factory=list)
+from resourcing_assistant.schemas import Scalar, StrictModel
 
 
 class BookingSlots(StrictModel):
@@ -138,7 +50,6 @@ class Interpretation(StrictModel):
     requested_count: int = Field(default=10, ge=1, le=100)
     modify_pending: bool = False
     selected_position: int | None = None
-    # Exact source filters remain SQL conditions, not unconstrained hidden Python filters.
 
 
 class Binding(StrictModel):
@@ -216,44 +127,3 @@ class ProjectChecks(StrictModel):
 class RankItem(StrictModel):
     source_id: str
     reason: str
-
-
-class ThreadCreated(StrictModel):
-    thread_id: str
-    created_ts: int
-
-
-class ThreadInfo(ThreadCreated):
-    updated_ts: int
-    label: str | None = None
-
-
-class HistoryMessage(StrictModel):
-    sequence: int
-    message_id: str
-    thread_id: str
-    request_id: str
-    role: Literal["user", "assistant"]
-    content: str | Response
-    created_ts: int
-
-
-class RequestInfo(StrictModel):
-    request_id: str
-    status: Literal["processing", "completed", "partial", "failed", "interrupted"]
-    error: str | None = None
-
-
-class History(StrictModel):
-    thread_id: str
-    messages: list[HistoryMessage]
-    requests: list[RequestInfo]
-    pending_action: dict[str, Any] | None = None
-    effective_reference_date: str
-
-
-class Health(StrictModel):
-    status: str
-    chat: str
-    embeddings: str
-    reference_date: str

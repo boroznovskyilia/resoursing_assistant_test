@@ -27,15 +27,20 @@ Write complete JSON via temporary file+atomic replace, then `make progress`. Do 
 copy live statuses into multiple documents or mark unrun checks passed. No secrets,
 raw prompts, full environment dumps or source text in status/ordinary logs.
 
-`make check` validates IDs/status/gate/evidence against all56 plan tasks and runs tooling
+`make check` validates IDs/status/gate/evidence against all62 plan tasks and runs tooling
 tests. A fresh-process test proves saved status recovery and corrupt-state rejection.
 No scheduler, daemon or external service is used. This is development progress memory,
 separate from the product's LangGraph conversation state.
 
 ## Implementation orientation
 
-- Backend in src/resourcing_assistant: config/models/data/storage, typed DSPy/telemetry,
-  semantic cache/assessment, controlled graph, service/API, evaluation/scoring/setup.
+- Owner approved all backend structure review items on2026-11-01 with synchronous
+  SQLAlchemy. WP-14/progress.json track the current refactor; earlier22-case evidence
+  remains historical until a new run is verified. Do not stop after a subset of items.
+- Backend packages: api, agent, llm, services, db, domain, evaluation. app.create_service
+  composes repositories/model clients/graph dependencies; app.create_app is the API
+  factory. Config uses pydantic-settings/SecretStr. Native protected reader and saver
+  remain; owned ORM schema matches saved files. No old Store compatibility facade.
 - React/TypeScript/Vite UI and real-browser tests in frontend. Explicit fake providers
   live only in tests; production has no fake-provider switch.
 - Source mock and tokenizer bundled under data; original input remains unchanged.

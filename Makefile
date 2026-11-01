@@ -25,7 +25,7 @@ build:
 	npm --prefix frontend run build
 
 run:
-	uv run uvicorn resourcing_assistant.api:create_app --factory --host 127.0.0.1 --port 8000 --workers 1
+	uv run uvicorn resourcing_assistant.app:create_app --factory --host 127.0.0.1 --port 8000 --workers 1
 
 test:
 	uv run pytest -q

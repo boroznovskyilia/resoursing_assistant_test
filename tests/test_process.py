@@ -1,10 +1,11 @@
-from contextlib import contextmanager
-from concurrent.futures import ThreadPoolExecutor
 import os
 import socket
 import subprocess
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
+
 import httpx
 
 

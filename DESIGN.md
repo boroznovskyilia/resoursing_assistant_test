@@ -4,6 +4,15 @@ Implemented locally with genuine Azure chat/embedding checks. Evaluation evidenc
 reported in [README](README.md); unexecuted delivery work remains explicit.
 Detailed contracts: [specifications](docs/specs/README.md). [Limits](NOT_DONE.md).
 
+**Backend structure.** pydantic-settings validates configuration before startup and masks
+secrets. The app factory composes synchronous SQLAlchemy conversation/action/vector
+repositories, booking/retrieval services, model clients and graph dependencies. API,
+agent-task and ORM schemas are separate; UTC/duration rules are pure domain functions.
+The protected model SQL reader and LangGraph saver keep their native SQLite connections.
+Writer sessions obtain BEGIN IMMEDIATE; source tables are reflected, never recreated.
+Batched source documents preserve the old content while reducing SELECTs from801 to3
+for people and151 to2 for projects. [Module map](docs/architecture/overview.md#backend-module-boundaries).
+
 **Graph and DSPy.** Controlled LangGraph StateGraph: context -> interpretation -> exact
 resolution/clarification -> factual reads or semantic matching -> composition; booking
 preparation persists immutable terms then interrupts. Typed DSPy signatures cover

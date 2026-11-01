@@ -1,8 +1,12 @@
+from datetime import UTC
 from types import SimpleNamespace
+
 import pytest
+
 from resourcing_assistant.config import Settings
-from resourcing_assistant.llm import retry_call, token_count, Gateway
-from resourcing_assistant.models import AppError
+from resourcing_assistant.errors import AppError
+from resourcing_assistant.llm.gateway import Gateway, retry_call
+from resourcing_assistant.llm.tokens import token_count
 
 
 class ProviderError(Exception):
@@ -66,7 +70,8 @@ def test_offline_tokenizer_and_missing_credentials():
 
 def test_query_contract_requires_explicit_bindings():
     from pydantic import ValidationError
-    from resourcing_assistant.models import Query
+
+    from resourcing_assistant.agent.schemas import Query
 
     assert "parameters" in Query.model_json_schema()["required"]
     with pytest.raises(ValidationError):
@@ -91,7 +96,7 @@ def test_query_contract_requires_explicit_bindings():
 
 
 def test_supplied_azure_api_base_alias_with_blank_primary(monkeypatch, tmp_path):
-    import resourcing_assistant.config as config
+    from resourcing_assistant import config
 
     monkeypatch.setattr(config, "ROOT", tmp_path)
     monkeypatch.setenv("AZURE_ENDPOINT", "")
@@ -103,8 +108,8 @@ def test_supplied_azure_api_base_alias_with_blank_primary(monkeypatch, tmp_path)
 
 def test_actual_dspy_planner_adapter_preserves_named_bindings(monkeypatch):
     import json
+
     import dspy
-    from dataclasses import replace
 
     def transport(self, *args, **kwargs):
         schema = kwargs["response_format"].model_json_schema()
@@ -128,7 +133,12 @@ def test_actual_dspy_planner_adapter_preserves_named_bindings(monkeypatch):
 
     monkeypatch.setattr(dspy.LM, "__call__", transport)
     plan = Gateway(
-        replace(Settings(), endpoint="https://test.invalid", api_key="test-only")
+        Settings(
+            **(
+                Settings().model_dump()
+                | {"endpoint": "https://test.invalid", "api_key": "test-only"}
+            )
+        )
     ).call(
         "PlanReads",
         intent="factual",
@@ -142,9 +152,11 @@ def test_actual_dspy_planner_adapter_preserves_named_bindings(monkeypatch):
 
 
 def test_real_dspy_adapter_typed_contract_repair_and_budget(monkeypatch):
-    import dspy, json
-    from dataclasses import replace
-    from resourcing_assistant.llm import BudgetLM
+    import json
+
+    import dspy
+
+    from resourcing_assistant.llm.gateway import BudgetLM
 
     calls = []
 
@@ -159,8 +171,11 @@ def test_real_dspy_adapter_typed_contract_repair_and_budget(monkeypatch):
         ]
 
     monkeypatch.setattr(dspy.LM, "__call__", transport)
-    settings = replace(
-        Settings(), endpoint="https://test.invalid", api_key="test-placeholder"
+    settings = Settings(
+        **(
+            Settings().model_dump()
+            | {"endpoint": "https://test.invalid", "api_key": "test-placeholder"}
+        )
     )
     value = Gateway(settings).call(
         "InterpretRequest",
@@ -172,6 +187,7 @@ def test_real_dspy_adapter_typed_contract_repair_and_budget(monkeypatch):
     assert calls[0] != calls[1]
     lm = BudgetLM(
         "azure/gpt-4.1-mini",
+        input_token_limit=settings.model_input_tokens,
         api_key="test-placeholder",
         num_retries=0,
         cache=False,
@@ -183,7 +199,7 @@ def test_real_dspy_adapter_typed_contract_repair_and_budget(monkeypatch):
 
 
 def test_http_date_retry_after_over_ten_seconds_is_not_retried():
-    from datetime import datetime, timezone, timedelta
+    from datetime import datetime, timedelta
     from email.utils import format_datetime
 
     calls = []
@@ -192,9 +208,7 @@ def test_http_date_retry_after_over_ten_seconds_is_not_retried():
         calls.append(1)
         raise ProviderError(
             429,
-            format_datetime(
-                datetime.now(timezone.utc) + timedelta(seconds=60), usegmt=True
-            ),
+            format_datetime(datetime.now(UTC) + timedelta(seconds=60), usegmt=True),
         )
 
     with pytest.raises(ProviderError):
@@ -222,7 +236,9 @@ def test_azure_millisecond_retry_header_is_honored():
 
 
 def test_ambient_hosted_tracing_is_disabled_in_fresh_process():
-    import os, subprocess, sys
+    import os
+    import subprocess
+    import sys
 
     env = {
         **os.environ,

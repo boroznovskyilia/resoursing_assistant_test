@@ -319,3 +319,21 @@ verified and claims match evidence. Any residual failure is visible in NOT_DONE/
 Package status is recorded in progress.json. Current checks and evidence are in
 [verification](../development/verification.md). This plan contains written tasks,
 not an automation, active background job, completion promise or grant of model access.
+
+## WP-14 Owner-approved backend structure and persistence refactor
+
+Owner approved all structural review findings on 2026-11-01, using synchronous
+SQLAlchemy. Preserve public API, existing runtime data, graph node names/checkpoints,
+source permissions, and atomic idempotent booking decisions. No async conversion.
+
+- T14.1 Replace dataclass configuration with validated pydantic-settings; extract domain calculations and centralize existing limits.
+- T14.2 Separate API/agent schemas, dependency assembly, graph state and model responsibilities; preserve CLI entry points.
+- T14.3 Introduce synchronous SQLAlchemy repositories for conversations, bookings and vectors without recreating saved data.
+- T14.4 Extract read orchestration/policy and RAG dependencies; retain the native protected SQL reader and LangGraph saver.
+- T14.5 Batch source document queries and verify equivalent results, query counts, restart and transaction invariants.
+- T14.6 Run local regression, browser and genuine Azure evaluation; record current evidence and update architecture/setup documentation.
+
+Done: every review item is implemented, saved-runtime compatibility is checked,
+local checks pass, genuine-model results/reviews are reported honestly, and changed
+imports/commands/specifications are updated. Existing evaluation artifacts remain
+historical evidence rather than being relabeled as results of the new runtime.

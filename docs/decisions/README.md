@@ -104,3 +104,13 @@ changes to agreed business behavior still require owner review.
 No unanswered business-rule choice is being hidden behind these items. If implementation
 reveals a contradiction that changes behavior, report the concrete conflict and impact;
 do not restart a long questionnaire for ordinary implementation choices.
+
+## Backend structure revision — owner accepted 2026-11-01
+
+Apply every structural review item, from required config validation through batched
+document loading. Use pydantic-settings and **synchronous** SQLAlchemy, not async ORM.
+Separate API/agent/ORM schemas, dependency assembly, context/read orchestration and
+model/cache/source responsibilities. Preserve public API, saved data/checkpoints,
+read-only SQL protections and atomic idempotent Confirm. No generic base managers or
+CRUD framework. Details: [module map](../architecture/overview.md#backend-module-boundaries),
+[WP-14](../plans/implementation.md#wp-14-owner-approved-backend-structure-and-persistence-refactor).

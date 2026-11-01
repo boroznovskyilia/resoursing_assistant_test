@@ -1,20 +1,89 @@
 """Source initialization, safe reads and compact source schema."""
 
-from contextlib import contextmanager, nullcontext
+import hashlib
 import json
 import re
-import hashlib
-from pathlib import Path
 import sqlite3
 import time
-from .telemetry import event
+from contextlib import nullcontext
+from pathlib import Path
+
+from resourcing_assistant.db.session import connect
+from resourcing_assistant.telemetry import event
 
 SUBJECT_TABLES = frozenset(
-    "approvals assignments billing_documents bookings business_units category_assignments currencies engagements org_units parties people person_skills rate_cards rate_categories requirement_requests resource_requirements risks skills status_lookup team_allocations time_entries work_item_links work_items".split()
+    [
+        "approvals",
+        "assignments",
+        "billing_documents",
+        "bookings",
+        "business_units",
+        "category_assignments",
+        "currencies",
+        "engagements",
+        "org_units",
+        "parties",
+        "people",
+        "person_skills",
+        "rate_cards",
+        "rate_categories",
+        "requirement_requests",
+        "resource_requirements",
+        "risks",
+        "skills",
+        "status_lookup",
+        "team_allocations",
+        "time_entries",
+        "work_item_links",
+        "work_items",
+    ]
 )
 PRIVATE_COLUMNS = {"people": {"auth_user_id", "avatar_url"}}
 FUNCTIONS = frozenset(
-    "abs avg cast char coalesce concat concat_ws count date datetime glob group_concat hex ifnull iif instr julianday length like likelihood likely lower ltrim max min nullif replace round rtrim sign strftime substr substring sum time total trim typeof unicode unixepoch unlikely upper".split()
+    [
+        "abs",
+        "avg",
+        "cast",
+        "char",
+        "coalesce",
+        "concat",
+        "concat_ws",
+        "count",
+        "date",
+        "datetime",
+        "glob",
+        "group_concat",
+        "hex",
+        "ifnull",
+        "iif",
+        "instr",
+        "julianday",
+        "length",
+        "like",
+        "likelihood",
+        "likely",
+        "lower",
+        "ltrim",
+        "max",
+        "min",
+        "nullif",
+        "replace",
+        "round",
+        "rtrim",
+        "sign",
+        "strftime",
+        "substr",
+        "substring",
+        "sum",
+        "time",
+        "total",
+        "trim",
+        "typeof",
+        "unicode",
+        "unixepoch",
+        "unlikely",
+        "upper",
+    ]
 )
 RULES = """Use subject source facts, never guessed literal answers. All names/IDs/windows/thresholds as named bound values. Exclude private columns. UTC epochs; human inclusive end day -> next midnight exclusive. Strict booking overlap start_ts<window_end AND end_ts>window_start. Hard metric uses kind='hard' including CMP, full intersecting minutes/60, no prorating, zero via LEFT JOIN/COALESCE. Capacity Mon-Fri8h; strict <60 excludes60. Display percentages on a 0-100 scale; a 0-1 proportion must be labeled ratio/fraction, never pct/percent. If capacity is zero, percentage is undefined: return hours and disclose that limit, never invent0%. Cents/100.0; reduce rate_cards to ONE consistent FX per currency before join; convert then SUM, round FINAL monetary display. Active project domain project/code ACT. Open requirements domain requirement/group open (OPN/PRT); submitted requests in requirement_requests.state. Roles via category_assignments/rate_categories; skills via person_skills/skills exact proficiency. Booked person from bookings.person_id, not allocation person. WBS effort SUM leaves only (NOT EXISTS child); actuals from time_entries via work_items. Aggregate independent many-to-many grains before join. HLS provider unit differs from industry in summary. Invoice cost centers cannot prove project attribution. Return requested total separately from top-N detail. NULL dates unknown, not1970. No filtering by created_ts to simulate a reference snapshot. No bio-based proven leadership. All/count semantic matching requires every eligible candidate. SQL detail LIMIT is not exact total. No source edits."""
 
@@ -40,69 +109,6 @@ def has_limit(sql, *, outer_only=False):
         elif token.upper() == "LIMIT" and (not outer_only or depth == 0):
             return True
     return False
-
-
-@contextmanager
-def connect(path, *, readonly=False):
-    conn = sqlite3.connect(
-        Path(path).resolve().as_uri() + "?mode=ro" if readonly else str(path),
-        uri=readonly,
-        timeout=5,
-    )
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys=ON")
-    try:
-        yield conn
-    finally:
-        conn.close()
-
-
-def initialize(settings):
-    settings.runtime.mkdir(parents=True, exist_ok=True)
-    target = settings.runtime / "subject.sqlite"
-    if target.resolve() == settings.source.resolve():
-        raise ValueError("Working database cannot be original source")
-    source_hash = hashlib.sha256(settings.source.read_bytes()).hexdigest()
-    if (
-        source_hash
-        != "8d00b91ae6aa23bbcf0d807c2e51fa6a45f7017a6557a4f51d11cfc82bfb4259"
-    ):
-        raise ValueError(
-            "Supplied mock source fingerprint does not match the assignment"
-        )
-    if not target.exists():
-        temp = target.with_suffix(".initializing")
-        with (
-            connect(settings.source, readonly=True) as source,
-            connect(temp) as destination,
-        ):
-            source.backup(destination)
-            destination.execute(
-                "CREATE TABLE assistant_metadata(key TEXT PRIMARY KEY,value TEXT NOT NULL)"
-            )
-            destination.executemany(
-                "INSERT INTO assistant_metadata VALUES(?,?)",
-                [("schema_version", "1"), ("source_sha256", source_hash)],
-            )
-            destination.commit()
-        temp.replace(target)
-    with connect(target) as c:
-        try:
-            metadata = dict(c.execute("SELECT key,value FROM assistant_metadata"))
-        except sqlite3.Error as error:
-            raise ValueError(
-                "Working source metadata missing; refusing to reset saved state"
-            ) from error
-        if (
-            metadata.get("schema_version") != "1"
-            or metadata.get("source_sha256") != source_hash
-        ):
-            raise ValueError(
-                "Working source version/fingerprint incompatible; saved state preserved"
-            )
-        if c.execute("PRAGMA quick_check").fetchone()[0] != "ok":
-            raise ValueError("Source database integrity failure")
-    return target
 
 
 class Reader:
@@ -217,7 +223,7 @@ class Reader:
                 )
             if table.get("notes"):
                 lines.append(table["notes"])
-        codes = sorted(set(re.findall(r"\bENG-\d{4}-\d+\b", question, re.I)))
+        codes = sorted(set(re.findall(r"\bENG-\d{4}-\d+\b", question, re.IGNORECASE)))
         if codes:
             with connect(self.path, readonly=True) as c:
                 mentions = [
@@ -239,7 +245,8 @@ class Reader:
 
         def mentioned(value):
             return bool(
-                value and re.search(r"\b" + re.escape(value) + r"\b", question, re.I)
+                value
+                and re.search(r"\b" + re.escape(value) + r"\b", question, re.IGNORECASE)
             )
 
         table, key = {
@@ -261,9 +268,11 @@ class Reader:
             if any(mentioned(v) for v in schema["skills"]["values"]["name"]):
                 allowed["skills"] = {"skill_id", "name"}
                 allowed["person_skills"] = {"person_id", "skill_id"}
-                if re.search(r"\bproficiency\b", question, re.I):
+                if re.search(r"\bproficiency\b", question, re.IGNORECASE):
                     allowed["person_skills"].add("proficiency")
-            if re.search(r"booked|booking|availability|utilization", question, re.I):
+            if re.search(
+                r"booked|booking|availability|utilization", question, re.IGNORECASE
+            ):
                 allowed["bookings"] = self.columns["bookings"]
         else:
             if kind == "risk":
@@ -272,7 +281,9 @@ class Reader:
                     allowed["risks"].add("severity")
                 allowed["engagements"] = {"engagement_id"}
             if re.search(
-                r"\b(active|closed|cancelled|canceled|hold|new)\b", question, re.I
+                r"\b(active|closed|cancelled|canceled|hold|new)\b",
+                question,
+                re.IGNORECASE,
             ):
                 allowed.setdefault("engagements", {"engagement_id"}).add("status_id")
                 allowed["status_lookup"] = self.columns["status_lookup"]
@@ -293,7 +304,7 @@ class Reader:
                         "client_party_id"
                     )
                     allowed["parties"] = self.columns["parties"]
-            if re.search(r"\bENG-\d{4}-\d+\b", question, re.I):
+            if re.search(r"\bENG-\d{4}-\d+\b", question, re.IGNORECASE):
                 allowed.setdefault("engagements", {"engagement_id"}).add("code")
         return allowed
 
@@ -303,7 +314,7 @@ class Reader:
         if re.search(
             r"\b(previous|above|those|these|them|same|first|second|third|fourth|fifth)\b",
             question,
-            re.I,
+            re.IGNORECASE,
         ):
             return None
         if any(
@@ -330,10 +341,10 @@ class Reader:
             return None
         predicates, parameters = [], {}
         if "status_lookup" in allowed:
-            if not re.search(r"\bactive\b", question, re.I) or re.search(
+            if not re.search(r"\bactive\b", question, re.IGNORECASE) or re.search(
                 r"\b(not active|inactive|closed|hold|cancelled|canceled|new)\b",
                 question,
-                re.I,
+                re.IGNORECASE,
             ):
                 return None
             predicates.append(
@@ -348,7 +359,9 @@ class Reader:
                     terms = [
                         v
                         for v in row
-                        if re.search(r"\b" + re.escape(v) + r"\b", question, re.I)
+                        if re.search(
+                            r"\b" + re.escape(v) + r"\b", question, re.IGNORECASE
+                        )
                     ]
                     if not terms:
                         continue
@@ -361,14 +374,14 @@ class Reader:
                             + re.escape(v)
                             + r"\b",
                             question,
-                            re.I,
+                            re.IGNORECASE,
                         )
                         for v in terms
                     )
                     if not negative and re.search(
                         r"\b(outside|except|excluding|exclude|other than|not)\b",
                         question,
-                        re.I,
+                        re.IGNORECASE,
                     ):
                         return None
                     key = "unit_" + str(len(parameters))

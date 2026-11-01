@@ -1,29 +1,33 @@
 """Thread-scoped admission, graph execution and authoritative action readback."""
 
-from contextlib import contextmanager
 import json
 import threading
-from .agent import Agent, card
-from .data import initialize, Reader
-from .llm import USAGE, configure_logging, event, token_count
-from .models import AppError, Response
-from .storage import Store
+from contextlib import contextmanager
+
+from resourcing_assistant.api.responses import card
+from resourcing_assistant.api.schemas import Response
+from resourcing_assistant.errors import AppError
+from resourcing_assistant.llm.tokens import token_count
+from resourcing_assistant.telemetry import USAGE, event
 
 
-class Service:
-    def __init__(self, settings, gateway=None):
-        self.settings = settings
-        configure_logging(settings.runtime)
-        self.subject = initialize(settings)
-        self.store = Store(settings, self.subject)
-        self.reader = Reader(settings, self.subject)
-        self.agent = Agent(settings, self.store, self.reader, gateway)
+class ConversationService:
+    def __init__(self, settings, conversations, bookings, agent, subject):
+        self.settings, self.conversations, self.bookings = (
+            settings,
+            conversations,
+            bookings,
+        )
+        self.agent, self.subject = agent, subject
         self.locks = {}
         self.registry = threading.Lock()
 
+    def history(self, thread):
+        return read_history(self.conversations, self.bookings, self.settings, thread)
+
     @contextmanager
     def guard(self, thread):
-        self.store.require_thread(thread)
+        self.conversations.require_thread(thread)
         with self.registry:
             lock = self.locks.setdefault(thread, threading.Lock())
         if not lock.acquire(blocking=False):
@@ -41,7 +45,7 @@ class Service:
     def replay(self, row):
         if row["response"]:
             return Response.model_validate(
-                self.store.overlay(json.loads(row["response"]))
+                self.bookings.overlay(json.loads(row["response"]))
             )
         if row["status"] == "processing":
             return Response(
@@ -71,13 +75,13 @@ class Service:
     def message(self, thread, request, text):
         if not text.strip():
             raise AppError("invalid_request", "Message cannot be blank", 422)
-        if token_count(text) > 9000:
+        if token_count(text) > self.settings.message_token_limit:
             raise AppError(
                 "context_budget_exceeded", "Message is too large; please narrow it", 422
             )
-        self.store.require_thread(thread)
+        self.conversations.require_thread(thread)
         try:
-            existing = self.store.request(thread, request)
+            existing = self.conversations.request(thread, request)
         except AppError as error:
             if error.status != 404:
                 raise
@@ -89,7 +93,7 @@ class Service:
                 )
             return self.replay(existing)
         with self.guard(thread):
-            row = self.store.admit(
+            row = self.conversations.admit(
                 thread, request, text, self.settings.reference().isoformat()
             )
             return self.execute(row)
@@ -107,10 +111,10 @@ class Service:
             )
             result = Response.model_validate(result).model_dump(mode="json")
             return Response.model_validate(
-                self.store.finish(row["thread_id"], row["request_id"], result)
+                self.conversations.finish(row["thread_id"], row["request_id"], result)
             )
         except AppError as error:
-            self.store.fail(row["thread_id"], row["request_id"], error)
+            self.conversations.fail(row["thread_id"], row["request_id"], error)
             raise
         except Exception as error:
             event("operation_failed", error_class=type(error).__name__)
@@ -119,31 +123,31 @@ class Service:
                 "The operation failed; saved history and actions are preserved",
                 500,
             )
-            self.store.fail(row["thread_id"], row["request_id"], failure)
+            self.conversations.fail(row["thread_id"], row["request_id"], failure)
             raise failure from error
         finally:
             event("request_finished", **usage)
             USAGE.reset(token)
 
     def resume(self, thread, request):
-        row = self.store.request(thread, request)
+        row = self.conversations.request(thread, request)
         if row["status"] != "interrupted":
             return self.replay(row)
         with self.guard(thread):
-            row = self.store.resume(thread, request)
+            row = self.conversations.resume(thread, request)
             return self.execute(row, resume=True)
 
     def decide(self, thread, action_id, decision):
         with self.guard(thread):
-            existing = self.store.action(thread, action_id)
+            existing = self.bookings.action(thread, action_id)
             if existing["status"] == "pending":
-                for req in self.store.history(thread)["requests"]:
+                for req in self.history(thread)["requests"]:
                     if req["status"] in ("processing", "interrupted"):
                         raise AppError(
                             "resume_required",
                             "Continue the interrupted request before deciding this action",
                         )
-            action = self.store.decide(thread, action_id, decision)
+            action = self.bookings.decide(thread, action_id, decision)
             issues = []
             try:
                 self.agent.decision(thread, action)
@@ -171,7 +175,9 @@ class Service:
             }
             # The receipt is already committed. A failing app-history write cannot undo it.
             try:
-                result = self.store.finish(thread, "decision_" + action_id, result)
+                result = self.conversations.finish(
+                    thread, "decision_" + action_id, result
+                )
             except Exception as error:
                 event(
                     "action_history_lag",
@@ -184,7 +190,7 @@ class Service:
         return {
             "status": "alive",
             "chat": "configured_unverified"
-            if self.settings.endpoint and self.settings.api_key
+            if self.settings.azure_configured
             else "not_configured",
             "embeddings": self.agent.semantic.embedding_status,
             "reference_date": self.settings.reference().isoformat(),
@@ -192,3 +198,15 @@ class Service:
 
     def close(self):
         self.agent.close()
+        self.conversations.database.close()
+        self.bookings.repository.database.close()
+
+
+def read_history(conversations, bookings, settings, thread):
+    result = conversations.history(thread)
+    for row in result["messages"]:
+        if row["role"] == "assistant":
+            row["content"] = bookings.overlay(row["content"])
+    result["pending_action"] = bookings.pending(thread)
+    result["effective_reference_date"] = settings.reference().isoformat()
+    return result

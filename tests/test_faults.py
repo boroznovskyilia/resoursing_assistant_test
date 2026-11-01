@@ -1,13 +1,16 @@
 import io
 import json
 import logging
+
 import pytest
-from tests.test_agent import ScriptedGateway
+
+from resourcing_assistant.agent.schemas import Query, ReadPlan
+from resourcing_assistant.app import create_service
 from resourcing_assistant.config import Settings
-from resourcing_assistant.service import Service
-from resourcing_assistant.models import AppError, ReadPlan, Query
-from resourcing_assistant.llm import LOG
-from resourcing_assistant.evaluation import invariants
+from resourcing_assistant.errors import AppError
+from resourcing_assistant.evaluation.runner import invariants
+from resourcing_assistant.telemetry import LOG
+from tests.test_agent import ScriptedGateway
 
 
 @pytest.mark.parametrize(
@@ -74,9 +77,9 @@ def test_primary_query_scope_and_domain_get_one_shared_repair(
             return super().call(name, **inputs)
 
     gateway = Corrected()
-    s = Service(Settings(runtime=tmp_path), gateway)
+    s = create_service(Settings(runtime=tmp_path), gateway)
     try:
-        thread = s.store.create_thread()["thread_id"]
+        thread = s.conversations.create_thread()["thread_id"]
         response = s.message(thread, "scope", message)
         assert response.request_status == "completed"
         assert len(gateway.errors) == 2 and reason in gateway.errors[1]
@@ -110,8 +113,8 @@ def test_sql_format_and_syntax_share_one_repair_then_next_request_works(tmp_path
             return super().call(name, **inputs)
 
     gateway = Broken()
-    s = Service(Settings(runtime=tmp_path), gateway)
-    thread = s.store.create_thread()["thread_id"]
+    s = create_service(Settings(runtime=tmp_path), gateway)
+    thread = s.conversations.create_thread()["thread_id"]
     try:
         with pytest.raises(AppError):
             s.message(thread, "r1", "count")
@@ -142,8 +145,8 @@ def test_policy_violation_gets_no_repair_and_preserves_source(tmp_path):
             return super().call(name, **inputs)
 
     gateway = Forbidden()
-    s = Service(Settings(runtime=tmp_path), gateway)
-    thread = s.store.create_thread()["thread_id"]
+    s = create_service(Settings(runtime=tmp_path), gateway)
+    thread = s.conversations.create_thread()["thread_id"]
     try:
         with pytest.raises(AppError):
             s.message(thread, "r1", "count")
@@ -162,14 +165,14 @@ def test_compaction_and_misleading_summary_never_change_pending_terms(tmp_path):
             return super().call(name, **inputs)
 
     gateway = Summary()
-    s = Service(Settings(runtime=tmp_path), gateway)
-    thread = s.store.create_thread()["thread_id"]
+    s = create_service(Settings(runtime=tmp_path), gateway)
+    thread = s.conversations.create_thread()["thread_id"]
     try:
         action = s.message(thread, "book", "book").blocks[0].action_id
         for i in range(6):
             s.message(thread, f"context{i}", "context " * 800)
         assert any(name == "SummarizeHistory" for name, _ in gateway.calls)
-        assert len(s.store.history(thread)["messages"]) == 14
+        assert len(s.history(thread)["messages"]) == 14
         result = s.decide(thread, action, "confirm")
         assert (
             result.blocks[0].fields["person_id"] == 1
@@ -195,8 +198,8 @@ def test_fallback_logs_scope_no_prompt_and_retains_pending(tmp_path):
                 value.question = "Recommend active projects"
             return value
 
-    s = Service(Settings(runtime=tmp_path), Shortlist())
-    thread = s.store.create_thread()["thread_id"]
+    s = create_service(Settings(runtime=tmp_path), Shortlist())
+    thread = s.conversations.create_thread()["thread_id"]
     stream = io.StringIO()
     handler = logging.StreamHandler(stream)
     LOG.addHandler(handler)
@@ -205,7 +208,7 @@ def test_fallback_logs_scope_no_prompt_and_retains_pending(tmp_path):
         result = s.message(thread, "semantic", "Recommend active projects")
         assert (
             result.request_status == "completed"
-            and s.store.pending(thread)["action_id"] == action
+            and s.bookings.pending(thread)["action_id"] == action
         )
         logs = stream.getvalue()
         events = [json.loads(line) for line in logs.splitlines()]
@@ -221,9 +224,9 @@ def test_fallback_logs_scope_no_prompt_and_retains_pending(tmp_path):
 
 
 def test_source_invariants_detect_illegal_working_copy_change(tmp_path):
-    from resourcing_assistant.data import connect
+    from resourcing_assistant.db.session import connect
 
-    s = Service(Settings(runtime=tmp_path), ScriptedGateway())
+    s = create_service(Settings(runtime=tmp_path), ScriptedGateway())
     try:
         assert invariants(s.settings.source, s.subject)
         with connect(s.subject) as c:
@@ -237,38 +240,25 @@ def test_source_invariants_detect_illegal_working_copy_change(tmp_path):
 def test_lost_commit_acknowledgement_returns_existing_receipt_on_retry(
     tmp_path, monkeypatch
 ):
-    from contextlib import contextmanager
-    import resourcing_assistant.storage as module
+    from sqlalchemy.orm import Session
 
-    real_connect = module.connect
-    service = Service(Settings(runtime=tmp_path), ScriptedGateway())
-    thread = service.store.create_thread()["thread_id"]
+    service = create_service(Settings(runtime=tmp_path), ScriptedGateway())
+    thread = service.conversations.create_thread()["thread_id"]
     action = service.message(thread, "r1", "book").blocks[0].action_id
+    real_commit = Session.commit
     armed = [True]
 
-    class Proxy:
-        def __init__(self, connection):
-            self.connection = connection
+    def lost_acknowledgement(session):
+        real_commit(session)
+        if armed[0]:
+            armed[0] = False
+            raise OSError("Simulated lost commit acknowledgement")
 
-        def __getattr__(self, key):
-            return getattr(self.connection, key)
-
-        def commit(self):
-            self.connection.commit()
-            if armed[0]:
-                armed[0] = False
-                raise OSError("Simulated lost commit acknowledgement")
-
-    @contextmanager
-    def interrupted_connect(*args, **kwargs):
-        with real_connect(*args, **kwargs) as connection:
-            yield Proxy(connection)
-
-    monkeypatch.setattr(module, "connect", interrupted_connect)
+    monkeypatch.setattr(Session, "commit", lost_acknowledgement)
     try:
         with pytest.raises(OSError):
-            service.store.decide(thread, action, "confirm")
-        committed = service.store.action(thread, action)
+            service.bookings.decide(thread, action, "confirm")
+        committed = service.bookings.action(thread, action)
         repeated = service.decide(thread, action, "confirm")
         assert repeated.blocks[0].booking_id == committed["booking_id"]
         assert invariants(service.settings.source, service.subject)
@@ -277,8 +267,8 @@ def test_lost_commit_acknowledgement_returns_existing_receipt_on_retry(
 
 
 def test_checkpoint_lag_after_commit_does_not_hide_success(tmp_path, monkeypatch):
-    service = Service(Settings(runtime=tmp_path), ScriptedGateway())
-    thread = service.store.create_thread()["thread_id"]
+    service = create_service(Settings(runtime=tmp_path), ScriptedGateway())
+    thread = service.conversations.create_thread()["thread_id"]
     action = service.message(thread, "r1", "book").blocks[0].action_id
 
     def failure(*args):

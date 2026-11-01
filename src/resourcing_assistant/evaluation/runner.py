@@ -1,22 +1,26 @@
 """Real-agent evaluation. Oracles are used only by this separate runner/scorer."""
 
 import argparse
-from contextlib import contextmanager
-from datetime import datetime, timezone
 import hashlib
 import json
 import os
-from pathlib import Path
 import socket
 import subprocess
 import sys
 import time
+from contextlib import contextmanager
+from datetime import UTC, datetime
+from pathlib import Path
 from uuid import uuid4
+
 import httpx
-from .config import Settings, ROOT, period
-from .data import SUBJECT_TABLES, connect
-from .scoring import score
 from pydantic import BaseModel, ConfigDict, Field
+
+from resourcing_assistant.config import ROOT, Settings
+from resourcing_assistant.db.reader import SUBJECT_TABLES
+from resourcing_assistant.db.session import connect
+from resourcing_assistant.domain.calculations import period
+from resourcing_assistant.evaluation.scoring import score
 
 
 def cases():
@@ -65,7 +69,7 @@ def server(settings, runtime):
         "RUNTIME_DIR": str(runtime),
         "REFERENCE_DATE": "2026-04-01T00:00:00Z",
         "AZURE_ENDPOINT": settings.endpoint,
-        "AZURE_API_KEY": settings.api_key,
+        "AZURE_API_KEY": settings.api_key.get_secret_value(),
         "AZURE_API_VERSION": settings.api_version,
         "CHAT_DEPLOYMENT": settings.chat_deployment,
         "EMBEDDING_DEPLOYMENT": settings.embedding_deployment,
@@ -77,7 +81,7 @@ def server(settings, runtime):
                 sys.executable,
                 "-m",
                 "uvicorn",
-                "resourcing_assistant.api:create_app",
+                "resourcing_assistant.app:create_app",
                 "--factory",
                 "--host",
                 "127.0.0.1",
@@ -202,15 +206,11 @@ def run_case(settings, case, runtime):
                     and fields.get("minutes") == expected_hours * 60
                     and fields.get("kind") == "soft"
                     and fields.get("start")
-                    == datetime.fromtimestamp(expected_start, timezone.utc)
-                    .date()
-                    .isoformat()
+                    == datetime.fromtimestamp(expected_start, UTC).date().isoformat()
                     and fields.get("end_exclusive")
-                    == datetime.fromtimestamp(expected_end, timezone.utc)
-                    .date()
-                    .isoformat()
+                    == datetime.fromtimestamp(expected_end, UTC).date().isoformat()
                     and fields.get("end_inclusive")
-                    == datetime.fromtimestamp(expected_end - 86400, timezone.utc)
+                    == datetime.fromtimestamp(expected_end - 86400, UTC)
                     .date()
                     .isoformat()
                 )
@@ -383,7 +383,7 @@ def apply_review(report, review):
                 "reviewer": review.reviewer,
                 "accepted": decision.accepted,
                 "notes": decision.notes,
-                "at": datetime.now(timezone.utc).isoformat(),
+                "at": datetime.now(UTC).isoformat(),
             }
         )
         row["review_status"] = "approved" if decision.accepted else "rejected"
@@ -466,9 +466,9 @@ def main():
         report["rescoring"] = {
             "original_report_sha256": hashlib.sha256(original).hexdigest(),
             "scorer_sha256": hashlib.sha256(
-                (ROOT / "src/resourcing_assistant/scoring.py").read_bytes()
+                (ROOT / "src/resourcing_assistant/evaluation/scoring.py").read_bytes()
             ).hexdigest(),
-            "at": datetime.now(timezone.utc).isoformat(),
+            "at": datetime.now(UTC).isoformat(),
             "method": "All saved answers from this run, unchanged. Recorded source/write observations retained; no inference or write replay. Free-text reviews reset to required.",
             "answer_sha256": {
                 p.name: hashlib.sha256(p.read_bytes()).hexdigest()
@@ -496,9 +496,7 @@ def main():
     selected = [q for q in all_cases if not args.selected or q["id"] in args.selected]
     if args.selected and set(args.selected) - {q["id"] for q in selected}:
         parser.error("Unknown case ID")
-    run_id = (
-        datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "_" + uuid4().hex[:6]
-    )
+    run_id = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ") + "_" + uuid4().hex[:6]
     output = args.output / run_id
     output.mkdir(parents=True, exist_ok=True)
     report = {
@@ -512,7 +510,7 @@ def main():
     }
     for case in selected:
         start = time.monotonic()
-        if not settings.endpoint or not settings.api_key:
+        if not settings.azure_configured:
             result = {
                 "score": None,
                 "status": "not_run",

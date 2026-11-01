@@ -122,3 +122,14 @@ initial settings, not performance guarantees or evidence of a current provider o
 See [topic checks](../../tests/test_faults.py) and [current verification](../development/verification.md).
 Known-case Azure results and explicit AI-assisted review are recorded in [evaluation evidence](../evaluation/README.md).
 Unseen quality and unmapped scenarios remain unverified.
+
+## Configuration boundary
+
+pydantic-settings validates supplied reference dates (timezone required), positive
+resource limits and context-budget relationships before creating application services.
+An unset reference uses current UTC; assignment startup explicitly pins April1.
+The dotenv file is loaded explicitly without mutating os.environ; constructor values
+win over environment, environment wins over dotenv, then defaults. Empty values are
+ignored and existing Azure aliases remain supported. SecretStr masks credential
+representations; settings errors hide input values. The API can still start without
+credentials and expose history/health. See [configuration checks](../../tests/test_config.py).

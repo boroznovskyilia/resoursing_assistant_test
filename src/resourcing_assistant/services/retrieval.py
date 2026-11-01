@@ -1,128 +1,33 @@
-"""Source-linked local vectors, exhaustive assessment and transparent fallback."""
+"""Semantic orchestration over injected documents, vectors and model clients."""
 
 import hashlib
 import json
-import math
 import re
 import time
-from openai import AzureOpenAI
-from .data import connect
-from .llm import event, retry_call, token_count, USAGE
-from .models import Candidate, AppError, Assessment
+
+from resourcing_assistant.agent.schemas import Assessment, Candidate
+from resourcing_assistant.llm.embeddings import normalize
+from resourcing_assistant.llm.tokens import token_count
+from resourcing_assistant.telemetry import event
 
 
-def normalize(vector):
-    if not vector or not all(
-        isinstance(v, (float, int)) and math.isfinite(v) for v in vector
-    ):
-        raise ValueError("Invalid embedding vector")
-    norm = math.sqrt(sum(v * v for v in vector))
-    if norm == 0:
-        raise ValueError("Zero embedding vector")
-    return [v / norm for v in vector]
+class RetrievalService:
+    def __init__(self, settings, documents, vectors, embeddings, gateway):
+        self.settings, self.documents, self.vectors = settings, documents, vectors
+        self.embeddings, self.gateway = embeddings, gateway
 
+    @property
+    def embedding_status(self):
+        return self.embeddings.status
 
-class Semantic:
-    def __init__(self, settings, store, gateway):
-        self.settings, self.store, self.gateway = settings, store, gateway
-        self.embedding_status = (
-            "unknown" if settings.endpoint and settings.api_key else "not_configured"
-        )
-        with connect(store.path) as c:
-            c.executescript("""CREATE TABLE IF NOT EXISTS semantic_vectors(cache_key TEXT PRIMARY KEY, model TEXT NOT NULL, text_hash TEXT NOT NULL, dimension INTEGER NOT NULL, vector TEXT NOT NULL);
-            CREATE TABLE IF NOT EXISTS semantic_memberships(source_ref TEXT PRIMARY KEY, cache_key TEXT NOT NULL REFERENCES semantic_vectors);""")
+    @embedding_status.setter
+    def embedding_status(self, value):
+        self.embeddings.status = value
 
     def candidates(self, kind, eligible=None):
-        result = []
-        with connect(self.store.subject, readonly=True) as c:
-            if kind == "person":
-                for person in c.execute(
-                    "SELECT person_id,display_name,bio,location_region FROM people ORDER BY person_id"
-                ):
-                    if eligible is not None and person["person_id"] not in eligible:
-                        continue
-                    roles = [
-                        r[0]
-                        for r in c.execute(
-                            "SELECT rc.name FROM category_assignments ca JOIN rate_categories rc USING(category_id) WHERE ca.person_id=? ORDER BY ca.is_default DESC,rc.category_id",
-                            (person["person_id"],),
-                        )
-                    ]
-                    skills = [
-                        dict(r)
-                        for r in c.execute(
-                            "SELECT s.name,ps.proficiency FROM person_skills ps JOIN skills s USING(skill_id) WHERE ps.person_id=? ORDER BY s.skill_id",
-                            (person["person_id"],),
-                        )
-                    ]
-                    text = "\n".join(
-                        [
-                            person["bio"] or "",
-                            "Roles: " + ", ".join(roles),
-                            "Skills: " + ", ".join(s["name"] for s in skills),
-                        ]
-                    )
-                    facts = {**dict(person), "roles": roles, "skills": skills}
-                    result.append(
-                        Candidate(
-                            source_id=f"person:{person['person_id']}",
-                            kind="person",
-                            entity_id=person["person_id"],
-                            text=text,
-                            facts=facts,
-                        )
-                    )
-            elif kind == "project":
-                for project in c.execute(
-                    "SELECT engagement_id,code,title,summary FROM engagements ORDER BY engagement_id"
-                ):
-                    if (
-                        eligible is not None
-                        and project["engagement_id"] not in eligible
-                    ):
-                        continue
-                    risks = [
-                        dict(r)
-                        for r in c.execute(
-                            "SELECT risk_id,description,severity FROM risks WHERE engagement_id=? ORDER BY risk_id",
-                            (project["engagement_id"],),
-                        )
-                    ]
-                    text = "\n".join(
-                        [project["summary"] or ""]
-                        + [r["description"] or "" for r in risks]
-                    )
-                    result.append(
-                        Candidate(
-                            source_id=f"project:{project['engagement_id']}",
-                            kind="project",
-                            entity_id=project["engagement_id"],
-                            text=text,
-                            facts={**dict(project), "risks": risks},
-                        )
-                    )
-            else:
-                for risk in c.execute(
-                    "SELECT r.*,e.code FROM risks r JOIN engagements e USING(engagement_id) ORDER BY risk_id"
-                ):
-                    if eligible is not None and risk["risk_id"] not in eligible:
-                        continue
-                    result.append(
-                        Candidate(
-                            source_id=f"risk:{risk['risk_id']}",
-                            kind="risk",
-                            entity_id=risk["risk_id"],
-                            text=risk["description"] or "",
-                            facts=dict(risk),
-                        )
-                    )
-        return result
+        return self.documents.candidates(kind, eligible)
 
     def _vectors(self, documents):
-        if not self.settings.endpoint or not self.settings.api_key:
-            raise AppError(
-                "embedding_unavailable", "Embedding deployment is not configured", 503
-            )
         model = (
             self.settings.embedding_deployment
             + ":"
@@ -130,85 +35,42 @@ class Semantic:
             + ":"
             + hashlib.sha256(self.settings.endpoint.encode()).hexdigest()[:16]
         )
-        records = {}
-        missing = {}
-        with connect(self.store.path) as c:
-            for reference, text in documents:
-                text_hash = hashlib.sha256(text.encode()).hexdigest()
-                key = hashlib.sha256((model + text_hash).encode()).hexdigest()
-                records[reference] = key
-                row = c.execute(
-                    "SELECT vector,dimension FROM semantic_vectors WHERE cache_key=?",
-                    (key,),
-                ).fetchone()
-                if row:
-                    value = normalize(json.loads(row[0]))
-                    if len(value) != row[1]:
-                        raise ValueError("Stored vector dimension mismatch")
-                else:
-                    missing[key] = (text_hash, text)
-        client = AzureOpenAI(
-            azure_endpoint=self.settings.endpoint,
-            api_key=self.settings.api_key,
-            api_version=self.settings.api_version,
-            max_retries=0,
-            timeout=self.settings.model_timeout,
-        )
-        values = list(missing.items())
-        try:
-            for offset in range(0, len(values), 64):
-                batch = values[offset : offset + 64]
-                output = retry_call(
-                    lambda: client.embeddings.create(
-                        model=self.settings.embedding_deployment,
-                        input=[v[1][1] for v in batch],
-                    ),
-                    stage="embedding",
-                    deployment=self.settings.embedding_deployment,
-                )
-                usage = USAGE.get()
-                used = getattr(getattr(output, "usage", None), "total_tokens", None)
-                if usage is not None and isinstance(used, int):
-                    usage["embedding_tokens"] = usage.get("embedding_tokens", 0) + used
-                if self.embedding_status == "degraded":
-                    event(
-                        "embedding_recovered",
-                        deployment=self.settings.embedding_deployment,
-                    )
-                self.embedding_status = "healthy"
-                ordered = sorted(output.data, key=lambda item: item.index)
-                if [v.index for v in ordered] != list(range(len(batch))):
-                    raise ValueError("Embedding response omitted documents")
-                with connect(self.store.path) as c:
-                    for (key, (text_hash, text)), item in zip(
-                        batch, ordered, strict=True
-                    ):
-                        vector = normalize(item.embedding)
-                        c.execute(
-                            "INSERT INTO semantic_vectors VALUES(?,?,?,?,?) ON CONFLICT(cache_key) DO NOTHING",
-                            (key, model, text_hash, len(vector), json.dumps(vector)),
-                        )
-                    c.commit()
-        finally:
-            client.close()
-        vectors = {}
-        with connect(self.store.path) as c:
-            for reference, key in records.items():
-                vector = normalize(
-                    json.loads(
-                        c.execute(
-                            "SELECT vector FROM semantic_vectors WHERE cache_key=?",
-                            (key,),
-                        ).fetchone()[0]
-                    )
-                )
-                vectors[reference] = vector
-                c.execute(
-                    "INSERT INTO semantic_memberships VALUES(?,?) ON CONFLICT(source_ref) DO UPDATE SET cache_key=excluded.cache_key",
-                    (reference, key),
-                )
-            c.commit()
-        return vectors
+        records, texts = {}, {}
+        for reference, text in documents:
+            text_hash = hashlib.sha256(text.encode()).hexdigest()
+            key = hashlib.sha256((model + text_hash).encode()).hexdigest()
+            records[reference] = key
+            texts[key] = (text_hash, text)
+        cached = self.vectors.get_many(texts)
+        values = {}
+        for key, (vector, dimension) in cached.items():
+            value = normalize(vector)
+            if len(value) != dimension:
+                raise ValueError("Stored vector dimension mismatch")
+            values[key] = value
+        missing = [
+            (key, text_hash, text)
+            for key, (text_hash, text) in texts.items()
+            if key not in cached
+        ]
+        for offset in range(0, len(missing), self.settings.embedding_batch_size):
+            batch = missing[offset : offset + self.settings.embedding_batch_size]
+            output = self.embeddings.embed([text for _, _, text in batch])
+            additions = [
+                (key, text_hash, vector)
+                for (key, text_hash, _), vector in zip(batch, output, strict=True)
+            ]
+            self.vectors.save(model, additions)
+            # Read the winner of ON CONFLICT in case another thread cached the same text.
+            for key, (vector, dimension) in self.vectors.get_many(
+                [key for key, _, _ in additions]
+            ).items():
+                value = normalize(vector)
+                if len(value) != dimension:
+                    raise ValueError("Stored vector dimension mismatch")
+                values[key] = value
+        self.vectors.memberships(records)
+        return {reference: values[key] for reference, key in records.items()}
 
     def shortlist(self, criteria, candidates, limit=40):
         docs = [("query:" + hashlib.sha256(criteria.encode()).hexdigest(), criteria)]
@@ -248,11 +110,11 @@ class Semantic:
         batch = []
         for candidate in candidates:
             if batch and (
-                len(batch) >= 12
+                len(batch) >= self.settings.assessment_batch_size
                 or token_count(
                     [x.model_dump() for x in batch] + [candidate.model_dump()]
                 )
-                > 6000
+                > self.settings.assessment_tokens
             ):
                 batches.append(batch)
                 batch = []
@@ -310,7 +172,9 @@ class Semantic:
             risk_severity = bool(
                 checks.risk
                 and re.search(
-                    r"\b(severity|critical|high|medium|low)\b", checks.risk, re.I
+                    r"\b(severity|critical|high|medium|low)\b",
+                    checks.risk,
+                    re.IGNORECASE,
                 )
             )
             for candidate in candidates:
@@ -460,7 +324,11 @@ class Semantic:
                 selected = self.shortlist(
                     interpretation.criteria or interpretation.question,
                     all_candidates,
-                    max(40, interpretation.requested_count * 4),
+                    max(
+                        self.settings.shortlist_min_candidates,
+                        interpretation.requested_count
+                        * self.settings.shortlist_multiplier,
+                    ),
                 )
             except Exception as error:
                 self.embedding_status = "degraded"
@@ -496,12 +364,16 @@ class Semantic:
         order = "source_id"
         ranking_reasons = {}
         if matched and (
-            len(matched) <= 40 or interpretation.semantic_mode == "shortlist"
+            len(matched) <= self.settings.max_rank_candidates
+            or interpretation.semantic_mode == "shortlist"
         ):
             try:
                 if interpretation.semantic_mode == "shortlist":
                     # Carry the best requested shortlist through finite candidate groups.
-                    pools = [matched[i : i + 12] for i in range(0, len(matched), 12)]
+                    pools = [
+                        matched[i : i + self.settings.rank_batch_size]
+                        for i in range(0, len(matched), self.settings.rank_batch_size)
+                    ]
                     ranked = []
                 else:
                     pools = [matched]
@@ -549,7 +421,7 @@ class Semantic:
                 )
                 event("ranking_failed", error_class=type(error).__name__)
                 ranked = sorted(matched, key=lambda pair: pair[0].source_id)
-        elif len(matched) > 40:
+        elif len(matched) > self.settings.max_rank_candidates:
             ranked = sorted(matched, key=lambda pair: pair[0].source_id)
         if interpretation.semantic_mode == "shortlist":
             ranked = ranked[: interpretation.requested_count]

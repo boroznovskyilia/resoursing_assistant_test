@@ -1,16 +1,17 @@
 import pytest
-from resourcing_assistant.config import Settings
-from resourcing_assistant.service import Service
-from resourcing_assistant.models import (
-    Interpretation,
-    BookingSlots,
-    ReadPlan,
-    Query,
-    AppError,
+
+from resourcing_assistant.agent.schemas import (
     Assessment,
-    RankItem,
+    BookingSlots,
+    Interpretation,
     ProjectChecks,
+    Query,
+    RankItem,
+    ReadPlan,
 )
+from resourcing_assistant.app import create_service
+from resourcing_assistant.config import Settings
+from resourcing_assistant.errors import AppError
 
 
 class ScriptedGateway:
@@ -121,7 +122,7 @@ class ScriptedGateway:
 @pytest.fixture
 def service(tmp_path):
     gateway = ScriptedGateway()
-    s = Service(
+    s = create_service(
         Settings(runtime=tmp_path, reference_date="2026-04-01T00:00:00Z"), gateway
     )
     yield s, gateway
@@ -130,7 +131,7 @@ def service(tmp_path):
 
 def test_factual_dedup_partial_and_no_model_on_history(service):
     s, gateway = service
-    thread = s.store.create_thread()["thread_id"]
+    thread = s.conversations.create_thread()["thread_id"]
     first = s.message(thread, "r1", "count")
     assert first.blocks[1].rows == [{"people": 400}]
     calls = len(gateway.calls)
@@ -138,7 +139,7 @@ def test_factual_dedup_partial_and_no_model_on_history(service):
         s.message(thread, "r1", "count").response_message_id
         == first.response_message_id
     )
-    s.store.history(thread)
+    s.history(thread)
     assert len(gateway.calls) == calls
     gateway.fail_explanation = True
     result = s.message(thread, "r2", "count")
@@ -149,18 +150,18 @@ def test_factual_dedup_partial_and_no_model_on_history(service):
 
 def test_pending_read_confirmation_and_real_checkpoint_reopen(service):
     s, gateway = service
-    thread = s.store.create_thread()["thread_id"]
+    thread = s.conversations.create_thread()["thread_id"]
     response = s.message(thread, "r1", "book")
     action = response.blocks[0].action_id
     assert response.request_status == "completed"
     assert s.agent.graph.get_state(s.agent.config(thread)).next == ("await_action",)
     s.message(thread, "r2", "count")
-    assert s.store.pending(thread)["action_id"] == action
+    assert s.bookings.pending(thread)["action_id"] == action
     before = len(gateway.calls)
     s.message(thread, "r3", "yes")
     assert len(gateway.calls) == before
     s.close()
-    restarted = Service(s.settings, gateway)
+    restarted = create_service(s.settings, gateway)
     try:
         result = restarted.decide(thread, action, "confirm")
         assert result.blocks[0].status == "confirmed"
@@ -170,9 +171,7 @@ def test_pending_read_confirmation_and_real_checkpoint_reopen(service):
         )
         assert len(gateway.calls) == before
         assert (
-            restarted.store.history(thread)["messages"][1]["content"]["blocks"][0][
-                "status"
-            ]
+            restarted.history(thread)["messages"][1]["content"]["blocks"][0]["status"]
             == "confirmed"
         )
         restarted.message(thread, "r4", "count")
@@ -183,14 +182,14 @@ def test_pending_read_confirmation_and_real_checkpoint_reopen(service):
 
 def test_ambiguity_and_clean_new_thread(service):
     s, gateway = service
-    thread = s.store.create_thread()["thread_id"]
+    thread = s.conversations.create_thread()["thread_id"]
     response = s.message(thread, "r1", "ambiguous")
-    assert s.store.pending(thread) is None
+    assert s.bookings.pending(thread) is None
     assert any(
         b.type == "table" and {r["person_id"] for r in b.rows} == {78, 238}
         for b in response.blocks
     )
-    other = s.store.create_thread()["thread_id"]
+    other = s.conversations.create_thread()["thread_id"]
     s.message(other, "r1", "count")
     context = next(
         inputs["context"]
@@ -202,7 +201,7 @@ def test_ambiguity_and_clean_new_thread(service):
 
 def test_exhaustive_semantic_source_set(service):
     s, _ = service
-    thread = s.store.create_thread()["thread_id"]
+    thread = s.conversations.create_thread()["thread_id"]
     result = s.message(thread, "r1", "active semantic")
     matches = next(
         b
@@ -217,7 +216,7 @@ def test_exhaustive_semantic_source_set(service):
 
 def test_scalar_followup_keeps_last_entity_order(service):
     s, _ = service
-    thread = s.store.create_thread()["thread_id"]
+    thread = s.conversations.create_thread()["thread_id"]
     s.message(thread, "semantic", "active semantic")
     before = s.agent.graph.get_state(s.agent.config(thread)).values[
         "displayed_references"
@@ -254,11 +253,11 @@ def test_factual_window_bindings_cannot_override_code_clock(tmp_path):
                 )
             return super().call(name, **inputs)
 
-    from resourcing_assistant.config import period
+    from resourcing_assistant.domain.calculations import period
 
-    s = Service(Settings(runtime=tmp_path), WrongClock())
+    s = create_service(Settings(runtime=tmp_path), WrongClock())
     try:
-        thread = s.store.create_thread()["thread_id"]
+        thread = s.conversations.create_thread()["thread_id"]
         result = s.message(thread, "period", "Period")
         block = next(b for b in result.blocks if b.type == "table")
         start, end = period("2026-03-01", "2026-05-31")

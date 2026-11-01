@@ -4,18 +4,18 @@ These tests are deliberately not real-model accuracy results.
 """
 
 import json
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 from types import SimpleNamespace
 
 import httpx
 import pytest
 
-from resourcing_assistant import evaluation as ev
 from resourcing_assistant.config import Settings
-from resourcing_assistant.data import connect
-from resourcing_assistant.scoring import score
+from resourcing_assistant.db.session import connect
+from resourcing_assistant.evaluation import runner as ev
+from resourcing_assistant.evaluation.scoring import score
 
 
 def case(case_id, message):
@@ -30,7 +30,7 @@ def test_process(monkeypatch):
 
     def start(args, **kwargs):
         args = list(args)
-        args[args.index("resourcing_assistant.api:create_app")] = (
+        args[args.index("resourcing_assistant.app:create_app")] = (
             "tests.process_app:create_app"
         )
         kwargs["env"]["TEST_RUNTIME"] = kwargs["env"]["RUNTIME_DIR"]

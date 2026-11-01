@@ -213,3 +213,14 @@ integration tests validate joins; real-model evaluation validates interpretation
 See [topic checks](../../tests/test_data.py) and [current verification](../development/verification.md).
 Known-case Azure results and explicit AI-assisted review are recorded in [evaluation evidence](../evaluation/README.md).
 Unseen quality and unmapped scenarios remain unverified.
+
+## Component and query boundaries
+
+RetrievalService receives SourceDocuments, VectorRepository, EmbeddingClient and the
+DSPy gateway. It does not create tables or construct an Azure SDK client. Source facts
+are loaded through fixed Core queries in one snapshot: three SELECTs for people, two
+for projects, one for risks. Entity-sized text and exact facts retain their pre-refactor
+content; [refactor checks](../../tests/test_refactor.py) assert all source-document digests
+and query counts. Cached vectors/memberships use synchronous ORM sessions, closed
+before any provider call. An actual successful embedding call, not a cache hit, clears
+a degraded embedding status.

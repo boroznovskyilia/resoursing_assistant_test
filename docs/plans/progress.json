@@ -1,58 +1,33 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-31T21:20:41.627956+00:00",
+  "updated_at": "2026-11-01T18:48:15.231978+00:00",
   "authorization": {
     "application_development": "authorized",
-    "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized."
+    "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized. On 2026-11-01 the owner explicitly approved every backend structural review recommendation, synchronous SQLAlchemy, and the proposed execution order."
   },
-  "current_task": null,
-  "next_action": "The owner-requested evaluation QA is complete. One full genuine inference run20261031T211131Z_822c63 (production runtimeae6e196) has22/22 passed after whole-run offline scoringebd3f14 and7 explicit AI-assisted source reviews; no answer changes, case stitching or write replay. Evidence and all20 original run reports: docs/evaluation/README.md. All92 backend and5 Chromium tests passed in the actual fresh local clone; final hashes/key/static/doc checks passed. MainAPI/UI runs at127.0.0.1:8000 PID3546 exec23525 with existing.runtime and privateAzure configuration. No evaluation process/goal/automation/subagent remains active. Next remaining delivery task is T13.4: record the three actual demo conversations/video including API restart; video is not done. T13.5 publication/sharing/submission remains separately gated. No new implementation permission is needed within the already authorized scope.",
+  "current_task": "T14.6",
+  "next_action": "WP-14 local refactor complete:100 backend tests41.43s,5 browser tests5.4s,9 tooling tests and Ruff60files passed. Copy of actual existing .runtime (2 chats) opened with readable history/checkpoints and unchanged thread/message/booking/action rows. Commit this runtime, then run complete genuine Azure22-case evaluation; preserve original20261031 evidence. Afterwards export new run/reviews, verify fresh setup and restart existing API without resetting data.",
   "blockers": [],
   "last_checks": [
     {
-      "command": "Genuine Azure DSPy chat and embedding smoke",
+      "command": ".venv/bin/python -m pytest tests -q",
       "result": "passed",
-      "scope": "Actual chat one attempt1617 tokens; embeddings1536 dimensions5 tokens. Private .runtime/evaluation/provider-smoke/results.json; no credential values recorded."
+      "scope": "100 checks41.43s, including actual API subprocesses/kill/restart, native read protections, sync ORM concurrency/receipt safety, configuration isolation, legacy checkpoint and document identity."
     },
     {
-      "command": "Original full genuine inference run20261031T211131Z_822c63",
-      "result": "failed",
-      "scope": "Original scorer:14 passed,7 review_required,1 false negative caused by person_id+name alias; original report preserved in docs/evaluation/inference-results.json. Production runtimeae6e196; all22 executed."
+      "command": "npm build; Chromium test:e2e",
+      "result": "passed",
+      "scope": "TypeScript/Vite build;5 browser scenarios5.4s with explicit test-only gateway."
     },
     {
-      "command": "Offline --rescore-report and run-bound --review-report, scorer ebd3f14",
+      "command": "Existing .runtime backup/open compatibility rehearsal",
       "result": "passed",
-      "scope": "Same22 unchanged answers:15 automatic passes then7 explicit AI-assisted source approvals =>22/22. No independent human review, inference replay, case stitching or write replay; recorded source/write observations retained. All artifact hashes verified."
-    },
-    {
-      "command": ".venv/bin/pytest -q tests (final actual Git-clone rehearsal)",
-      "result": "passed",
-      "scope": "92 tests39.94s on ebd3f14; source/write safety, real API restart, DSPy adapter/budgets, semantics, scorer and credential-free immutable offline rescoring."
-    },
-    {
-      "command": "PLAYWRIGHT_BROWSERS_PATH=/private/tmp/resourcing-browsers npm --prefix frontend run test:e2e (clone)",
-      "result": "passed",
-      "scope": "All5 Chromium scenarios4.2s against real local API with explicit test-only provider; no production fake mode."
-    },
-    {
-      "command": "make setup/build and idempotent setup in fresh local Git clone",
-      "result": "passed",
-      "scope": "Python3.12/uv locked packages, source/tokenizer assets, private env preservation and TypeScript/Vite build; no inherited credentials/runtime or model calls. Same locks throughout final runtime/scorer checks."
+      "scope": "Actual2 chats history/checkpoints read using new dependencies on a temporary SQLite backup; thread/message/booking/action rows unchanged. Original files not opened as writer."
     },
     {
       "command": "make check; Ruff check/format; git diff --check",
       "result": "passed",
-      "scope": "9 repository-tooling tests, local links/progress inventory,32 Python files formatted/static checks. Final documentation-only commit follows these checks."
-    },
-    {
-      "command": "Original-source and grading-lineage hashes; configured-key scan",
-      "result": "passed",
-      "scope": "All4 supplied-file SHA256 equal Downloads; immutable original report and all22 answer digests match exported values; scorer digest matches code. Configured key absent from171 Git blobs and all documentation/exported JSON; .env0600 ignored."
-    },
-    {
-      "command": "GET /health, / and built JS at127.0.0.1:8000 after final restart",
-      "result": "passed",
-      "scope": "API alive, UI/JS HTTP200, reference2026-04-01, private credentials configured. Per-process chat configured_unverified/embedding unknown is expected without paid health probes; actual model evidence is isolated evaluation. Existing.runtime preserved."
+      "scope": "9 tooling checks, links/progress inventory,60 Python files formatted/static checks."
     }
   ],
   "tasks": [
@@ -508,6 +483,52 @@
       "status": "blocked",
       "evidence": [],
       "blocker": "Local submission draft/checklist prepared; actual remote repository/demo links and sending/publication require owner scope and completed real demo."
+    },
+    {
+      "id": "T14.1",
+      "status": "done",
+      "evidence": [
+        "Validated BaseSettings/SecretStr, dotenv isolation, extracted calculations and centralized existing limits; 36 config/data/LLM/RAG/setup checks passed."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T14.2",
+      "status": "done",
+      "evidence": [
+        "API/agent schemas, app composition, graph state, DSPy signatures/tokenizer and evaluation package separated; 28 config/agent/API/LLM checks passed; stable public shape and node names."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T14.3",
+      "status": "done",
+      "evidence": [
+        "Synchronous SQLAlchemy repositories replace Store; explicit immediate transactions, owned-schema validation, fixed Core writer; storage/API/fault checks passed. No old Store facade remains."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T14.4",
+      "status": "done",
+      "evidence": [
+        "ContextBuilder, ReadService/ReadPolicy, BookingService, SourceDocuments and injected embedding/vector repositories assembled in app.create_service; native reader and node names retained."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T14.5",
+      "status": "done",
+      "evidence": [
+        "All 923 entity documents have identical pre-refactor digests; SELECT counts 3/2/1 for people/projects/risks. Legacy schema/history/pending checkpoint and atomic rollback checks passed. 28 targeted config/semantic/refactor/LLM checks passed; 5 browser checks passed."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T14.6",
+      "status": "in_progress",
+      "evidence": [],
+      "blocker": null
     }
   ],
   "runtime_services": [
