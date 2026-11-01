@@ -313,7 +313,7 @@ class Agent:
             f = candidate["facts"]
             row = {
                 key: candidate["entity_id"],
-                "reason": assessment.get("ranking_reason") or assessment["reason"],
+                "reason": assessment["reason"],
                 "match_reason": assessment["reason"],
                 "evidence": " | ".join(assessment["quotes"]),
             }

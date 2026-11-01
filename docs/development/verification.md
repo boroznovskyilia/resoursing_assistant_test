@@ -123,3 +123,10 @@ First post-refactor genuine run20261101T184828Z_97ba7b on e1e2714 executed all22
 hard hours from epoch differences. That report/answers remain unchanged. Physical
 column provenance and a shared-budget repair regression were added; a new complete
 run, rather than selected-case stitching or scorer relaxation, validates the fix.
+
+Second full run20261101T185409Z_8a6909 on5fa44dd passed all automatic checks
+(15passed,7review-required). AI-assisted review rejected own-06: ranking rationales
+added unsupported historical ACT-status years from engagement codes. Its automatic
+report, answers and explicit rejection remain preserved. Ranking now supplies order
+only; public reasons retain the source-field assessment. A new full run validates
+that boundary without editing or combining the saved answers.

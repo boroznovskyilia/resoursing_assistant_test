@@ -65,16 +65,16 @@ separate from the product's LangGraph conversation state.
 - Source obligations, accepted choices and88 scenario inventory are in specs/decisions;
   old Russian review drafts in parent workspace are historical, not new architecture.
 
-## Completed evaluation evidence
+## Previous release evaluation evidence
 
-The owner-requested QA is complete. Start with [evaluation evidence](../evaluation/README.md),
+The previous release QA was completed before the owner-approved WP-14 refactor. Start with [evaluation evidence](../evaluation/README.md),
 not the old failing baseline: one genuine full22-case inference run, unchanged answer
 artifacts, corrected whole-run offline scoring and7 explicit AI-assisted source reviews.
 This is not independent human or held-out validation. The initial report and20 original
 run reports remain available; final report/answer/scorer hashes were verified. All92
 backend and5 browser checks passed from the actual local Git-clone rehearsal.
 
-No evaluation process is active. `progress.json` owns remaining tasks and service IDs;
+`progress.json` owns current validation progress, active evaluation and service IDs;
 demo video and remote publication/submission remain unfinished. Do not rerun paid
 models just to restore missing chat context or replay a confirmed booking.
 

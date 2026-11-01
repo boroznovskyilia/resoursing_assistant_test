@@ -224,3 +224,9 @@ content; [refactor checks](../../tests/test_refactor.py) assert all source-docum
 and query counts. Cached vectors/memberships use synchronous ORM sessions, closed
 before any provider call. An actual successful embedding call, not a cache hit, clears
 a degraded embedding status.
+
+Ranking only determines candidate order. Public matching explanations come from
+source-field assessments with checked quotations; free-text RankCandidates rationales
+must not replace those explanations or add historical status/leadership facts.
+[Trust-boundary regression](../../tests/test_agent.py) covers an injected unsupported
+ranking claim. Previously saved responses remain immutable historical records.

@@ -362,7 +362,6 @@ class RetrievalService:
         matched = list(assessed.values())
         ranked = matched
         order = "source_id"
-        ranking_reasons = {}
         if matched and (
             len(matched) <= self.settings.max_rank_candidates
             or interpretation.semantic_mode == "shortlist"
@@ -406,7 +405,6 @@ class RetrievalService:
                         or not {r.source_id for r in ranks} <= set(expected)
                     ):
                         raise ValueError("Ranking IDs invalid")
-                    ranking_reasons.update({r.source_id: r.reason for r in ranks})
                     ranked = [expected[r.source_id] for r in ranks]
                     if interpretation.semantic_mode == "shortlist":
                         ranked = ranked[: interpretation.requested_count]
@@ -445,16 +443,7 @@ class RetrievalService:
                 latency_ms=round((time.monotonic() - start) * 1000),
             )
         return (
-            [
-                (
-                    c.model_dump(),
-                    {
-                        **a.model_dump(),
-                        "ranking_reason": ranking_reasons.get(c.source_id),
-                    },
-                )
-                for c, a in ranked
-            ],
+            [(c.model_dump(), a.model_dump()) for c, a in ranked],
             metadata,
             issues,
         )

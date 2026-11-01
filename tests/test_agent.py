@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from resourcing_assistant.agent.schemas import (
@@ -315,3 +317,48 @@ def test_semantic_output_scope_uses_request(message, normalized, kind, mode, ser
     result = s.agent.interpret({"text": message, "context": {}})
     assert result["interpretation"]["semantic_kind"] == kind
     assert result["interpretation"]["semantic_mode"] == mode
+
+
+def test_ranker_rationale_cannot_replace_source_assessment(store, monkeypatch):
+    candidate = store.agent.semantic.candidates("project", {6})[0].model_dump()
+    assessment = {
+        "reason": "Original risk records identify a staffing gap.",
+        "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+        ],
+        "ranking_reason": "Unsupported claim: project was active in 2020.",
+    }
+    metadata = {
+        "mode": "exhaustive",
+        "eligible": 1,
+        "processed": 1,
+        "matched": 1,
+        "uncertain": 0,
+        "complete": True,
+        "fallback": False,
+        "order": "assessed_ranking",
+    }
+    monkeypatch.setattr(
+        store.agent.semantic,
+        "search",
+        lambda task, eligible: ([(candidate, assessment)], metadata, []),
+    )
+    state = {
+        "thread_id": "source-trust",
+        "request_id": "rank-only",
+        "reference_date": store.settings.reference().isoformat(),
+        "interpretation": Interpretation(
+            intent="semantic",
+            question="All projects with staffing gaps",
+            semantic_kind="project",
+            semantic_mode="exhaustive",
+        ).model_dump(),
+        "read_results": [{"rows": [{"engagement_id": 6}]}],
+        "issues": [],
+    }
+    response = store.agent.match(state)["response"]
+    row = next(
+        b for b in response["blocks"] if b.get("block_id") == "semantic_matches"
+    )["rows"][0]
+    assert row["reason"] == assessment["reason"]
+    assert "Unsupported claim" not in json.dumps(response)
