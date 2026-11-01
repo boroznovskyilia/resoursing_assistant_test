@@ -10,9 +10,9 @@ Start/recover using [handoff](handoff.md) and `make progress`.
 | --- | --- | --- |
 | G0 Requirements understood | Source inventory, data facts, accepted business conventions | Documented; source findings are data evidence, not agent results |
 | G1 Architecture selected | Accepted choices in decision register | Selected; reviewed; full implementation explicitly authorized |
-| G2 Acceptance specified | Written scenarios, approved 22 cases, scoring, per-task criteria | Written; implemented local checks mapped in verification.md, Azure checks pending |
+| G2 Acceptance specified | Written scenarios, approved 22 cases, scoring, per-task criteria | Written; local checks and known-case Azure results mapped in verification.md |
 | G3 Development authorized | Separate explicit owner instruction | Authorized 2026-10-31, explicit scope-question reply |
-| G4 Delivery verified | Real checks/results, fresh clone and demo, honest limitations | In progress; local evidence exists, genuine model evidence pending |
+| G4 Delivery verified | Real checks/results, fresh clone and demo, honest limitations | In progress; local/model checks exist, demo/publication remain |
 
 After G3, proceed through the plan without asking approval for every routine task.
 Do not wait for credentials before doing independent local work. Missing Azure access

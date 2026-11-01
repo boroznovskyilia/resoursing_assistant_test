@@ -65,6 +65,19 @@ separate from the product's LangGraph conversation state.
 - Source obligations, accepted choices and88 scenario inventory are in specs/decisions;
   old Russian review drafts in parent workspace are historical, not new architecture.
 
+## Current refactor completion
+
+WP-14 is complete on runtime23487e3. All requested review items are implemented:
+validated pydantic-settings, sync ORM/Core repositories, separated schemas/composition,
+context/read policies, injected RAG dependencies and batched equivalent documents.
+Two genuine-run defects were fixed with regressions: epoch-derived booked hours and
+ranker prose replacing source explanations. Final103 backend,5 Chromium,9 tooling
+checks passed; fresh-clone setup/build and existing-runtime compatibility passed.
+New full Azure run20261101T190046Z_a1cdc9:15 automatic passes plus7 explicitly recorded
+AI-assisted source reviews =>22/22. [Evidence](../evaluation/backend-refactor-20261101/README.md).
+Both prior failed/rejected runs are preserved; no stitching or independent human review.
+Actual API process/session IDs remain only in progress.json. No evaluation is active.
+
 ## Previous release evaluation evidence
 
 The previous release QA was completed before the owner-approved WP-14 refactor. Start with [evaluation evidence](../evaluation/README.md),

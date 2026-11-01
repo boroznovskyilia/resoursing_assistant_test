@@ -1,6 +1,6 @@
 # Verification and evidence limits
 
-Updated 2026-10-31. Application implementation is authorized and present. This document
+Updated 2026-11-01. Application implementation is authorized and present. This document
 separates executed deterministic checks, genuine model runs, explicit source review
 and remaining evidence limits.
 Current task statuses: [progress.json](../plans/progress.json).
@@ -130,3 +130,18 @@ added unsupported historical ACT-status years from engagement codes. Its automat
 report, answers and explicit rejection remain preserved. Ranking now supplies order
 only; public reasons retain the source-field assessment. A new full run validates
 that boundary without editing or combining the saved answers.
+
+Final runtime23487e3 local results:103 backend tests42.84s,5 Chromium scenarios5.5s,
+9 tooling checks and Ruff check/format across60 Python files. The local clone was
+fast-forwarded to23487e3 and passed10 config/setup/legacy/document/answer-trust checks
+in0.49s. The main app factory was restarted against its existing runtime; health,
+static assets and both saved chats remained readable. Final model-run/review evidence
+is linked separately; these local checks do not establish model accuracy.
+
+Final genuine run20261101T190046Z_a1cdc9 on runtime23487e3 has22/22 passed after7
+explicit run-bound AI-assisted source reviews,15 automatic passes before review.
+Independent source field/quote checks cover all delivered semantic rows; the empty
+Banking/key-person result was also checked by read-only source reference SQL.
+[All answers, reports, review decisions and retained failures](../evaluation/backend-refactor-20261101/README.md).
+No scorer relaxation, response editing, selected-case stitching or independent human
+review. Original report/answer hashes and both earlier failed/rejected runs are preserved.

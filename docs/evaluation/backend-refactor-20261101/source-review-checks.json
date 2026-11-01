@@ -1,0 +1,82 @@
+{
+  "run_id": "20261101T190046Z_a1cdc9",
+  "source_sha256": "8d00b91ae6aa23bbcf0d807c2e51fa6a45f7017a6557a4f51d11cfc82bfb4259",
+  "method": "Independent read-only source field/quote checks; semantic entailment and refusals require separate AI-assisted review.",
+  "cases": {
+    "gq-07": {
+      "rows_checked": 10,
+      "source_fields_equal": true,
+      "quotes_present": true,
+      "coverage": {
+        "mode": "shortlist",
+        "eligible": 400,
+        "processed": 40,
+        "matched": 20,
+        "uncertain": 0,
+        "complete": false,
+        "fallback": false,
+        "order": "assessed_ranking"
+      }
+    },
+    "gq-08": {
+      "rows_checked": 5,
+      "source_fields_equal": true,
+      "quotes_present": true,
+      "coverage": {
+        "mode": "exhaustive",
+        "eligible": 60,
+        "processed": 60,
+        "matched": 5,
+        "uncertain": 0,
+        "complete": true,
+        "fallback": false,
+        "order": "assessed_ranking"
+      }
+    },
+    "own-06": {
+      "rows_checked": 11,
+      "source_fields_equal": true,
+      "quotes_present": true,
+      "coverage": {
+        "mode": "exhaustive",
+        "eligible": 60,
+        "processed": 60,
+        "matched": 11,
+        "uncertain": 0,
+        "complete": true,
+        "fallback": false,
+        "order": "assessed_ranking"
+      }
+    },
+    "own-07": {
+      "rows_checked": 0,
+      "source_fields_equal": true,
+      "quotes_present": true,
+      "coverage": {
+        "mode": "exhaustive",
+        "eligible": 60,
+        "processed": 60,
+        "matched": 0,
+        "uncertain": 0,
+        "complete": true,
+        "fallback": false,
+        "order": "source_id"
+      }
+    },
+    "own-08": {
+      "rows_checked": 4,
+      "source_fields_equal": true,
+      "quotes_present": true,
+      "coverage": {
+        "mode": "exhaustive",
+        "eligible": 49,
+        "processed": 49,
+        "matched": 4,
+        "uncertain": 0,
+        "complete": true,
+        "fallback": false,
+        "order": "assessed_ranking"
+      }
+    }
+  }
+}

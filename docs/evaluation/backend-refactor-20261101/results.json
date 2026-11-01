@@ -1,0 +1,538 @@
+{
+  "run_id": "20261101T190046Z_a1cdc9",
+  "source_sha256": "8d00b91ae6aa23bbcf0d807c2e51fa6a45f7017a6557a4f51d11cfc82bfb4259",
+  "reference_date": "2026-04-01T00:00:00Z",
+  "api_version": "2024-10-21",
+  "chat_deployment": "gpt-4.1-mini",
+  "embedding_deployment": "text-embedding-3-small",
+  "results": [
+    {
+      "id": "gq-01",
+      "type": "factual",
+      "elapsed_seconds": 12.813,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 12315,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-02",
+      "type": "factual",
+      "elapsed_seconds": 9.83,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 15885,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-03",
+      "type": "factual",
+      "elapsed_seconds": 10.385,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 11620,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true,
+        "engagement_count": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-04",
+      "type": "factual",
+      "elapsed_seconds": 8.843,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 11125,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "unique_regions": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-05",
+      "type": "factual",
+      "elapsed_seconds": 12.752,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 12109,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-06",
+      "type": "factual",
+      "elapsed_seconds": 11.153,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 12027,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true,
+        "requested_leaders": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-07",
+      "type": "semantic",
+      "elapsed_seconds": 65.39,
+      "usage": {
+        "chat_attempts": 7,
+        "embedding_attempts": 7,
+        "chat_tokens": 33230,
+        "embedding_tokens": 18074
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "per_item_source_evidence": true,
+        "bio_and_skill_level": true
+      },
+      "review_status": "approved",
+      "status": "passed",
+      "reason": "Manual review: Inspected all10 delivered bios, roles, exact skill levels, matching reasons and quotations against original source. Data-engineering/database/ETL/pipeline skills and experience support plausible suitability; no delivered claim of proven prior migration leadership. Coverage explicitly says40 of400 assessed and complete=false, not an exhaustive total.",
+      "reviews": [
+        {
+          "reviewer": "Codex AI-assisted source inspection (not independent human review)",
+          "accepted": true,
+          "notes": "Inspected all10 delivered bios, roles, exact skill levels, matching reasons and quotations against original source. Data-engineering/database/ETL/pipeline skills and experience support plausible suitability; no delivered claim of proven prior migration leadership. Coverage explicitly says40 of400 assessed and complete=false, not an exhaustive total.",
+          "at": "2026-11-01T19:06:18.164826+00:00"
+        }
+      ]
+    },
+    {
+      "id": "gq-08",
+      "type": "semantic",
+      "elapsed_seconds": 20.015,
+      "usage": {
+        "chat_attempts": 5,
+        "embedding_attempts": 0,
+        "chat_tokens": 12052,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "per_item_source_evidence": true,
+        "industry_and_risk": true
+      },
+      "review_status": "approved",
+      "status": "passed",
+      "reason": "Manual review: All5 delivered ACT projects have Healthcare or Pharmaceuticals in the original client summary and a source staffing-gap or key-person risk. Reasons preserve industry AND (staffing OR key-person), with exact quotes;60/60 processed, no uncertainty. Provider HLS membership is not used as an industry proxy.",
+      "reviews": [
+        {
+          "reviewer": "Codex AI-assisted source inspection (not independent human review)",
+          "accepted": true,
+          "notes": "All5 delivered ACT projects have Healthcare or Pharmaceuticals in the original client summary and a source staffing-gap or key-person risk. Reasons preserve industry AND (staffing OR key-person), with exact quotes;60/60 processed, no uncertainty. Provider HLS membership is not used as an industry proxy.",
+          "at": "2026-11-01T19:06:18.164885+00:00"
+        }
+      ]
+    },
+    {
+      "id": "gq-09",
+      "type": "write",
+      "elapsed_seconds": 17.226,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 14754,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "no_insert_before_confirmation": true,
+        "proposal_present": true,
+        "exact_proposal": true,
+        "decision_receipts": true,
+        "exact_confirmed_row": true,
+        "repeat_receipt": true,
+        "reject_no_prewrite": true,
+        "reject_succeeded": true,
+        "restart_no_prewrite": true,
+        "restart_succeeded": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-10",
+      "type": "out_of_scope",
+      "elapsed_seconds": 4.889,
+      "usage": {
+        "chat_attempts": 1,
+        "embedding_attempts": 0,
+        "chat_tokens": 4891,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "manual_weather_refusal_review": true
+      },
+      "review_status": "approved",
+      "status": "passed",
+      "reason": "Manual review: The delivered text truthfully refuses weather because the supplied source has no weather observations/forecasts. It supplies no invented external weather value; automated source-invariant checks passed.",
+      "reviews": [
+        {
+          "reviewer": "Codex AI-assisted source inspection (not independent human review)",
+          "accepted": true,
+          "notes": "The delivered text truthfully refuses weather because the supplied source has no weather observations/forecasts. It supplies no invented external weather value; automated source-invariant checks passed.",
+          "at": "2026-11-01T19:06:18.164888+00:00"
+        }
+      ]
+    },
+    {
+      "id": "own-01",
+      "type": "factual",
+      "elapsed_seconds": 8.995,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 11025,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-02",
+      "type": "factual",
+      "elapsed_seconds": 8.685,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 10988,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true,
+        "keyed_result_present": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-03",
+      "type": "factual",
+      "elapsed_seconds": 8.82,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 11140,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-04",
+      "type": "factual",
+      "elapsed_seconds": 8.909,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 11090,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-05",
+      "type": "factual",
+      "elapsed_seconds": 8.145,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 10894,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-06",
+      "type": "semantic",
+      "elapsed_seconds": 15.869,
+      "usage": {
+        "chat_attempts": 4,
+        "embedding_attempts": 0,
+        "chat_tokens": 12385,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "keyed_result_present": true,
+        "exhaustive_coverage": true,
+        "per_item_source_evidence": true
+      },
+      "review_status": "approved",
+      "status": "passed",
+      "reason": "Manual review: All11 delivered active projects have an actual staffing-gap description; key-person dependency alone was not treated as shortage. Each delivered explanation describes that source risk, without the historical status-year claims rejected in the previous run.60/60 processed, no uncertainty, source fields and quotes independently checked.",
+      "reviews": [
+        {
+          "reviewer": "Codex AI-assisted source inspection (not independent human review)",
+          "accepted": true,
+          "notes": "All11 delivered active projects have an actual staffing-gap description; key-person dependency alone was not treated as shortage. Each delivered explanation describes that source risk, without the historical status-year claims rejected in the previous run.60/60 processed, no uncertainty, source fields and quotes independently checked.",
+          "at": "2026-11-01T19:06:18.164890+00:00"
+        }
+      ]
+    },
+    {
+      "id": "own-07",
+      "type": "semantic",
+      "elapsed_seconds": 17.923,
+      "usage": {
+        "chat_attempts": 4,
+        "embedding_attempts": 0,
+        "chat_tokens": 9464,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "keyed_result_present": true,
+        "exhaustive_coverage": true,
+        "per_item_source_evidence": true
+      },
+      "review_status": "approved",
+      "status": "passed",
+      "reason": "Manual review: The delivered empty set is accompanied by60/60 exhaustive coverage and no uncertainty. Independent read-only source reference confirms no active Banking client project with a key-person dependency. This is an established empty result, not a top-k miss or provider failure.",
+      "reviews": [
+        {
+          "reviewer": "Codex AI-assisted source inspection (not independent human review)",
+          "accepted": true,
+          "notes": "The delivered empty set is accompanied by60/60 exhaustive coverage and no uncertainty. Independent read-only source reference confirms no active Banking client project with a key-person dependency. This is an established empty result, not a top-k miss or provider failure.",
+          "at": "2026-11-01T19:06:18.164891+00:00"
+        }
+      ]
+    },
+    {
+      "id": "own-08",
+      "type": "semantic",
+      "elapsed_seconds": 19.418,
+      "usage": {
+        "chat_attempts": 5,
+        "embedding_attempts": 0,
+        "chat_tokens": 11592,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "keyed_result_present": true,
+        "exhaustive_coverage": true,
+        "per_item_source_evidence": true
+      },
+      "review_status": "approved",
+      "status": "passed",
+      "reason": "Manual review: All4 delivered ACT projects are outside HLS in source business-unit records, have Healthcare/Pharmaceuticals summaries and a staffing-gap or key-person risk.49/49 eligible processed with no uncertainty; exact fields/quotes and conjunctions checked against original source.",
+      "reviews": [
+        {
+          "reviewer": "Codex AI-assisted source inspection (not independent human review)",
+          "accepted": true,
+          "notes": "All4 delivered ACT projects are outside HLS in source business-unit records, have Healthcare/Pharmaceuticals summaries and a staffing-gap or key-person risk.49/49 eligible processed with no uncertainty; exact fields/quotes and conjunctions checked against original source.",
+          "at": "2026-11-01T19:06:18.164892+00:00"
+        }
+      ]
+    },
+    {
+      "id": "own-09",
+      "type": "write",
+      "elapsed_seconds": 5.345,
+      "usage": {
+        "chat_attempts": 1,
+        "embedding_attempts": 0,
+        "chat_tokens": 4919,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "no_insert_before_confirmation": true,
+        "ambiguous_person_clarified": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-10",
+      "type": "write",
+      "elapsed_seconds": 5.094,
+      "usage": {
+        "chat_attempts": 1,
+        "embedding_attempts": 0,
+        "chat_tokens": 4904,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "no_insert_before_confirmation": true,
+        "proposal_present": true,
+        "exact_proposal": true,
+        "decision_receipts": true,
+        "reject_zero_insert": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-11",
+      "type": "write",
+      "elapsed_seconds": 4.996,
+      "usage": {
+        "chat_attempts": 1,
+        "embedding_attempts": 0,
+        "chat_tokens": 4920,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "no_insert_before_confirmation": true,
+        "proposal_present": true,
+        "exact_proposal": true,
+        "decision_receipts": true,
+        "exact_confirmed_row": true,
+        "repeat_receipt": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-12",
+      "type": "out_of_scope",
+      "elapsed_seconds": 4.895,
+      "usage": {
+        "chat_attempts": 1,
+        "embedding_attempts": 0,
+        "chat_tokens": 4805,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "no_source_changes": true,
+        "no_executable_action": true,
+        "refusal_visible": true
+      },
+      "review_status": "approved",
+      "status": "passed",
+      "reason": "Manual review: The response truthfully refuses the unsupported source-changing operation and does not claim deletion or success. Automated read-only/source-invariant checks confirm unchanged subject rows.",
+      "reviews": [
+        {
+          "reviewer": "Codex AI-assisted source inspection (not independent human review)",
+          "accepted": true,
+          "notes": "The response truthfully refuses the unsupported source-changing operation and does not claim deletion or success. Automated read-only/source-invariant checks confirm unchanged subject rows.",
+          "at": "2026-11-01T19:06:18.164893+00:00"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3172 @@
+{
+  "run_id": "20261101T190046Z_a1cdc9",
+  "answers": {
+    "gq-01": {
+      "thread_id": "04f9d8078aee471f945c4629b4f986ab",
+      "request_id": "9abc65da1b1144879312252869dbd2c8",
+      "response_message_id": "b3260cd9158d4da78481c546b5e4dfe9",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "The query results list six individuals in the EMEA region who have Python proficiency at level 4 or higher and are less than 60% hard-booked between March and May 2026. Their hard-booked hours range from 0 to 26 hours out of a total capacity of 520 hours in that period, resulting in hard-booked percentages from 0% up to 5%. The individuals are Anthony Thompson, Kevin Robinson, Edward Hill, Matthew Hill, Matthew White, and David Allen. The data is complete for this query and no truncation occurred.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "python_proficiency_hard_booking_emea_2026Q2",
+          "title": "List people in EMEA with Python skill proficiency >=4 and hard-booked less than 60% between March and May 2026, including person_id, name, hard_booked_hours and hard_booked_pct.",
+          "columns": [
+            {
+              "key": "person_id",
+              "label": "person id",
+              "unit": null
+            },
+            {
+              "key": "name",
+              "label": "name",
+              "unit": null
+            },
+            {
+              "key": "hard_booked_hours",
+              "label": "hard booked hours",
+              "unit": null
+            },
+            {
+              "key": "hard_booked_pct",
+              "label": "hard booked pct",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "person_id": 30,
+              "name": "Anthony Thompson",
+              "hard_booked_hours": 10.0,
+              "hard_booked_pct": 1.9230769230769231
+            },
+            {
+              "person_id": 167,
+              "name": "Kevin Robinson",
+              "hard_booked_hours": 18.0,
+              "hard_booked_pct": 3.4615384615384617
+            },
+            {
+              "person_id": 261,
+              "name": "Edward Hill",
+              "hard_booked_hours": 0,
+              "hard_booked_pct": 0
+            },
+            {
+              "person_id": 280,
+              "name": "Matthew Hill",
+              "hard_booked_hours": 0,
+              "hard_booked_pct": 0
+            },
+            {
+              "person_id": 328,
+              "name": "Matthew White",
+              "hard_booked_hours": 0,
+              "hard_booked_pct": 0
+            },
+            {
+              "person_id": 344,
+              "name": "David Allen",
+              "hard_booked_hours": 26.0,
+              "hard_booked_pct": 5.0
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "python_proficiency_hard_booking_emea_2026Q2",
+              "source_tables": [
+                "bookings",
+                "people",
+                "person_skills",
+                "skills"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sql",
+          "query_id": "python_proficiency_hard_booking_emea_2026Q2",
+          "purpose": "List people in EMEA with Python skill proficiency >=4 and hard-booked less than 60% between March and May 2026, including person_id, name, hard_booked_hours and hard_booked_pct.",
+          "sql": "WITH skill_python AS (\n    SELECT ps.person_id\n    FROM person_skills ps\n    JOIN skills s ON ps.skill_id = s.skill_id\n    WHERE s.name = 'Python' AND ps.proficiency >= 4\n),\nbooked_hours AS (\n    SELECT\n        b.person_id,\n        SUM(b.minutes) / 60.0 AS hard_booked_hours\n    FROM bookings b\n    WHERE b.kind = 'hard'\n      AND b.start_ts < :window_end\n      AND b.end_ts > :window_start\n    GROUP BY b.person_id\n),\npeople_emea AS (\n    SELECT p.person_id, p.display_name\n    FROM people p\n    WHERE p.location_region = 'EMEA'\n),\ncapacity AS (\n    SELECT :capacity_hours AS capacity_hours\n)\nSELECT\n    p.person_id,\n    p.display_name AS name,\n    COALESCE(bh.hard_booked_hours, 0) AS hard_booked_hours,\n    CASE WHEN c.capacity_hours > 0 THEN (COALESCE(bh.hard_booked_hours, 0) / c.capacity_hours) * 100 ELSE NULL END AS hard_booked_pct\nFROM people_emea p\nJOIN skill_python sp ON p.person_id = sp.person_id\nLEFT JOIN booked_hours bh ON p.person_id = bh.person_id\nCROSS JOIN capacity c\nWHERE (COALESCE(bh.hard_booked_hours, 0) / c.capacity_hours) * 100 < 60\nORDER BY p.person_id ASC;",
+          "parameters": {
+            "window_start": 1772323200,
+            "window_end": 1780272000,
+            "capacity_hours": 520
+          }
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "The date range March to May 2026 is inclusive, so start_date is 2026-03-01 and end_date is 2026-05-31.",
+        "Hard-booked means bookings with kind='hard' including completed rows, counting minutes intersecting the date range, converted to hours.",
+        "Proficiency 4 or higher means person_skills with skill='Python' and proficiency >= 4.",
+        "Region EMEA means people.location_region = 'EMEA'.",
+        "Less than 60% hard-booked means total hard booking hours in the date range divided by total available hours in that range is less than 0.6."
+      ]
+    },
+    "gq-02": {
+      "thread_id": "6ea957d773c04a04957b4819d1518054",
+      "request_id": "3cc96db335bf4167a208826164b56f1f",
+      "response_message_id": "a9f3404fe7d2464baccfe7e7e48d314b",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "The open resource requirements that belong to engagements with a critical risk and have no submitted request are listed in the provided table. These requirements have an open status (status_id in the open state group) and their requirement_id is not found in the set of submitted requests. The table includes details such as requirement_id, name, engagement_id, role_category_id, status_id, work location, effort, duration, remaining duration, fulfilled duration, fulfilled hours, percentage filled, cost price in cents, quantity, city, state or province, country, latitude, longitude, request status, and timestamps for creation and update. The data is complete as per the query and no truncation is indicated. The assumptions include the definitions of open resource requirements, critical risk engagements, and the absence of submitted requests as per the states in the relevant tables.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "open_requirements_with_critical_risk_no_submitted_request",
+          "title": "List all open resource requirements belonging to engagements with a critical risk and no submitted request",
+          "columns": [
+            {
+              "key": "requirement_id",
+              "label": "requirement id",
+              "unit": null
+            },
+            {
+              "key": "name",
+              "label": "name",
+              "unit": null
+            },
+            {
+              "key": "engagement_id",
+              "label": "engagement id",
+              "unit": null
+            },
+            {
+              "key": "role_category_id",
+              "label": "role category id",
+              "unit": null
+            },
+            {
+              "key": "status_id",
+              "label": "status id",
+              "unit": null
+            },
+            {
+              "key": "is_primary",
+              "label": "is primary",
+              "unit": null
+            },
+            {
+              "key": "alloc_method",
+              "label": "alloc method",
+              "unit": null
+            },
+            {
+              "key": "work_location",
+              "label": "work location",
+              "unit": null
+            },
+            {
+              "key": "from_ts",
+              "label": "from ts",
+              "unit": null
+            },
+            {
+              "key": "to_ts",
+              "label": "to ts",
+              "unit": null
+            },
+            {
+              "key": "effort",
+              "label": "effort",
+              "unit": null
+            },
+            {
+              "key": "duration",
+              "label": "duration",
+              "unit": null
+            },
+            {
+              "key": "remaining_duration",
+              "label": "remaining duration",
+              "unit": null
+            },
+            {
+              "key": "fulfilled_duration",
+              "label": "fulfilled duration",
+              "unit": null
+            },
+            {
+              "key": "fulfilled_hours",
+              "label": "fulfilled hours",
+              "unit": null
+            },
+            {
+              "key": "pct",
+              "label": "pct",
+              "unit": null
+            },
+            {
+              "key": "cost_price_cents",
+              "label": "cost price cents",
+              "unit": null
+            },
+            {
+              "key": "quantity",
+              "label": "quantity",
+              "unit": null
+            },
+            {
+              "key": "city",
+              "label": "city",
+              "unit": null
+            },
+            {
+              "key": "state_or_province",
+              "label": "state or province",
+              "unit": null
+            },
+            {
+              "key": "country",
+              "label": "country",
+              "unit": null
+            },
+            {
+              "key": "latitude",
+              "label": "latitude",
+              "unit": null
+            },
+            {
+              "key": "longitude",
+              "label": "longitude",
+              "unit": null
+            },
+            {
+              "key": "request_status",
+              "label": "request status",
+              "unit": null
+            },
+            {
+              "key": "created_ts",
+              "label": "created ts",
+              "unit": null
+            },
+            {
+              "key": "updated_ts",
+              "label": "updated ts",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "requirement_id": 4,
+              "name": "Open role: UX Designer",
+              "engagement_id": 1,
+              "role_category_id": 13,
+              "status_id": 16,
+              "is_primary": 1,
+              "alloc_method": "percentage",
+              "work_location": "onsite",
+              "from_ts": 1774114409,
+              "to_ts": 1784384775,
+              "effort": 386.6,
+              "duration": 118.9,
+              "remaining_duration": 70.2,
+              "fulfilled_duration": 48.7,
+              "fulfilled_hours": 389.6,
+              "pct": 40.3,
+              "cost_price_cents": 8697,
+              "quantity": 2,
+              "city": "Dublin",
+              "state_or_province": "Ireland",
+              "country": "Ireland",
+              "latitude": 53.2034,
+              "longitude": -6.3501,
+              "request_status": "in-review",
+              "created_ts": 1772818409,
+              "updated_ts": 1774114409
+            },
+            {
+              "requirement_id": 6,
+              "name": "Open role: Machine Learning Engineer",
+              "engagement_id": 1,
+              "role_category_id": 7,
+              "status_id": 16,
+              "is_primary": 1,
+              "alloc_method": "full",
+              "work_location": "remote",
+              "from_ts": 1772826853,
+              "to_ts": 1781697719,
+              "effort": 388.3,
+              "duration": 102.7,
+              "remaining_duration": 33.8,
+              "fulfilled_duration": 68.9,
+              "fulfilled_hours": 551.2,
+              "pct": 68.3,
+              "cost_price_cents": 10590,
+              "quantity": 3,
+              "city": "Dublin",
+              "state_or_province": "Ireland",
+              "country": "Ireland",
+              "latitude": 53.2975,
+              "longitude": -6.1347,
+              "request_status": "approved",
+              "created_ts": 1771876453,
+              "updated_ts": 1772826853
+            },
+            {
+              "requirement_id": 77,
+              "name": "Open role: Solutions Architect",
+              "engagement_id": 21,
+              "role_category_id": 5,
+              "status_id": 15,
+              "is_primary": 0,
+              "alloc_method": "by-hours",
+              "work_location": "onsite",
+              "from_ts": 1745054498,
+              "to_ts": 1759203258,
+              "effort": 669.9,
+              "duration": 163.8,
+              "remaining_duration": 126.4,
+              "fulfilled_duration": 37.4,
+              "fulfilled_hours": 299.2,
+              "pct": 54.6,
+              "cost_price_cents": 12362,
+              "quantity": 5,
+              "city": "Chicago",
+              "state_or_province": "IL",
+              "country": "USA",
+              "latitude": 41.9361,
+              "longitude": -87.6028,
+              "request_status": "in-review",
+              "created_ts": 1744622498,
+              "updated_ts": 1745054498
+            },
+            {
+              "requirement_id": 102,
+              "name": "Open role: Project Manager",
+              "engagement_id": 26,
+              "role_category_id": 9,
+              "status_id": 15,
+              "is_primary": 0,
+              "alloc_method": "full",
+              "work_location": "hybrid",
+              "from_ts": 1746852602,
+              "to_ts": 1770800191,
+              "effort": 288.5,
+              "duration": 277.2,
+              "remaining_duration": 202.9,
+              "fulfilled_duration": 74.3,
+              "fulfilled_hours": 594.4,
+              "pct": 48.7,
+              "cost_price_cents": 9501,
+              "quantity": 2,
+              "city": "Toronto",
+              "state_or_province": "Canada",
+              "country": "Canada",
+              "latitude": 43.5391,
+              "longitude": -79.2599,
+              "request_status": "rejected",
+              "created_ts": 1745556602,
+              "updated_ts": 1746852602
+            },
+            {
+              "requirement_id": 104,
+              "name": "Open role: Consultant",
+              "engagement_id": 27,
+              "role_category_id": 16,
+              "status_id": 16,
+              "is_primary": 1,
+              "alloc_method": "full",
+              "work_location": "hybrid",
+              "from_ts": 1782280532,
+              "to_ts": 1792425737,
+              "effort": 439.1,
+              "duration": 117.4,
+              "remaining_duration": 57.0,
+              "fulfilled_duration": 60.4,
+              "fulfilled_hours": 483.2,
+              "pct": 60.6,
+              "cost_price_cents": 9622,
+              "quantity": 5,
+              "city": "London",
+              "state_or_province": "UK",
+              "country": "UK",
+              "latitude": 51.6063,
+              "longitude": -0.167,
+              "request_status": "in-review",
+              "created_ts": 1781589332,
+              "updated_ts": 1782280532
+            },
+            {
+              "requirement_id": 124,
+              "name": "Open role: Solutions Architect",
+              "engagement_id": 34,
+              "role_category_id": 5,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "percentage",
+              "work_location": "remote",
+              "from_ts": 1775471966,
+              "to_ts": 1789126237,
+              "effort": 176.6,
+              "duration": 158.0,
+              "remaining_duration": 137.7,
+              "fulfilled_duration": 20.3,
+              "fulfilled_hours": 162.4,
+              "pct": 32.6,
+              "cost_price_cents": 12773,
+              "quantity": 2,
+              "city": "Singapore",
+              "state_or_province": "Singapore",
+              "country": "Singapore",
+              "latitude": 1.3924,
+              "longitude": 103.9301,
+              "request_status": "rejected",
+              "created_ts": 1774348766,
+              "updated_ts": 1775471966
+            },
+            {
+              "requirement_id": 127,
+              "name": "Open role: DevOps Engineer",
+              "engagement_id": 34,
+              "role_category_id": 12,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "percentage",
+              "work_location": "hybrid",
+              "from_ts": 1768773710,
+              "to_ts": 1775236023,
+              "effort": 619.6,
+              "duration": 74.8,
+              "remaining_duration": 1.5,
+              "fulfilled_duration": 73.3,
+              "fulfilled_hours": 586.4,
+              "pct": 49.3,
+              "cost_price_cents": 9845,
+              "quantity": 2,
+              "city": "Singapore",
+              "state_or_province": "Singapore",
+              "country": "Singapore",
+              "latitude": 1.3327,
+              "longitude": 103.7477,
+              "request_status": "requested",
+              "created_ts": 1767823310,
+              "updated_ts": 1768773710
+            },
+            {
+              "requirement_id": 128,
+              "name": "Open role: UX Designer",
+              "engagement_id": 34,
+              "role_category_id": 13,
+              "status_id": 16,
+              "is_primary": 1,
+              "alloc_method": "full",
+              "work_location": "remote",
+              "from_ts": 1768144780,
+              "to_ts": 1781437289,
+              "effort": 362.9,
+              "duration": 153.8,
+              "remaining_duration": 87.1,
+              "fulfilled_duration": 66.7,
+              "fulfilled_hours": 533.6,
+              "pct": 68.1,
+              "cost_price_cents": 7554,
+              "quantity": 5,
+              "city": "Singapore",
+              "state_or_province": "Singapore",
+              "country": "Singapore",
+              "latitude": 1.3344,
+              "longitude": 103.7149,
+              "request_status": "rejected",
+              "created_ts": 1766762380,
+              "updated_ts": 1768144780
+            },
+            {
+              "requirement_id": 129,
+              "name": "Open role: Junior Developer",
+              "engagement_id": 34,
+              "role_category_id": 1,
+              "status_id": 15,
+              "is_primary": 1,
+              "alloc_method": "full",
+              "work_location": "remote",
+              "from_ts": 1772104168,
+              "to_ts": 1789126237,
+              "effort": 171.1,
+              "duration": 197.0,
+              "remaining_duration": 189.5,
+              "fulfilled_duration": 7.5,
+              "fulfilled_hours": 60.0,
+              "pct": 29.2,
+              "cost_price_cents": 4834,
+              "quantity": 5,
+              "city": "Singapore",
+              "state_or_province": "Singapore",
+              "country": "Singapore",
+              "latitude": 1.2146,
+              "longitude": 103.6949,
+              "request_status": "in-review",
+              "created_ts": 1771412968,
+              "updated_ts": 1772104168
+            },
+            {
+              "requirement_id": 163,
+              "name": "Open role: Engagement Manager",
+              "engagement_id": 44,
+              "role_category_id": 18,
+              "status_id": 15,
+              "is_primary": 0,
+              "alloc_method": "percentage",
+              "work_location": "remote",
+              "from_ts": 1713850010,
+              "to_ts": 1729482169,
+              "effort": 630.8,
+              "duration": 180.9,
+              "remaining_duration": 16.7,
+              "fulfilled_duration": 164.2,
+              "fulfilled_hours": 1313.6,
+              "pct": 58.7,
+              "cost_price_cents": 15208,
+              "quantity": 4,
+              "city": "Bengaluru",
+              "state_or_province": "India",
+              "country": "India",
+              "latitude": 13.1045,
+              "longitude": 77.4905,
+              "request_status": "requested",
+              "created_ts": 1713072410,
+              "updated_ts": 1713850010
+            },
+            {
+              "requirement_id": 165,
+              "name": "Open role: Machine Learning Engineer",
+              "engagement_id": 44,
+              "role_category_id": 7,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "by-hours",
+              "work_location": "onsite",
+              "from_ts": 1722200285,
+              "to_ts": 1732124047,
+              "effort": 642.9,
+              "duration": 114.9,
+              "remaining_duration": 13.4,
+              "fulfilled_duration": 101.5,
+              "fulfilled_hours": 812.0,
+              "pct": 52.0,
+              "cost_price_cents": 10277,
+              "quantity": 1,
+              "city": "Bengaluru",
+              "state_or_province": "India",
+              "country": "India",
+              "latitude": 13.0298,
+              "longitude": 77.4954,
+              "request_status": "requested",
+              "created_ts": 1721336285,
+              "updated_ts": 1722200285
+            },
+            {
+              "requirement_id": 166,
+              "name": "Open role: Technical Writer",
+              "engagement_id": 44,
+              "role_category_id": 14,
+              "status_id": 15,
+              "is_primary": 0,
+              "alloc_method": "percentage",
+              "work_location": "hybrid",
+              "from_ts": 1718699848,
+              "to_ts": 1736696544,
+              "effort": 196.1,
+              "duration": 208.3,
+              "remaining_duration": 59.2,
+              "fulfilled_duration": 149.1,
+              "fulfilled_hours": 1192.8,
+              "pct": 13.0,
+              "cost_price_cents": 4967,
+              "quantity": 5,
+              "city": "Bengaluru",
+              "state_or_province": "India",
+              "country": "India",
+              "latitude": 12.9021,
+              "longitude": 77.6462,
+              "request_status": "approved",
+              "created_ts": 1717490248,
+              "updated_ts": 1718699848
+            },
+            {
+              "requirement_id": 167,
+              "name": "Open role: Software Developer",
+              "engagement_id": 44,
+              "role_category_id": 2,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "by-hours",
+              "work_location": "hybrid",
+              "from_ts": 1708146917,
+              "to_ts": 1732857703,
+              "effort": 93.3,
+              "duration": 286.0,
+              "remaining_duration": 258.8,
+              "fulfilled_duration": 27.2,
+              "fulfilled_hours": 217.6,
+              "pct": 78.0,
+              "cost_price_cents": 6581,
+              "quantity": 4,
+              "city": "Bengaluru",
+              "state_or_province": "India",
+              "country": "India",
+              "latitude": 12.9799,
+              "longitude": 77.7196,
+              "request_status": "in-review",
+              "created_ts": 1708060517,
+              "updated_ts": 1708146917
+            },
+            {
+              "requirement_id": 177,
+              "name": "Open role: Consultant",
+              "engagement_id": 49,
+              "role_category_id": 16,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "by-hours",
+              "work_location": "hybrid",
+              "from_ts": 1780626372,
+              "to_ts": 1807398598,
+              "effort": 141.4,
+              "duration": 309.9,
+              "remaining_duration": 273.4,
+              "fulfilled_duration": 36.5,
+              "fulfilled_hours": 292.0,
+              "pct": 11.2,
+              "cost_price_cents": 9032,
+              "quantity": 5,
+              "city": "Sydney",
+              "state_or_province": "Australia",
+              "country": "Australia",
+              "latitude": -33.7837,
+              "longitude": 151.087,
+              "request_status": "rejected",
+              "created_ts": 1779503172,
+              "updated_ts": 1780626372
+            },
+            {
+              "requirement_id": 179,
+              "name": "Open role: Practice Lead",
+              "engagement_id": 49,
+              "role_category_id": 19,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "by-hours",
+              "work_location": "remote",
+              "from_ts": 1780169994,
+              "to_ts": 1807398598,
+              "effort": 519.2,
+              "duration": 315.1,
+              "remaining_duration": 122.1,
+              "fulfilled_duration": 193.0,
+              "fulfilled_hours": 1544.0,
+              "pct": 94.0,
+              "cost_price_cents": 16753,
+              "quantity": 1,
+              "city": "Sydney",
+              "state_or_province": "Australia",
+              "country": "Australia",
+              "latitude": -33.8256,
+              "longitude": 151.1161,
+              "request_status": "approved",
+              "created_ts": 1779824394,
+              "updated_ts": 1780169994
+            },
+            {
+              "requirement_id": 180,
+              "name": "Open role: Scrum Master",
+              "engagement_id": 49,
+              "role_category_id": 15,
+              "status_id": 15,
+              "is_primary": 0,
+              "alloc_method": "full",
+              "work_location": "onsite",
+              "from_ts": 1783257349,
+              "to_ts": 1791363101,
+              "effort": 788.8,
+              "duration": 93.8,
+              "remaining_duration": 41.1,
+              "fulfilled_duration": 52.7,
+              "fulfilled_hours": 421.6,
+              "pct": 44.7,
+              "cost_price_cents": 8265,
+              "quantity": 5,
+              "city": "Sydney",
+              "state_or_province": "Australia",
+              "country": "Australia",
+              "latitude": -33.9039,
+              "longitude": 151.068,
+              "request_status": "rejected",
+              "created_ts": 1782566149,
+              "updated_ts": 1783257349
+            },
+            {
+              "requirement_id": 194,
+              "name": "Open role: DevOps Engineer",
+              "engagement_id": 56,
+              "role_category_id": 12,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "full",
+              "work_location": "onsite",
+              "from_ts": 1728500367,
+              "to_ts": 1742533283,
+              "effort": 526.2,
+              "duration": 162.4,
+              "remaining_duration": 58.5,
+              "fulfilled_duration": 103.9,
+              "fulfilled_hours": 831.2,
+              "pct": 51.7,
+              "cost_price_cents": 8709,
+              "quantity": 5,
+              "city": "Singapore",
+              "state_or_province": "Singapore",
+              "country": "Singapore",
+              "latitude": 1.267,
+              "longitude": 103.7986,
+              "request_status": "approved",
+              "created_ts": 1727031567,
+              "updated_ts": 1728500367
+            },
+            {
+              "requirement_id": 199,
+              "name": "Open role: Support Engineer",
+              "engagement_id": 56,
+              "role_category_id": 20,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "percentage",
+              "work_location": "onsite",
+              "from_ts": 1725869659,
+              "to_ts": 1746854110,
+              "effort": 825.3,
+              "duration": 242.9,
+              "remaining_duration": 64.9,
+              "fulfilled_duration": 178.0,
+              "fulfilled_hours": 1424.0,
+              "pct": 75.4,
+              "cost_price_cents": 5349,
+              "quantity": 4,
+              "city": "Singapore",
+              "state_or_province": "Singapore",
+              "country": "Singapore",
+              "latitude": 1.2758,
+              "longitude": 103.8151,
+              "request_status": "rejected",
+              "created_ts": 1725783259,
+              "updated_ts": 1725869659
+            },
+            {
+              "requirement_id": 200,
+              "name": "Open role: DevOps Engineer",
+              "engagement_id": 57,
+              "role_category_id": 12,
+              "status_id": 15,
+              "is_primary": 0,
+              "alloc_method": "by-hours",
+              "work_location": "onsite",
+              "from_ts": 1749630702,
+              "to_ts": 1770623792,
+              "effort": 342.9,
+              "duration": 243.0,
+              "remaining_duration": 88.5,
+              "fulfilled_duration": 154.5,
+              "fulfilled_hours": 1236.0,
+              "pct": 36.6,
+              "cost_price_cents": 8638,
+              "quantity": 1,
+              "city": "London",
+              "state_or_province": "UK",
+              "country": "UK",
+              "latitude": 51.5391,
+              "longitude": -0.1914,
+              "request_status": "rejected",
+              "created_ts": 1749371502,
+              "updated_ts": 1749630702
+            },
+            {
+              "requirement_id": 207,
+              "name": "Open role: Support Engineer",
+              "engagement_id": 59,
+              "role_category_id": 20,
+              "status_id": 15,
+              "is_primary": 0,
+              "alloc_method": "by-hours",
+              "work_location": "onsite",
+              "from_ts": 1756194252,
+              "to_ts": 1773038078,
+              "effort": 334.8,
+              "duration": 195.0,
+              "remaining_duration": 174.8,
+              "fulfilled_duration": 20.2,
+              "fulfilled_hours": 161.6,
+              "pct": 49.0,
+              "cost_price_cents": 5542,
+              "quantity": 4,
+              "city": "London",
+              "state_or_province": "UK",
+              "country": "UK",
+              "latitude": 51.542,
+              "longitude": -0.0024,
+              "request_status": "approved",
+              "created_ts": 1755935052,
+              "updated_ts": 1756194252
+            },
+            {
+              "requirement_id": 231,
+              "name": "Open role: Solutions Architect",
+              "engagement_id": 69,
+              "role_category_id": 5,
+              "status_id": 15,
+              "is_primary": 0,
+              "alloc_method": "percentage",
+              "work_location": "remote",
+              "from_ts": 1790470307,
+              "to_ts": 1824987704,
+              "effort": 758.5,
+              "duration": 399.5,
+              "remaining_duration": 182.3,
+              "fulfilled_duration": 217.2,
+              "fulfilled_hours": 1737.6,
+              "pct": 31.5,
+              "cost_price_cents": 12814,
+              "quantity": 5,
+              "city": "Toronto",
+              "state_or_province": "Canada",
+              "country": "Canada",
+              "latitude": 43.5396,
+              "longitude": -79.4732,
+              "request_status": "approved",
+              "created_ts": 1790124707,
+              "updated_ts": 1790470307
+            },
+            {
+              "requirement_id": 233,
+              "name": "Open role: Senior Developer",
+              "engagement_id": 69,
+              "role_category_id": 3,
+              "status_id": 15,
+              "is_primary": 1,
+              "alloc_method": "full",
+              "work_location": "onsite",
+              "from_ts": 1785982607,
+              "to_ts": 1811466520,
+              "effort": 256.9,
+              "duration": 295.0,
+              "remaining_duration": 131.3,
+              "fulfilled_duration": 163.7,
+              "fulfilled_hours": 1309.6,
+              "pct": 41.1,
+              "cost_price_cents": 7893,
+              "quantity": 4,
+              "city": "Toronto",
+              "state_or_province": "Canada",
+              "country": "Canada",
+              "latitude": 43.5427,
+              "longitude": -79.3772,
+              "request_status": "approved",
+              "created_ts": 1785377807,
+              "updated_ts": 1785982607
+            },
+            {
+              "requirement_id": 269,
+              "name": "Open role: UX Designer",
+              "engagement_id": 79,
+              "role_category_id": 13,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "by-hours",
+              "work_location": "hybrid",
+              "from_ts": 1797368973,
+              "to_ts": 1810766815,
+              "effort": 303.6,
+              "duration": 155.1,
+              "remaining_duration": 109.2,
+              "fulfilled_duration": 45.9,
+              "fulfilled_hours": 367.2,
+              "pct": 11.9,
+              "cost_price_cents": 8762,
+              "quantity": 4,
+              "city": "Manchester",
+              "state_or_province": "UK",
+              "country": "UK",
+              "latitude": 53.4424,
+              "longitude": -2.2078,
+              "request_status": "rejected",
+              "created_ts": 1796591373,
+              "updated_ts": 1797368973
+            },
+            {
+              "requirement_id": 331,
+              "name": "Open role: Consultant",
+              "engagement_id": 95,
+              "role_category_id": 16,
+              "status_id": 15,
+              "is_primary": 0,
+              "alloc_method": "percentage",
+              "work_location": "onsite",
+              "from_ts": 1752484942,
+              "to_ts": 1771120284,
+              "effort": 656.6,
+              "duration": 215.7,
+              "remaining_duration": 120.8,
+              "fulfilled_duration": 94.9,
+              "fulfilled_hours": 759.2,
+              "pct": 77.1,
+              "cost_price_cents": 8759,
+              "quantity": 5,
+              "city": "Sao Paulo",
+              "state_or_province": "Brazil",
+              "country": "Brazil",
+              "latitude": -23.5403,
+              "longitude": -46.6313,
+              "request_status": "in-review",
+              "created_ts": 1752398542,
+              "updated_ts": 1752484942
+            },
+            {
+              "requirement_id": 335,
+              "name": "Open role: Project Manager",
+              "engagement_id": 97,
+              "role_category_id": 9,
+              "status_id": 15,
+              "is_primary": 0,
+              "alloc_method": "percentage",
+              "work_location": "remote",
+              "from_ts": 1729424942,
+              "to_ts": 1732276228,
+              "effort": 402.0,
+              "duration": 33.0,
+              "remaining_duration": 24.3,
+              "fulfilled_duration": 8.7,
+              "fulfilled_hours": 69.6,
+              "pct": 32.4,
+              "cost_price_cents": 10402,
+              "quantity": 1,
+              "city": "London",
+              "state_or_province": "UK",
+              "country": "UK",
+              "latitude": 51.5279,
+              "longitude": -0.01,
+              "request_status": "approved",
+              "created_ts": 1728215342,
+              "updated_ts": 1729424942
+            },
+            {
+              "requirement_id": 336,
+              "name": "Open role: Consultant",
+              "engagement_id": 97,
+              "role_category_id": 16,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "percentage",
+              "work_location": "onsite",
+              "from_ts": 1729603414,
+              "to_ts": 1737710649,
+              "effort": 713.6,
+              "duration": 93.8,
+              "remaining_duration": 19.1,
+              "fulfilled_duration": 74.7,
+              "fulfilled_hours": 597.6,
+              "pct": 73.5,
+              "cost_price_cents": 9189,
+              "quantity": 1,
+              "city": "London",
+              "state_or_province": "UK",
+              "country": "UK",
+              "latitude": 51.5108,
+              "longitude": -0.2559,
+              "request_status": "approved",
+              "created_ts": 1729603414,
+              "updated_ts": 1729603414
+            },
+            {
+              "requirement_id": 337,
+              "name": "Open role: Delivery Lead",
+              "engagement_id": 98,
+              "role_category_id": 8,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "percentage",
+              "work_location": "onsite",
+              "from_ts": 1787178965,
+              "to_ts": 1789704260,
+              "effort": 363.9,
+              "duration": 29.2,
+              "remaining_duration": 6.3,
+              "fulfilled_duration": 22.9,
+              "fulfilled_hours": 183.2,
+              "pct": 42.1,
+              "cost_price_cents": 12168,
+              "quantity": 5,
+              "city": "Chicago",
+              "state_or_province": "IL",
+              "country": "USA",
+              "latitude": 41.7952,
+              "longitude": -87.696,
+              "request_status": "in-review",
+              "created_ts": 1786746965,
+              "updated_ts": 1787178965
+            },
+            {
+              "requirement_id": 344,
+              "name": "Open role: Software Developer",
+              "engagement_id": 102,
+              "role_category_id": 2,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "percentage",
+              "work_location": "onsite",
+              "from_ts": 1758728314,
+              "to_ts": 1770847754,
+              "effort": 707.7,
+              "duration": 140.3,
+              "remaining_duration": 15.3,
+              "fulfilled_duration": 125.0,
+              "fulfilled_hours": 1000.0,
+              "pct": 82.8,
+              "cost_price_cents": 7059,
+              "quantity": 4,
+              "city": "London",
+              "state_or_province": "UK",
+              "country": "UK",
+              "latitude": 51.6137,
+              "longitude": -0.2067,
+              "request_status": "in-review",
+              "created_ts": 1757777914,
+              "updated_ts": 1758728314
+            },
+            {
+              "requirement_id": 404,
+              "name": "Open role: Scrum Master",
+              "engagement_id": 120,
+              "role_category_id": 15,
+              "status_id": 15,
+              "is_primary": 0,
+              "alloc_method": "by-hours",
+              "work_location": "onsite",
+              "from_ts": 1761825113,
+              "to_ts": 1781530762,
+              "effort": 421.3,
+              "duration": 228.1,
+              "remaining_duration": 139.5,
+              "fulfilled_duration": 88.6,
+              "fulfilled_hours": 708.8,
+              "pct": 81.2,
+              "cost_price_cents": 8503,
+              "quantity": 2,
+              "city": "London",
+              "state_or_province": "UK",
+              "country": "UK",
+              "latitude": 51.5824,
+              "longitude": -0.1938,
+              "request_status": "requested",
+              "created_ts": 1761306713,
+              "updated_ts": 1761825113
+            },
+            {
+              "requirement_id": 421,
+              "name": "Open role: Solutions Architect",
+              "engagement_id": 126,
+              "role_category_id": 5,
+              "status_id": 16,
+              "is_primary": 1,
+              "alloc_method": "full",
+              "work_location": "remote",
+              "from_ts": 1774842906,
+              "to_ts": 1779898072,
+              "effort": 79.1,
+              "duration": 58.5,
+              "remaining_duration": 27.5,
+              "fulfilled_duration": 31.0,
+              "fulfilled_hours": 248.0,
+              "pct": 4.4,
+              "cost_price_cents": 11959,
+              "quantity": 1,
+              "city": "Dublin",
+              "state_or_province": "Ireland",
+              "country": "Ireland",
+              "latitude": 53.3426,
+              "longitude": -6.31,
+              "request_status": "requested",
+              "created_ts": 1773287706,
+              "updated_ts": 1774842906
+            },
+            {
+              "requirement_id": 426,
+              "name": "Open role: QA Engineer",
+              "engagement_id": 126,
+              "role_category_id": 11,
+              "status_id": 16,
+              "is_primary": 1,
+              "alloc_method": "by-hours",
+              "work_location": "hybrid",
+              "from_ts": 1777011933,
+              "to_ts": 1782971868,
+              "effort": 360.6,
+              "duration": 69.0,
+              "remaining_duration": 18.2,
+              "fulfilled_duration": 50.8,
+              "fulfilled_hours": 406.4,
+              "pct": 91.2,
+              "cost_price_cents": 5927,
+              "quantity": 2,
+              "city": "Dublin",
+              "state_or_province": "Ireland",
+              "country": "Ireland",
+              "latitude": 53.2436,
+              "longitude": -6.2935,
+              "request_status": "in-review",
+              "created_ts": 1776234333,
+              "updated_ts": 1777011933
+            },
+            {
+              "requirement_id": 485,
+              "name": "Open role: Solutions Architect",
+              "engagement_id": 149,
+              "role_category_id": 5,
+              "status_id": 16,
+              "is_primary": 0,
+              "alloc_method": "full",
+              "work_location": "hybrid",
+              "from_ts": 1721088108,
+              "to_ts": 1742004976,
+              "effort": 876.7,
+              "duration": 242.1,
+              "remaining_duration": 123.5,
+              "fulfilled_duration": 118.6,
+              "fulfilled_hours": 948.8,
+              "pct": 5.0,
+              "cost_price_cents": 14787,
+              "quantity": 1,
+              "city": "London",
+              "state_or_province": "UK",
+              "country": "UK",
+              "latitude": 51.5939,
+              "longitude": -0.1107,
+              "request_status": "in-review",
+              "created_ts": 1720224108,
+              "updated_ts": 1721088108
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "open_requirements_with_critical_risk_no_submitted_request",
+              "source_tables": [
+                "requirement_requests",
+                "resource_requirements",
+                "risks",
+                "status_lookup"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sql",
+          "query_id": "open_requirements_with_critical_risk_no_submitted_request",
+          "purpose": "List all open resource requirements belonging to engagements with a critical risk and no submitted request",
+          "sql": "WITH critical_engagements AS (\n    SELECT DISTINCT engagement_id\n    FROM risks\n    WHERE severity = 'critical'\n), open_requirements AS (\n    SELECT rr.requirement_id\n    FROM requirement_requests rr\n    WHERE rr.state = 'submitted'\n), open_resource_requirements AS (\n    SELECT rr.*\n    FROM resource_requirements rr\n    JOIN status_lookup sl ON rr.status_id = sl.status_id\n    WHERE sl.domain = 'requirement' AND sl.state_group = 'open'\n)\nSELECT orr.*\nFROM open_resource_requirements orr\nJOIN critical_engagements ce ON orr.engagement_id = ce.engagement_id\nWHERE orr.requirement_id NOT IN (SELECT requirement_id FROM open_requirements)\nORDER BY orr.requirement_id ASC;",
+          "parameters": {}
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Open resource requirements are those with status_id in the open state group for requirements.",
+        "Engagements with a critical risk have at least one risk record with severity='critical'.",
+        "No submitted request means there is no requirement_requests record with state='submitted' for the requirement."
+      ]
+    },
+    "gq-03": {
+      "thread_id": "3b6829fdd45c49d0b99cd9f763bf11f9",
+      "request_id": "a034c3d38a45494fb5e97291552afe6d",
+      "response_message_id": "f1743184916046e39e0d8d8618495c1a",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "The total planned cost of active engagements in the Healthcare & Life Sciences (HLS) business unit, converted to the reporting currency (primary currency), is $5,157,842.10. This total is derived by summing the planned costs (originally in cents) of engagements with active status (status code 'ACT' in the 'project' domain) within the HLS business unit, converting each to the reporting currency using the latest foreign exchange rates. There are 11 such active engagements included in this total. The calculation assumes the primary currency is identified by the 'is_primary' flag in the currencies table, and the HLS business unit is identified by the code 'HLS'. The provided result is complete and not truncated.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "total_planned_cost_active_engagements_hls",
+          "title": "Calculate total planned cost in reporting currency and count of active engagements in Healthcare & Life Sciences business unit",
+          "columns": [
+            {
+              "key": "total_usd",
+              "label": "total usd",
+              "unit": null
+            },
+            {
+              "key": "engagement_count",
+              "label": "engagement count",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "total_usd": 5157842.1,
+              "engagement_count": 11
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "total_planned_cost_active_engagements_hls",
+              "source_tables": [
+                "business_units",
+                "currencies",
+                "engagements",
+                "rate_cards",
+                "status_lookup"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sql",
+          "query_id": "total_planned_cost_active_engagements_hls",
+          "purpose": "Calculate total planned cost in reporting currency and count of active engagements in Healthcare & Life Sciences business unit",
+          "sql": "WITH primary_currency AS (\n    SELECT currency_id\n    FROM currencies\n    WHERE is_primary = 1\n    LIMIT 1\n), fx_rates AS (\n    SELECT currency_id, MAX(fx_rate) AS fx_rate\n    FROM rate_cards\n    GROUP BY currency_id\n), hls_bu AS (\n    SELECT business_unit_id\n    FROM business_units\n    WHERE code = 'HLS'\n    LIMIT 1\n), active_status AS (\n    SELECT status_id\n    FROM status_lookup\n    WHERE domain = 'project' AND code = 'ACT'\n    LIMIT 1\n)\nSELECT\n    ROUND(SUM(CAST(e.planned_cost_cents AS REAL) / 100.0 * fr.fx_rate), 2) AS total_usd,\n    COUNT(DISTINCT e.engagement_id) AS engagement_count\nFROM engagements e\nJOIN hls_bu bu ON e.business_unit_id = bu.business_unit_id\nJOIN active_status s ON e.status_id = s.status_id\nJOIN primary_currency pc ON 1=1\nLEFT JOIN fx_rates fr ON e.currency_id = fr.currency_id\nWHERE e.planned_cost_cents IS NOT NULL;",
+          "parameters": {}
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Active engagements are those with status_lookup domain='project' and code='ACT'.",
+        "The reporting currency is identified by currencies.is_primary=1.",
+        "Planned cost is taken from engagements.planned_cost_cents converted to reporting currency using rate_cards.fx_rate.",
+        "The Healthcare & Life Sciences business unit corresponds to business_units.code='HLS'."
+      ]
+    },
+    "gq-04": {
+      "thread_id": "de9a3a8f041a4850aa08397c462fc85f",
+      "request_id": "ee35618e88df4afbb5cf149d02b3369b",
+      "response_message_id": "6af74c66fdb3407cb1e3b6e556ac00ab",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "The data shows the count of people in each region who have the DSPy / LLM Ops skill at proficiency level 3 or higher. According to the query results, there is 1 person in the AMER region, 1 person in the EMEA region, and 3 people in the LATAM region with this skill proficiency. The APAC region is not listed, indicating no people meeting the criteria there. The results are complete and based on the specified proficiency threshold and region definitions.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "count_people_by_region_with_dspy_llm_ops_skill",
+          "title": "Count people in each region with DSPy / LLM Ops skill at proficiency 3 or higher",
+          "columns": [
+            {
+              "key": "region",
+              "label": "region",
+              "unit": null
+            },
+            {
+              "key": "people",
+              "label": "people",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "region": "AMER",
+              "people": 1
+            },
+            {
+              "region": "EMEA",
+              "people": 1
+            },
+            {
+              "region": "LATAM",
+              "people": 3
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "count_people_by_region_with_dspy_llm_ops_skill",
+              "source_tables": [
+                "people",
+                "person_skills",
+                "skills"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sql",
+          "query_id": "count_people_by_region_with_dspy_llm_ops_skill",
+          "purpose": "Count people in each region with DSPy / LLM Ops skill at proficiency 3 or higher",
+          "sql": "WITH dspy_skill AS (\n  SELECT skill_id FROM skills WHERE name = 'DSPy / LLM Ops'\n), qualified_people AS (\n  SELECT DISTINCT ps.person_id\n  FROM person_skills ps\n  JOIN dspy_skill ds ON ps.skill_id = ds.skill_id\n  WHERE ps.proficiency >= 3\n)\nSELECT p.location_region AS region, COUNT(DISTINCT p.person_id) AS people\nFROM people p\nJOIN qualified_people qp ON p.person_id = qp.person_id\nGROUP BY p.location_region\nORDER BY p.location_region ASC;",
+          "parameters": {}
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Proficiency 3 or higher means proficiency >= 3.",
+        "Regions are as per people.location_region field with values like AMER, APAC, EMEA, LATAM."
+      ]
+    },
+    "gq-05": {
+      "thread_id": "114b7aef444b477881963815311137d3",
+      "request_id": "e8d1dcd0cfa044ac875eaca495f350a5",
+      "response_message_id": "77d5ecb78f24424cbba3b9df25e729af",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "The person who logged the most hours on engagement ENG-2026-0001 in the first quarter of 2026 was Mark Stewart, with 131.5 hours. The total number of hours logged on this engagement during that quarter was 425.0 hours.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "top5_person_hours_eng2026q1",
+          "title": "Top 5 people by logged actual hours on engagement ENG-2026-0001 in Q1 2026",
+          "columns": [
+            {
+              "key": "person_id",
+              "label": "person id",
+              "unit": null
+            },
+            {
+              "key": "person",
+              "label": "person",
+              "unit": null
+            },
+            {
+              "key": "hours",
+              "label": "hours",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "person_id": 120,
+              "person": "Mark Stewart",
+              "hours": 131.5
+            },
+            {
+              "person_id": 282,
+              "person": "Andrew King",
+              "hours": 90.5
+            },
+            {
+              "person_id": 351,
+              "person": "Patricia Anderson",
+              "hours": 62.0
+            },
+            {
+              "person_id": 348,
+              "person": "Donald Moore",
+              "hours": 44.0
+            },
+            {
+              "person_id": 88,
+              "person": "Michelle Martin",
+              "hours": 41.5
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "top5_person_hours_eng2026q1",
+              "source_tables": [
+                "engagements",
+                "people",
+                "time_entries",
+                "work_items"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "block_id": "total_hours_eng2026q1",
+          "title": "Total logged actual hours on engagement ENG-2026-0001 in Q1 2026",
+          "columns": [
+            {
+              "key": "total_hours",
+              "label": "total hours",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "total_hours": 425.0
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "total_hours_eng2026q1",
+              "source_tables": [
+                "engagements",
+                "time_entries",
+                "work_items"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sql",
+          "query_id": "top5_person_hours_eng2026q1",
+          "purpose": "Top 5 people by logged actual hours on engagement ENG-2026-0001 in Q1 2026",
+          "sql": "WITH engagement_work_items AS (\n  SELECT work_item_id\n  FROM work_items\n  WHERE engagement_id = (SELECT engagement_id FROM engagements WHERE code = :engagement_code LIMIT 1)\n),\nfiltered_time_entries AS (\n  SELECT te.person_id, te.minutes\n  FROM time_entries te\n  JOIN engagement_work_items ewi ON te.work_item_id = ewi.work_item_id\n  WHERE te.entry_ts >= :window_start AND te.entry_ts < :window_end\n)\nSELECT p.person_id, p.display_name AS person, ROUND(SUM(fte.minutes) / 60.0, 2) AS hours\nFROM filtered_time_entries fte\nJOIN people p ON fte.person_id = p.person_id\nGROUP BY p.person_id, p.display_name\nORDER BY hours DESC\nLIMIT 5;",
+          "parameters": {
+            "engagement_code": "ENG-2026-0001",
+            "window_start": 1767225600,
+            "window_end": 1775001600
+          }
+        },
+        {
+          "type": "sql",
+          "query_id": "total_hours_eng2026q1",
+          "purpose": "Total logged actual hours on engagement ENG-2026-0001 in Q1 2026",
+          "sql": "WITH engagement_work_items AS (\n  SELECT work_item_id\n  FROM work_items\n  WHERE engagement_id = (SELECT engagement_id FROM engagements WHERE code = :engagement_code LIMIT 1)\n),\nfiltered_time_entries AS (\n  SELECT minutes\n  FROM time_entries te\n  JOIN engagement_work_items ewi ON te.work_item_id = ewi.work_item_id\n  WHERE te.entry_ts >= :window_start AND te.entry_ts < :window_end\n)\nSELECT ROUND(SUM(minutes) / 60.0, 2) AS total_hours\nFROM filtered_time_entries;",
+          "parameters": {
+            "engagement_code": "ENG-2026-0001",
+            "window_start": 1767225600,
+            "window_end": 1775001600
+          }
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "The first quarter of 2026 is from 2026-01-01 to 2026-03-31 inclusive.",
+        "Rankings without an explicit size show the top five for context."
+      ]
+    },
+    "gq-06": {
+      "thread_id": "28c5f19088cd4ce5b32de503e9aae4f6",
+      "request_id": "e83d1406e69f45d2a1e4b417860e7080",
+      "response_message_id": "ef5eab404fed46bb8d1ada33b69d4ff7",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "There are currently 21 critical-path work items that are blocked on active engagements. Among these active engagements, the top five engagements each have 2 blocked critical-path work items. These engagements are ENG-2025-0016, ENG-2024-0031, ENG-2024-0053, ENG-2025-0058, and ENG-2026-0111. The data is complete for the top five engagements and the total count, with no truncation or sampling indicated.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "count_blocked_critical_work_items_active_engagements",
+          "title": "Count total number of blocked critical-path work items on active engagements",
+          "columns": [
+            {
+              "key": "total_blocked_critical_items",
+              "label": "total blocked critical items",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "total_blocked_critical_items": 21
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "count_blocked_critical_work_items_active_engagements",
+              "source_tables": [
+                "engagements",
+                "status_lookup",
+                "work_items"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "block_id": "top5_engagements_blocked_critical_items",
+          "title": "Top 5 active engagements ranked by number of blocked critical-path work items",
+          "columns": [
+            {
+              "key": "engagement_id",
+              "label": "engagement id",
+              "unit": null
+            },
+            {
+              "key": "engagement_code",
+              "label": "engagement code",
+              "unit": null
+            },
+            {
+              "key": "blocked_critical_items",
+              "label": "blocked critical items",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "engagement_id": 16,
+              "engagement_code": "ENG-2025-0016",
+              "blocked_critical_items": 2
+            },
+            {
+              "engagement_id": 31,
+              "engagement_code": "ENG-2024-0031",
+              "blocked_critical_items": 2
+            },
+            {
+              "engagement_id": 53,
+              "engagement_code": "ENG-2024-0053",
+              "blocked_critical_items": 2
+            },
+            {
+              "engagement_id": 58,
+              "engagement_code": "ENG-2025-0058",
+              "blocked_critical_items": 2
+            },
+            {
+              "engagement_id": 111,
+              "engagement_code": "ENG-2026-0111",
+              "blocked_critical_items": 2
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "top5_engagements_blocked_critical_items",
+              "source_tables": [
+                "engagements",
+                "status_lookup",
+                "work_items"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sql",
+          "query_id": "count_blocked_critical_work_items_active_engagements",
+          "purpose": "Count total number of blocked critical-path work items on active engagements",
+          "sql": "WITH active_engagements AS (\n  SELECT engagement_id\n  FROM engagements\n  WHERE status_id = (SELECT status_id FROM status_lookup WHERE domain = 'project' AND code = 'ACT' LIMIT 1)\n), blocked_critical_items AS (\n  SELECT wi.work_item_id\n  FROM work_items wi\n  JOIN status_lookup sl ON wi.status_id = sl.status_id\n  WHERE wi.is_critical = 1\n    AND sl.domain = 'task' AND sl.code = 'BLK'\n    AND wi.engagement_id IN (SELECT engagement_id FROM active_engagements)\n)\nSELECT COUNT(DISTINCT work_item_id) AS total_blocked_critical_items\nFROM blocked_critical_items;",
+          "parameters": {}
+        },
+        {
+          "type": "sql",
+          "query_id": "top5_engagements_blocked_critical_items",
+          "purpose": "Top 5 active engagements ranked by number of blocked critical-path work items",
+          "sql": "WITH active_engagements AS (\n  SELECT engagement_id, code\n  FROM engagements\n  WHERE status_id = (SELECT status_id FROM status_lookup WHERE domain = 'project' AND code = 'ACT' LIMIT 1)\n), blocked_critical_items AS (\n  SELECT wi.work_item_id, wi.engagement_id\n  FROM work_items wi\n  JOIN status_lookup sl ON wi.status_id = sl.status_id\n  WHERE wi.is_critical = 1\n    AND sl.domain = 'task' AND sl.code = 'BLK'\n    AND wi.engagement_id IN (SELECT engagement_id FROM active_engagements)\n)\nSELECT ae.engagement_id, ae.code AS engagement_code, COUNT(bci.work_item_id) AS blocked_critical_items\nFROM active_engagements ae\nLEFT JOIN blocked_critical_items bci ON ae.engagement_id = bci.engagement_id\nGROUP BY ae.engagement_id, ae.code\nORDER BY blocked_critical_items DESC\nLIMIT 5;",
+          "parameters": {}
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Active engagements are those with status code 'ACT' in the project domain as of reference date 2026-04-01.",
+        "Blocked work items have status code 'BLK' in the task domain.",
+        "Critical-path work items are those with is_critical=1.",
+        "Rankings without an explicit size show the top five for context."
+      ]
+    },
+    "gq-07": {
+      "thread_id": "36bcf53385504c1ea389935a5eee0a56",
+      "request_id": "bdf64646542a4427884b32180d6f983c",
+      "response_message_id": "de4931637bd747688ca6d65267142b52",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "table",
+          "block_id": "semantic_matches",
+          "title": "Source-grounded matches",
+          "columns": [
+            {
+              "key": "person_id",
+              "label": "person id",
+              "unit": null
+            },
+            {
+              "key": "reason",
+              "label": "reason",
+              "unit": null
+            },
+            {
+              "key": "match_reason",
+              "label": "match reason",
+              "unit": null
+            },
+            {
+              "key": "evidence",
+              "label": "evidence",
+              "unit": null
+            },
+            {
+              "key": "person",
+              "label": "person",
+              "unit": null
+            },
+            {
+              "key": "bio",
+              "label": "bio",
+              "unit": null
+            },
+            {
+              "key": "roles",
+              "label": "roles",
+              "unit": null
+            },
+            {
+              "key": "skills",
+              "label": "skills",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "person_id": 367,
+              "reason": "Olivia Walker has 12 years of experience as a Data Engineer and Delivery Lead, with strong skills in Data Engineering (4), PostgreSQL (4), AWS (4), and Azure (4). Her leadership role and technical skills make her highly suitable to lead a data-migration workstream.",
+              "match_reason": "Olivia Walker has 12 years of experience as a Data Engineer and Delivery Lead, with strong skills in Data Engineering (4), PostgreSQL (4), AWS (4), and Azure (4). Her leadership role and technical skills make her highly suitable to lead a data-migration workstream.",
+              "evidence": "Olivia Walker is a AMER-based Data Engineer with 12 years of experience delivering enterprise software and consulting engagements. | Roles: Data Engineer, Delivery Lead | Skills: Ruby on Rails, Data Engineering, PostgreSQL, Redis, AWS, Azure",
+              "person": "Olivia Walker",
+              "bio": "Olivia Walker is a AMER-based Data Engineer with 12 years of experience delivering enterprise software and consulting engagements.",
+              "roles": "Data Engineer, Delivery Lead",
+              "skills": "Ruby on Rails (3), Data Engineering (4), PostgreSQL (4), Redis (2), AWS (4), Azure (4)"
+            },
+            {
+              "person_id": 213,
+              "reason": "Jessica Williams has 9 years experience as a Data Engineer with strong skills in SQL Modeling (5), PostgreSQL (5), and Terraform (4). This extensive experience and technical skill set make her a strong candidate to lead a data-migration workstream.",
+              "match_reason": "Jessica Williams has 9 years experience as a Data Engineer with strong skills in SQL Modeling (5), PostgreSQL (5), and Terraform (4). This extensive experience and technical skill set make her a strong candidate to lead a data-migration workstream.",
+              "evidence": "Jessica Williams is a LATAM-based Data Engineer with 9 years of experience delivering enterprise software and consulting engagements. | Roles: Data Engineer | Skills: SQL Modeling, PostgreSQL, Terraform, Security Review",
+              "person": "Jessica Williams",
+              "bio": "Jessica Williams is a LATAM-based Data Engineer with 9 years of experience delivering enterprise software and consulting engagements.",
+              "roles": "Data Engineer",
+              "skills": "SQL Modeling (5), PostgreSQL (5), Terraform (4), Security Review (4)"
+            },
+            {
+              "person_id": 60,
+              "reason": "David Robinson has strong Data Engineering skills with proficiency 5 and ETL Design proficiency 4, indicating solid technical competence. His 11 years of experience in enterprise software and consulting engagements suggest sufficient domain experience. While his role is Machine Learning Engineer, his skills and experience establish plausible suitability to lead a data-migration workstream.",
+              "match_reason": "David Robinson has strong Data Engineering skills with proficiency 5 and ETL Design proficiency 4, indicating solid technical competence. His 11 years of experience in enterprise software and consulting engagements suggest sufficient domain experience. While his role is Machine Learning Engineer, his skills and experience establish plausible suitability to lead a data-migration workstream.",
+              "evidence": "Skills: Data Engineering, ETL Design, Data Viz, Prompt Engineering, Machine Learning, Scrum Mastery | David Robinson is a LATAM-based Machine Learning Engineer with 11 years of experience delivering enterprise software and consulting engagements.",
+              "person": "David Robinson",
+              "bio": "David Robinson is a LATAM-based Machine Learning Engineer with 11 years of experience delivering enterprise software and consulting engagements.",
+              "roles": "Machine Learning Engineer",
+              "skills": "Data Engineering (5), ETL Design (4), Data Viz (5), Prompt Engineering (3), Machine Learning (3), Scrum Mastery (3)"
+            },
+            {
+              "person_id": 308,
+              "reason": "Robert Green has 18 years of experience and skills in Data Engineering (proficiency 3) and project management, indicating strong technical competence and leadership potential for a data-migration workstream.",
+              "match_reason": "Robert Green has 18 years of experience and skills in Data Engineering (proficiency 3) and project management, indicating strong technical competence and leadership potential for a data-migration workstream.",
+              "evidence": "Robert Green is a APAC-based Engagement Manager with 18 years of experience delivering enterprise software and consulting engagements. | Skills: Data Engineering, Feature Engineering, Project Management, Business Analysis, Technical Writing",
+              "person": "Robert Green",
+              "bio": "Robert Green is a APAC-based Engagement Manager with 18 years of experience delivering enterprise software and consulting engagements.",
+              "roles": "Engagement Manager, Delivery Lead",
+              "skills": "Data Engineering (3), Feature Engineering (2), Project Management (3), Business Analysis (5), Technical Writing (4)"
+            },
+            {
+              "person_id": 109,
+              "reason": "Kimberly Jackson has 6 years of experience and strong skills in Data Engineering (proficiency 4) and ETL Design (proficiency 4), which are highly relevant for data migration, establishing plausible suitability to lead a data-migration workstream.",
+              "match_reason": "Kimberly Jackson has 6 years of experience and strong skills in Data Engineering (proficiency 4) and ETL Design (proficiency 4), which are highly relevant for data migration, establishing plausible suitability to lead a data-migration workstream.",
+              "evidence": "Kimberly Jackson is a LATAM-based Data Engineer with 6 years of experience delivering enterprise software and consulting engagements. | Skills: Python, Data Engineering, ETL Design, Kafka, Security Review, CI/CD, Docker",
+              "person": "Kimberly Jackson",
+              "bio": "Kimberly Jackson is a LATAM-based Data Engineer with 6 years of experience delivering enterprise software and consulting engagements.",
+              "roles": "Data Engineer",
+              "skills": "Python (3), Data Engineering (4), ETL Design (4), Kafka (4), Security Review (5), CI/CD (4), Docker (3)"
+            },
+            {
+              "person_id": 342,
+              "reason": "Emily Allen has 8 years of experience as a Data Engineer with strong skills in ETL Design (3) and SQL Modeling (5), which are critical for data migration. Her experience and skills indicate suitability to lead a data-migration workstream.",
+              "match_reason": "Emily Allen has 8 years of experience as a Data Engineer with strong skills in ETL Design (3) and SQL Modeling (5), which are critical for data migration. Her experience and skills indicate suitability to lead a data-migration workstream.",
+              "evidence": "Emily Allen is a LATAM-based Data Engineer with 8 years of experience delivering enterprise software and consulting engagements. | Roles: Data Engineer | Skills: ETL Design, SQL Modeling, Azure, Observability, Security Review, Docker",
+              "person": "Emily Allen",
+              "bio": "Emily Allen is a LATAM-based Data Engineer with 8 years of experience delivering enterprise software and consulting engagements.",
+              "roles": "Data Engineer",
+              "skills": "ETL Design (3), SQL Modeling (5), Azure (3), Observability (3), Security Review (5), Docker (3)"
+            },
+            {
+              "person_id": 286,
+              "reason": "David Brown has 7 years of experience as a Data Engineer with strong skills in SQL Modeling (proficiency 5) and related data engineering skills, indicating solid domain competence. His experience and skills make him suitable to lead a data-migration workstream.",
+              "match_reason": "David Brown has 7 years of experience as a Data Engineer with strong skills in SQL Modeling (proficiency 5) and related data engineering skills, indicating solid domain competence. His experience and skills make him suitable to lead a data-migration workstream.",
+              "evidence": "David Brown is a APAC-based Data Engineer with 7 years of experience delivering enterprise software and consulting engagements. | Roles: Data Engineer | Skills: Rust, Neo4j / Cypher, SQL Modeling, Observability, Security Review, Performance Tuning, Cost Optimization",
+              "person": "David Brown",
+              "bio": "David Brown is a APAC-based Data Engineer with 7 years of experience delivering enterprise software and consulting engagements.",
+              "roles": "Data Engineer",
+              "skills": "Rust (1), Neo4j / Cypher (5), SQL Modeling (5), Observability (4), Security Review (3), Performance Tuning (4), Cost Optimization (4)"
+            },
+            {
+              "person_id": 375,
+              "reason": "Anthony King has 6 years of experience as a Data Engineer with relevant skills in Kafka and Message Queues (proficiency 3), which are important in data pipelines and migration. His Scrum Master role suggests leadership potential. Overall, he is suitable to lead a data-migration workstream.",
+              "match_reason": "Anthony King has 6 years of experience as a Data Engineer with relevant skills in Kafka and Message Queues (proficiency 3), which are important in data pipelines and migration. His Scrum Master role suggests leadership potential. Overall, he is suitable to lead a data-migration workstream.",
+              "evidence": "Anthony King is a EMEA-based Data Engineer with 6 years of experience delivering enterprise software and consulting engagements. | Roles: Data Engineer, Scrum Master | Skills: Kafka, Message Queues, Observability, Prompt Engineering, Scrum Mastery",
+              "person": "Anthony King",
+              "bio": "Anthony King is a EMEA-based Data Engineer with 6 years of experience delivering enterprise software and consulting engagements.",
+              "roles": "Data Engineer, Scrum Master",
+              "skills": "Kafka (3), Message Queues (3), Observability (3), Prompt Engineering (2), Scrum Mastery (1)"
+            },
+            {
+              "person_id": 91,
+              "reason": "John Morris has 8 years of experience as a Data Engineer with strong skills in ETL Design (5), Data Engineering (2), and SQL Modeling (3). His Scrum Master role suggests leadership potential. He is suitable to lead a data-migration workstream.",
+              "match_reason": "John Morris has 8 years of experience as a Data Engineer with strong skills in ETL Design (5), Data Engineering (2), and SQL Modeling (3). His Scrum Master role suggests leadership potential. He is suitable to lead a data-migration workstream.",
+              "evidence": "John Morris is a AMER-based Data Engineer with 8 years of experience delivering enterprise software and consulting engagements. | Roles: Data Engineer, Scrum Master | Skills: Python, Data Engineering, ETL Design, SQL Modeling, Kafka, Kubernetes",
+              "person": "John Morris",
+              "bio": "John Morris is a AMER-based Data Engineer with 8 years of experience delivering enterprise software and consulting engagements.",
+              "roles": "Data Engineer, Scrum Master",
+              "skills": "Python (3), Data Engineering (2), ETL Design (5), SQL Modeling (3), Kafka (4), Kubernetes (2)"
+            },
+            {
+              "person_id": 356,
+              "reason": "Robert Garcia has 5 years experience as a Data Engineer with strong skills in SQL Modeling (4), Kafka (5), and Message Queues (2). This technical competence in data engineering makes him suitable to lead a data-migration workstream, with plausible leadership potential despite no explicit leadership role.",
+              "match_reason": "Robert Garcia has 5 years experience as a Data Engineer with strong skills in SQL Modeling (4), Kafka (5), and Message Queues (2). This technical competence in data engineering makes him suitable to lead a data-migration workstream, with plausible leadership potential despite no explicit leadership role.",
+              "evidence": "Robert Garcia is a LATAM-based Data Engineer with 5 years of experience delivering enterprise software and consulting engagements. | Roles: Data Engineer | Skills: SQL Modeling, Kafka, Message Queues",
+              "person": "Robert Garcia",
+              "bio": "Robert Garcia is a LATAM-based Data Engineer with 5 years of experience delivering enterprise software and consulting engagements.",
+              "roles": "Data Engineer",
+              "skills": "SQL Modeling (4), Kafka (5), Message Queues (2)"
+            }
+          ],
+          "completeness": {
+            "mode": "shortlist",
+            "eligible": 400,
+            "processed": 40,
+            "matched": 20,
+            "uncertain": 0,
+            "complete": false,
+            "fallback": false,
+            "order": "assessed_ranking"
+          },
+          "evidence": [
+            {
+              "source_id": "person:367",
+              "quotes": [
+                "Olivia Walker is a AMER-based Data Engineer with 12 years of experience delivering enterprise software and consulting engagements.",
+                "Roles: Data Engineer, Delivery Lead",
+                "Skills: Ruby on Rails, Data Engineering, PostgreSQL, Redis, AWS, Azure"
+              ]
+            },
+            {
+              "source_id": "person:213",
+              "quotes": [
+                "Jessica Williams is a LATAM-based Data Engineer with 9 years of experience delivering enterprise software and consulting engagements.",
+                "Roles: Data Engineer",
+                "Skills: SQL Modeling, PostgreSQL, Terraform, Security Review"
+              ]
+            },
+            {
+              "source_id": "person:60",
+              "quotes": [
+                "Skills: Data Engineering, ETL Design, Data Viz, Prompt Engineering, Machine Learning, Scrum Mastery",
+                "David Robinson is a LATAM-based Machine Learning Engineer with 11 years of experience delivering enterprise software and consulting engagements."
+              ]
+            },
+            {
+              "source_id": "person:308",
+              "quotes": [
+                "Robert Green is a APAC-based Engagement Manager with 18 years of experience delivering enterprise software and consulting engagements.",
+                "Skills: Data Engineering, Feature Engineering, Project Management, Business Analysis, Technical Writing"
+              ]
+            },
+            {
+              "source_id": "person:109",
+              "quotes": [
+                "Kimberly Jackson is a LATAM-based Data Engineer with 6 years of experience delivering enterprise software and consulting engagements.",
+                "Skills: Python, Data Engineering, ETL Design, Kafka, Security Review, CI/CD, Docker"
+              ]
+            },
+            {
+              "source_id": "person:342",
+              "quotes": [
+                "Emily Allen is a LATAM-based Data Engineer with 8 years of experience delivering enterprise software and consulting engagements.",
+                "Roles: Data Engineer",
+                "Skills: ETL Design, SQL Modeling, Azure, Observability, Security Review, Docker"
+              ]
+            },
+            {
+              "source_id": "person:286",
+              "quotes": [
+                "David Brown is a APAC-based Data Engineer with 7 years of experience delivering enterprise software and consulting engagements.",
+                "Roles: Data Engineer",
+                "Skills: Rust, Neo4j / Cypher, SQL Modeling, Observability, Security Review, Performance Tuning, Cost Optimization"
+              ]
+            },
+            {
+              "source_id": "person:375",
+              "quotes": [
+                "Anthony King is a EMEA-based Data Engineer with 6 years of experience delivering enterprise software and consulting engagements.",
+                "Roles: Data Engineer, Scrum Master",
+                "Skills: Kafka, Message Queues, Observability, Prompt Engineering, Scrum Mastery"
+              ]
+            },
+            {
+              "source_id": "person:91",
+              "quotes": [
+                "John Morris is a AMER-based Data Engineer with 8 years of experience delivering enterprise software and consulting engagements.",
+                "Roles: Data Engineer, Scrum Master",
+                "Skills: Python, Data Engineering, ETL Design, SQL Modeling, Kafka, Kubernetes"
+              ]
+            },
+            {
+              "source_id": "person:356",
+              "quotes": [
+                "Robert Garcia is a LATAM-based Data Engineer with 5 years of experience delivering enterprise software and consulting engagements.",
+                "Roles: Data Engineer",
+                "Skills: SQL Modeling, Kafka, Message Queues"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "block_id": "semantic_counts",
+          "title": "Coverage and matching count",
+          "columns": [
+            {
+              "key": "eligible",
+              "label": "eligible",
+              "unit": null
+            },
+            {
+              "key": "processed",
+              "label": "processed",
+              "unit": null
+            },
+            {
+              "key": "matched",
+              "label": "matched",
+              "unit": null
+            },
+            {
+              "key": "uncertain",
+              "label": "uncertain",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "eligible": 400,
+              "processed": 40,
+              "matched": 20,
+              "uncertain": 0
+            }
+          ],
+          "completeness": {
+            "mode": "shortlist",
+            "eligible": 400,
+            "processed": 40,
+            "matched": 20,
+            "uncertain": 0,
+            "complete": false,
+            "fallback": false,
+            "order": "assessed_ranking"
+          },
+          "evidence": []
+        },
+        {
+          "type": "sql",
+          "query_id": "eligible",
+          "purpose": "Exact structured candidate pool",
+          "sql": "SELECT person_id FROM people ORDER BY person_id",
+          "parameters": {}
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Experienced means having relevant skills with proficiency, but no explicit numeric threshold given.",
+        "Data-migration workstream leadership implies suitability from bio or skills, not just bookings or assignments.",
+        "No explicit date range given; assume current or near-future availability is relevant."
+      ]
+    },
+    "gq-08": {
+      "thread_id": "aafe662389e64857bd61bc4af974c79f",
+      "request_id": "f0685fb8ed034604bd0a429457c7b718",
+      "response_message_id": "8739710aa5bc4cc896d5b18838459a5f",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "table",
+          "block_id": "semantic_matches",
+          "title": "Source-grounded matches",
+          "columns": [
+            {
+              "key": "engagement_id",
+              "label": "engagement id",
+              "unit": null
+            },
+            {
+              "key": "reason",
+              "label": "reason",
+              "unit": null
+            },
+            {
+              "key": "match_reason",
+              "label": "match reason",
+              "unit": null
+            },
+            {
+              "key": "evidence",
+              "label": "evidence",
+              "unit": null
+            },
+            {
+              "key": "engagement",
+              "label": "engagement",
+              "unit": null
+            },
+            {
+              "key": "summary",
+              "label": "summary",
+              "unit": null
+            },
+            {
+              "key": "risks",
+              "label": "risks",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "engagement_id": 59,
+              "reason": "The industry is Pharmaceuticals, which matches the criteria.; The risk explicitly mentions a staffing gap, which matches the staffing criterion.; The risk explicitly mentions key-person dependency, matching the key-person criterion.",
+              "match_reason": "The industry is Pharmaceuticals, which matches the criteria.; The risk explicitly mentions a staffing gap, which matches the staffing criterion.; The risk explicitly mentions key-person dependency, matching the key-person criterion.",
+              "evidence": "Pharmaceuticals | Staffing gap identified on this engagement; mitigation plan in progress. | Key-person dependency identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2025-0059",
+              "summary": "Digital Transformation for Solstice Financial, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+              "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Key-person dependency identified on this engagement; mitigation plan in progress. | Budget overrun identified on this engagement; mitigation plan in progress. | Integration delay identified on this engagement; mitigation plan in progress. | Unclear requirements identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 67,
+              "reason": "The industry is Healthcare, which matches the criteria.; The risk explicitly mentions a staffing gap, which matches the staffing criterion.",
+              "match_reason": "The industry is Healthcare, which matches the criteria.; The risk explicitly mentions a staffing gap, which matches the staffing criterion.",
+              "evidence": "Healthcare | Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2024-0067",
+              "summary": "Data Warehouse Migration for Granite Analytics, a Healthcare organization based in Berlin. Delivered by an internal cross-functional team.",
+              "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Regulatory compliance identified on this engagement; mitigation plan in progress. | Vendor dependency identified on this engagement; mitigation plan in progress. | Environment instability identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 110,
+              "reason": "The industry is Pharmaceuticals, which matches the criteria.; The risk explicitly mentions key-person dependency, matching the key-person criterion.",
+              "match_reason": "The industry is Pharmaceuticals, which matches the criteria.; The risk explicitly mentions key-person dependency, matching the key-person criterion.",
+              "evidence": "Pharmaceuticals | Key-person dependency identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2024-0110",
+              "summary": "Legacy Modernization for Solstice Financial, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+              "risks": "Budget overrun identified on this engagement; mitigation plan in progress. | Integration delay identified on this engagement; mitigation plan in progress. | Key-person dependency identified on this engagement; mitigation plan in progress. | Unclear requirements identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 144,
+              "reason": "The industry is Healthcare, which matches the criteria.; The risk explicitly mentions key-person dependency, matching the key-person criterion.",
+              "match_reason": "The industry is Healthcare, which matches the criteria.; The risk explicitly mentions key-person dependency, matching the key-person criterion.",
+              "evidence": "Healthcare | Key-person dependency identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2025-0144",
+              "summary": "Systems Integration for Granite Analytics, a Healthcare organization based in Berlin. Delivered by an internal cross-functional team.",
+              "risks": "Key-person dependency identified on this engagement; mitigation plan in progress. | Regulatory compliance identified on this engagement; mitigation plan in progress. | Environment instability identified on this engagement; mitigation plan in progress. | Unclear requirements identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 108,
+              "reason": "The industry is Pharmaceuticals, which matches the criteria.; The risk explicitly mentions a staffing gap, which matches the staffing criterion.",
+              "match_reason": "The industry is Pharmaceuticals, which matches the criteria.; The risk explicitly mentions a staffing gap, which matches the staffing criterion.",
+              "evidence": "Pharmaceuticals | Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2024-0108",
+              "summary": "Workforce Planning Rollout for Ironwood Technologies, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+              "risks": "Regulatory compliance identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress."
+            }
+          ],
+          "completeness": {
+            "mode": "exhaustive",
+            "eligible": 60,
+            "processed": 60,
+            "matched": 5,
+            "uncertain": 0,
+            "complete": true,
+            "fallback": false,
+            "order": "assessed_ranking"
+          },
+          "evidence": [
+            {
+              "source_id": "project:59",
+              "quotes": [
+                "Pharmaceuticals",
+                "Staffing gap identified on this engagement; mitigation plan in progress.",
+                "Key-person dependency identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:67",
+              "quotes": [
+                "Healthcare",
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:110",
+              "quotes": [
+                "Pharmaceuticals",
+                "Key-person dependency identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:144",
+              "quotes": [
+                "Healthcare",
+                "Key-person dependency identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:108",
+              "quotes": [
+                "Pharmaceuticals",
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "block_id": "semantic_counts",
+          "title": "Coverage and matching count",
+          "columns": [
+            {
+              "key": "eligible",
+              "label": "eligible",
+              "unit": null
+            },
+            {
+              "key": "processed",
+              "label": "processed",
+              "unit": null
+            },
+            {
+              "key": "matched",
+              "label": "matched",
+              "unit": null
+            },
+            {
+              "key": "uncertain",
+              "label": "uncertain",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "eligible": 60,
+              "processed": 60,
+              "matched": 5,
+              "uncertain": 0
+            }
+          ],
+          "completeness": {
+            "mode": "exhaustive",
+            "eligible": 60,
+            "processed": 60,
+            "matched": 5,
+            "uncertain": 0,
+            "complete": true,
+            "fallback": false,
+            "order": "assessed_ranking"
+          },
+          "evidence": []
+        },
+        {
+          "type": "sql",
+          "query_id": "eligible",
+          "purpose": "Exact structured candidate pool",
+          "sql": "SELECT e.engagement_id FROM engagements e WHERE e.status_id IN (SELECT status_id FROM status_lookup WHERE domain='project' AND code='ACT') ORDER BY e.engagement_id",
+          "parameters": {}
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Active engagements are those with status code ACT in the project domain as of 2026-04-01.",
+        "Healthcare or pharmaceutical clients are identified by client party attributes or business unit codes related to healthcare/pharmaceutical sectors, which requires semantic interpretation as no explicit structured field is given.",
+        "People-related risks require semantic matching of risk descriptions to identify risks related to people, staff shortages, or key-person dependencies."
+      ]
+    },
+    "gq-09": {
+      "thread_id": "dc94761e0ab34aecb357ad46357c965d",
+      "request_id": "d417cc2be97a4a14ba0f3313f4c0ae85",
+      "response_message_id": "7eb5ac0c9eed4694a5795fbff2bc3f70",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "confirmation",
+          "action_id": "22b7ecd392fa4e2995f54cf5045a0b93",
+          "status": "pending",
+          "fields": {
+            "person_id": 1,
+            "person": "Amanda Evans",
+            "engagement_id": 1,
+            "engagement": "ENG-2026-0001",
+            "start": "2026-04-01",
+            "end_inclusive": "2026-04-30",
+            "end_exclusive": "2026-05-01",
+            "hours": 40.0,
+            "minutes": 2400,
+            "warnings": [],
+            "kind": "soft"
+          },
+          "booking_id": null
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "April is interpreted as the full month from 2026-04-01 to 2026-04-30"
+      ]
+    },
+    "gq-10": {
+      "thread_id": "0ff6c1be19604a65b859660e45b840da",
+      "request_id": "789c2f4756094f46b0550b6205a0bb9b",
+      "response_message_id": "79774bbbe8ee4cc48a4b8edcffa8f2a3",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "The supplied database contains no weather observations or forecasts, so I cannot provide a weather value.",
+          "evidence": []
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": []
+    },
+    "own-01": {
+      "thread_id": "f23275f27e5a44d791d327a3152dd682",
+      "request_id": "e763f1f1ed8944f09bd305aaab66adf8",
+      "response_message_id": "7d44ce73a8e04b7794e3d3ac973771e1",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "The query counts the number of distinct people located in the APAC region who have a Python skill proficiency of 4 or higher. According to the provided SQL query and its results, there are 11 such people. The assumptions clarify that proficiency 4 or higher means proficiency >= 4, the region APAC is identified by people.location_region = 'APAC', and the skill name is exactly 'Python'. The result is not truncated and is based on the exact data from the source tables people, person_skills, and skills.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "count_people_apac_python_proficiency_4_plus",
+          "title": "Count of people in APAC region with Python skill proficiency 4 or higher",
+          "columns": [
+            {
+              "key": "people",
+              "label": "people",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "people": 11
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "count_people_apac_python_proficiency_4_plus",
+              "source_tables": [
+                "people",
+                "person_skills",
+                "skills"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sql",
+          "query_id": "count_people_apac_python_proficiency_4_plus",
+          "purpose": "Count of people in APAC region with Python skill proficiency 4 or higher",
+          "sql": "WITH python_skill AS (\n  SELECT skill_id FROM skills WHERE name = 'Python'\n)\nSELECT COUNT(DISTINCT p.person_id) AS people\nFROM people p\nJOIN person_skills ps ON p.person_id = ps.person_id\nJOIN python_skill sk ON ps.skill_id = sk.skill_id\nWHERE p.location_region = 'APAC'\n  AND ps.proficiency >= 4;",
+          "parameters": {}
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Proficiency 4 or higher means proficiency >= 4.",
+        "Region APAC corresponds to people.location_region = 'APAC'.",
+        "Skill name is exactly 'Python'.",
+        "Count distinct people meeting these criteria."
+      ]
+    },
+    "own-02": {
+      "thread_id": "d9b49e9e0ffa470387d54cb0ab1c8fc5",
+      "request_id": "019025f3f16e4c679f3e5927c23493a4",
+      "response_message_id": "105cad8412b44745b1945c8777d327b0",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "The query searched for people who have Python, Ruby on Rails, and PostgreSQL all at proficiency level 5. According to the provided evidence, no individuals meet this criterion, as the result set is empty (no rows returned). This indicates that there is no one in the dataset with all three skills at proficiency 5.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "person_skills_python_ruby_postgresql_proficiency5",
+          "title": "Find people who have Python, Ruby on Rails, and PostgreSQL all at proficiency 5",
+          "columns": [
+            {
+              "key": "person_id",
+              "label": "person id",
+              "unit": null
+            },
+            {
+              "key": "display_name",
+              "label": "display name",
+              "unit": null
+            }
+          ],
+          "rows": [],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "person_skills_python_ruby_postgresql_proficiency5",
+              "source_tables": [
+                "people",
+                "person_skills",
+                "skills"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sql",
+          "query_id": "person_skills_python_ruby_postgresql_proficiency5",
+          "purpose": "Find people who have Python, Ruby on Rails, and PostgreSQL all at proficiency 5",
+          "sql": "WITH skill_ids AS (\n  SELECT skill_id, name FROM skills WHERE name IN ('Python', 'Ruby on Rails', 'PostgreSQL')\n), person_skill_counts AS (\n  SELECT ps.person_id\n  FROM person_skills ps\n  JOIN skill_ids s ON ps.skill_id = s.skill_id\n  WHERE ps.proficiency = 5\n  GROUP BY ps.person_id\n  HAVING COUNT(DISTINCT ps.skill_id) = 3\n)\nSELECT p.person_id, p.display_name\nFROM people p\nJOIN person_skill_counts psc ON p.person_id = psc.person_id\nORDER BY p.display_name ASC;",
+          "parameters": {}
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": []
+    },
+    "own-03": {
+      "thread_id": "70d225e1e456452ca3a8788458db1148",
+      "request_id": "bc0525421ec14ca58fe525fb8ff11357",
+      "response_message_id": "c746e45f6b3c41f3a3df21401efb9dbf",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "The total value in USD of vendor invoices issued in BRL currency is $2,715,321.97. This amount is calculated by summing the amounts in billing_documents where the currency is BRL, converting these amounts from cents to the base unit, and then applying the latest available foreign exchange rate (fx_rate) from the rate_cards table to convert BRL to USD. The calculation uses the maximum fx_rate per currency to ensure the most recent rate is applied. Only vendor invoices denominated in BRL are included in this total. The result is rounded to two decimal places and represents the aggregate USD value of all such invoices.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "total_usd_value_vendor_invoices_brl",
+          "title": "Calculate total value in USD of vendor invoices issued in BRL currency",
+          "columns": [
+            {
+              "key": "total_usd_value",
+              "label": "total usd value",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "total_usd_value": 2715321.97
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "total_usd_value_vendor_invoices_brl",
+              "source_tables": [
+                "billing_documents",
+                "currencies",
+                "rate_cards"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sql",
+          "query_id": "total_usd_value_vendor_invoices_brl",
+          "purpose": "Calculate total value in USD of vendor invoices issued in BRL currency",
+          "sql": "WITH fx AS (SELECT currency_id, MAX(fx_rate) AS fx_rate FROM rate_cards GROUP BY currency_id), brl_currency AS (SELECT currency_id FROM currencies WHERE iso_code = 'BRL') SELECT ROUND(SUM(bd.amount_cents * fx.fx_rate) / 100.0, 2) AS total_usd_value FROM billing_documents bd JOIN brl_currency brl ON bd.currency_id = brl.currency_id JOIN fx ON bd.currency_id = fx.currency_id;",
+          "parameters": {}
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "The total value is the sum of billing_documents amounts where currency is BRL, converted to USD using the latest available fx_rate from rate_cards.",
+        "Use the fx_rate from rate_cards to convert BRL amounts to the reporting currency USD, not assuming rate=1.",
+        "Only vendor invoices (billing_documents) are considered, filtered by currency_id corresponding to BRL."
+      ]
+    },
+    "own-04": {
+      "thread_id": "e323bc0d1b4649ec8b04649c460c18eb",
+      "request_id": "acf339676a964dc8882e534a0a8197c6",
+      "response_message_id": "f045202b52314433b592f97aeeff53fd",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "The total estimated leaf-task hours for project ENG-2026-0001 is 1068.1 hours. This value is derived by summing the estimated hours (est_hours) of all work items associated with the engagement that have no child tasks (i.e., leaf tasks). The calculation is based on the provided SQL query and data, and no truncation or sampling was applied, indicating this is the complete total for the project.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "total_leaf_est_hours_eng_2026_0001",
+          "title": "Total estimated leaf-task hours for project ENG-2026-0001",
+          "columns": [
+            {
+              "key": "total_leaf_est_hours",
+              "label": "total leaf est hours",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "total_leaf_est_hours": 1068.1
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "total_leaf_est_hours_eng_2026_0001",
+              "source_tables": [
+                "engagements",
+                "work_items"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sql",
+          "query_id": "total_leaf_est_hours_eng_2026_0001",
+          "purpose": "Total estimated leaf-task hours for project ENG-2026-0001",
+          "sql": "WITH leaf_tasks AS (\n  SELECT work_item_id, est_hours\n  FROM work_items\n  WHERE engagement_id = (SELECT engagement_id FROM engagements WHERE code = :project_code)\n    AND NOT EXISTS (\n      SELECT 1 FROM work_items AS children WHERE children.parent_item_id = work_items.work_item_id\n    )\n)\nSELECT CAST(COALESCE(SUM(est_hours), 0) AS REAL) AS total_leaf_est_hours\nFROM leaf_tasks;",
+          "parameters": {
+            "project_code": "ENG-2026-0001"
+          }
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Estimated leaf-task hours means summing est_hours of work_items with no children for the engagement."
+      ]
+    },
+    "own-05": {
+      "thread_id": "8cb8ae990594457b8524389af0111fc6",
+      "request_id": "ef23faa467f3495885ec2f771ca75a92",
+      "response_message_id": "83c7597605e74b6f829b330bb9a6fb86",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "Person ID 348 has a total of 30.0 hard-booked hours across all booking periods. This total is calculated by summing all bookings with kind='hard' for this person and converting the total minutes to hours by dividing by 60. The data includes all booking statuses and covers all time periods without any truncation or filtering.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "hard_booked_hours_person_348",
+          "title": "Calculate total hard-booked hours for person ID 348 across all booking periods",
+          "columns": [
+            {
+              "key": "hard_booked_hours",
+              "label": "hard booked hours",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "hard_booked_hours": 30.0
+            }
+          ],
+          "completeness": {
+            "mode": "structured",
+            "truncated": false,
+            "has_more": false
+          },
+          "evidence": [
+            {
+              "query_id": "hard_booked_hours_person_348",
+              "source_tables": [
+                "bookings"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sql",
+          "query_id": "hard_booked_hours_person_348",
+          "purpose": "Calculate total hard-booked hours for person ID 348 across all booking periods",
+          "sql": "SELECT COALESCE(SUM(CAST(bookings.minutes AS REAL)) / 60.0, 0) AS hard_booked_hours\nFROM bookings\nWHERE bookings.person_id = :person_id\n  AND bookings.kind = 'hard';",
+          "parameters": {
+            "person_id": 348
+          }
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Sum all bookings with kind='hard' for person ID 348 across all time periods.",
+        "Convert booking minutes to hours by dividing by 60.",
+        "Include all booking statuses, including completed ones."
+      ]
+    },
+    "own-06": {
+      "thread_id": "e4a0b04f3cc248628dddcb644448b1ca",
+      "request_id": "fc9e5c61a86042598dfb7023ca968917",
+      "response_message_id": "d58bfc3efb46404d8d4c782066b02a8f",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "table",
+          "block_id": "semantic_matches",
+          "title": "Source-grounded matches",
+          "columns": [
+            {
+              "key": "engagement_id",
+              "label": "engagement id",
+              "unit": null
+            },
+            {
+              "key": "reason",
+              "label": "reason",
+              "unit": null
+            },
+            {
+              "key": "match_reason",
+              "label": "match reason",
+              "unit": null
+            },
+            {
+              "key": "evidence",
+              "label": "evidence",
+              "unit": null
+            },
+            {
+              "key": "engagement",
+              "label": "engagement",
+              "unit": null
+            },
+            {
+              "key": "summary",
+              "label": "summary",
+              "unit": null
+            },
+            {
+              "key": "risks",
+              "label": "risks",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "engagement_id": 111,
+              "reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2026-0111",
+              "summary": "Systems Integration for Beacon Financial, a Banking organization based in Manchester. Delivered by an internal cross-functional team.",
+              "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Scope creep identified on this engagement; mitigation plan in progress. | Integration delay identified on this engagement; mitigation plan in progress. | Data quality issues identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 29,
+              "reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2026-0029",
+              "summary": "Digital Transformation for Brightline Labs, a Retail organization based in Singapore. Delivered by an internal cross-functional team.",
+              "risks": "Regulatory compliance identified on this engagement; mitigation plan in progress. | Unclear requirements identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 17,
+              "reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2025-0017",
+              "summary": "Workforce Planning Rollout for Zephyr Systems, a Travel & Hospitality organization based in Chicago. Delivered by an internal cross-functional team.",
+              "risks": "Environment instability identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress. | Integration delay identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 59,
+              "reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2025-0059",
+              "summary": "Digital Transformation for Solstice Financial, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+              "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Key-person dependency identified on this engagement; mitigation plan in progress. | Budget overrun identified on this engagement; mitigation plan in progress. | Integration delay identified on this engagement; mitigation plan in progress. | Unclear requirements identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 108,
+              "reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2024-0108",
+              "summary": "Workforce Planning Rollout for Ironwood Technologies, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+              "risks": "Regulatory compliance identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 140,
+              "reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2026-0140",
+              "summary": "Digital Transformation for Solstice Analytics, a Telecom organization based in Bengaluru. Delivered by an internal cross-functional team.",
+              "risks": "Vendor dependency identified on this engagement; mitigation plan in progress. | Regulatory compliance identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 67,
+              "reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2024-0067",
+              "summary": "Data Warehouse Migration for Granite Analytics, a Healthcare organization based in Berlin. Delivered by an internal cross-functional team.",
+              "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Regulatory compliance identified on this engagement; mitigation plan in progress. | Vendor dependency identified on this engagement; mitigation plan in progress. | Environment instability identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 6,
+              "reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2024-0006",
+              "summary": "Analytics Platform Build for Cascade Partners, a Manufacturing organization based in Dublin. Delivered by an internal cross-functional team.",
+              "risks": "Regulatory compliance identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress. | Budget overrun identified on this engagement; mitigation plan in progress. | Key-person dependency identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 21,
+              "reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2025-0021",
+              "summary": "Cloud Migration for Helix Analytics, a Energy & Utilities organization based in Chicago. Delivered by an internal cross-functional team.",
+              "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Environment instability identified on this engagement; mitigation plan in progress. | Unclear requirements identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 80,
+              "reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2024-0080",
+              "summary": "Customer Portal Rollout for Aurora Systems, a Logistics organization based in Amsterdam. Delivered by an internal cross-functional team.",
+              "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Integration delay identified on this engagement; mitigation plan in progress. | Environment instability identified on this engagement; mitigation plan in progress. | Data quality issues identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 83,
+              "reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+              "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2024-0083",
+              "summary": "Billing System Replacement for Solstice Analytics, a Telecom organization based in Bengaluru. Delivered by an internal cross-functional team.",
+              "risks": "Unclear requirements identified on this engagement; mitigation plan in progress. | Vendor dependency identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress. | Data quality issues identified on this engagement; mitigation plan in progress."
+            }
+          ],
+          "completeness": {
+            "mode": "exhaustive",
+            "eligible": 60,
+            "processed": 60,
+            "matched": 11,
+            "uncertain": 0,
+            "complete": true,
+            "fallback": false,
+            "order": "assessed_ranking"
+          },
+          "evidence": [
+            {
+              "source_id": "project:111",
+              "quotes": [
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:29",
+              "quotes": [
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:17",
+              "quotes": [
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:59",
+              "quotes": [
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:108",
+              "quotes": [
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:140",
+              "quotes": [
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:67",
+              "quotes": [
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:6",
+              "quotes": [
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:21",
+              "quotes": [
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:80",
+              "quotes": [
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:83",
+              "quotes": [
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "block_id": "semantic_counts",
+          "title": "Coverage and matching count",
+          "columns": [
+            {
+              "key": "eligible",
+              "label": "eligible",
+              "unit": null
+            },
+            {
+              "key": "processed",
+              "label": "processed",
+              "unit": null
+            },
+            {
+              "key": "matched",
+              "label": "matched",
+              "unit": null
+            },
+            {
+              "key": "uncertain",
+              "label": "uncertain",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "eligible": 60,
+              "processed": 60,
+              "matched": 11,
+              "uncertain": 0
+            }
+          ],
+          "completeness": {
+            "mode": "exhaustive",
+            "eligible": 60,
+            "processed": 60,
+            "matched": 11,
+            "uncertain": 0,
+            "complete": true,
+            "fallback": false,
+            "order": "assessed_ranking"
+          },
+          "evidence": []
+        },
+        {
+          "type": "sql",
+          "query_id": "eligible",
+          "purpose": "Exact structured candidate pool",
+          "sql": "SELECT e.engagement_id FROM engagements e WHERE e.status_id IN (SELECT status_id FROM status_lookup WHERE domain='project' AND code='ACT') ORDER BY e.engagement_id",
+          "parameters": {}
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Active projects are those with status code 'ACT' in the project domain as of 2026-04-01.",
+        "Shortage of staff is interpreted as a staffing risk or shortage described in risk records or resource requirements indicating insufficient staffing.",
+        "The query requires semantic assessment because 'shortage of staff' is a concept needing interpretation from risk or resource requirement descriptions or statuses."
+      ]
+    },
+    "own-07": {
+      "thread_id": "9debfa5ea85645c1afccda8f35beebf4",
+      "request_id": "a4b74f1c24f04199857ae1e837000065",
+      "response_message_id": "e787acc7c3ef482db9911d346e99ec3b",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "table",
+          "block_id": "semantic_matches",
+          "title": "Source-grounded matches",
+          "columns": [
+            {
+              "key": "engagement_id",
+              "label": "engagement id",
+              "unit": null
+            },
+            {
+              "key": "reason",
+              "label": "reason",
+              "unit": null
+            },
+            {
+              "key": "evidence",
+              "label": "evidence",
+              "unit": null
+            }
+          ],
+          "rows": [],
+          "completeness": {
+            "mode": "exhaustive",
+            "eligible": 60,
+            "processed": 60,
+            "matched": 0,
+            "uncertain": 0,
+            "complete": true,
+            "fallback": false,
+            "order": "source_id"
+          },
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "semantic_counts",
+          "title": "Coverage and matching count",
+          "columns": [
+            {
+              "key": "eligible",
+              "label": "eligible",
+              "unit": null
+            },
+            {
+              "key": "processed",
+              "label": "processed",
+              "unit": null
+            },
+            {
+              "key": "matched",
+              "label": "matched",
+              "unit": null
+            },
+            {
+              "key": "uncertain",
+              "label": "uncertain",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "eligible": 60,
+              "processed": 60,
+              "matched": 0,
+              "uncertain": 0
+            }
+          ],
+          "completeness": {
+            "mode": "exhaustive",
+            "eligible": 60,
+            "processed": 60,
+            "matched": 0,
+            "uncertain": 0,
+            "complete": true,
+            "fallback": false,
+            "order": "source_id"
+          },
+          "evidence": []
+        },
+        {
+          "type": "sql",
+          "query_id": "eligible",
+          "purpose": "Exact structured candidate pool",
+          "sql": "SELECT e.engagement_id FROM engagements e WHERE e.status_id IN (SELECT status_id FROM status_lookup WHERE domain='project' AND code='ACT') ORDER BY e.engagement_id",
+          "parameters": {}
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Banking clients are identified by client party or business unit related to banking industry, which is not explicitly defined in the schema, so semantic interpretation is needed.",
+        "Dependence on a key individual implies a semantic risk or dependency concept, not a direct structured field, so semantic analysis is required."
+      ]
+    },
+    "own-08": {
+      "thread_id": "e322673db0ac40ce9d44f7d620ffbb81",
+      "request_id": "9896cf82cfce4698a6c4ddeca862efdf",
+      "response_message_id": "65b060f1709a43e3bb69cd3990b35ffb",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "table",
+          "block_id": "semantic_matches",
+          "title": "Source-grounded matches",
+          "columns": [
+            {
+              "key": "engagement_id",
+              "label": "engagement id",
+              "unit": null
+            },
+            {
+              "key": "reason",
+              "label": "reason",
+              "unit": null
+            },
+            {
+              "key": "match_reason",
+              "label": "match reason",
+              "unit": null
+            },
+            {
+              "key": "evidence",
+              "label": "evidence",
+              "unit": null
+            },
+            {
+              "key": "engagement",
+              "label": "engagement",
+              "unit": null
+            },
+            {
+              "key": "summary",
+              "label": "summary",
+              "unit": null
+            },
+            {
+              "key": "risks",
+              "label": "risks",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "engagement_id": 59,
+              "reason": "The industry is Pharmaceuticals, which matches the criteria.; The risk description explicitly mentions a staffing gap, which matches the staffing criterion.; The risk description explicitly mentions key-person dependency, which matches the key-person criterion.",
+              "match_reason": "The industry is Pharmaceuticals, which matches the criteria.; The risk description explicitly mentions a staffing gap, which matches the staffing criterion.; The risk description explicitly mentions key-person dependency, which matches the key-person criterion.",
+              "evidence": "Pharmaceuticals | Staffing gap identified on this engagement; mitigation plan in progress. | Key-person dependency identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2025-0059",
+              "summary": "Digital Transformation for Solstice Financial, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+              "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Key-person dependency identified on this engagement; mitigation plan in progress. | Budget overrun identified on this engagement; mitigation plan in progress. | Integration delay identified on this engagement; mitigation plan in progress. | Unclear requirements identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 144,
+              "reason": "The industry is Healthcare, which matches the criteria.; The risk description explicitly mentions key-person dependency, which matches the key-person criterion.",
+              "match_reason": "The industry is Healthcare, which matches the criteria.; The risk description explicitly mentions key-person dependency, which matches the key-person criterion.",
+              "evidence": "Healthcare | Key-person dependency identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2025-0144",
+              "summary": "Systems Integration for Granite Analytics, a Healthcare organization based in Berlin. Delivered by an internal cross-functional team.",
+              "risks": "Key-person dependency identified on this engagement; mitigation plan in progress. | Regulatory compliance identified on this engagement; mitigation plan in progress. | Environment instability identified on this engagement; mitigation plan in progress. | Unclear requirements identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 67,
+              "reason": "The industry is Healthcare, which matches the criteria.; The risk description explicitly mentions a staffing gap, which matches the staffing criterion.",
+              "match_reason": "The industry is Healthcare, which matches the criteria.; The risk description explicitly mentions a staffing gap, which matches the staffing criterion.",
+              "evidence": "Healthcare | Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2024-0067",
+              "summary": "Data Warehouse Migration for Granite Analytics, a Healthcare organization based in Berlin. Delivered by an internal cross-functional team.",
+              "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Regulatory compliance identified on this engagement; mitigation plan in progress. | Vendor dependency identified on this engagement; mitigation plan in progress. | Environment instability identified on this engagement; mitigation plan in progress."
+            },
+            {
+              "engagement_id": 108,
+              "reason": "The industry is Pharmaceuticals, which matches the criteria.; The risk description explicitly mentions a staffing gap, which matches the staffing criterion.",
+              "match_reason": "The industry is Pharmaceuticals, which matches the criteria.; The risk description explicitly mentions a staffing gap, which matches the staffing criterion.",
+              "evidence": "Pharmaceuticals | Staffing gap identified on this engagement; mitigation plan in progress.",
+              "engagement": "ENG-2024-0108",
+              "summary": "Workforce Planning Rollout for Ironwood Technologies, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+              "risks": "Regulatory compliance identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress."
+            }
+          ],
+          "completeness": {
+            "mode": "exhaustive",
+            "eligible": 49,
+            "processed": 49,
+            "matched": 4,
+            "uncertain": 0,
+            "complete": true,
+            "fallback": false,
+            "order": "assessed_ranking"
+          },
+          "evidence": [
+            {
+              "source_id": "project:59",
+              "quotes": [
+                "Pharmaceuticals",
+                "Staffing gap identified on this engagement; mitigation plan in progress.",
+                "Key-person dependency identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:144",
+              "quotes": [
+                "Healthcare",
+                "Key-person dependency identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:67",
+              "quotes": [
+                "Healthcare",
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            },
+            {
+              "source_id": "project:108",
+              "quotes": [
+                "Pharmaceuticals",
+                "Staffing gap identified on this engagement; mitigation plan in progress."
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "block_id": "semantic_counts",
+          "title": "Coverage and matching count",
+          "columns": [
+            {
+              "key": "eligible",
+              "label": "eligible",
+              "unit": null
+            },
+            {
+              "key": "processed",
+              "label": "processed",
+              "unit": null
+            },
+            {
+              "key": "matched",
+              "label": "matched",
+              "unit": null
+            },
+            {
+              "key": "uncertain",
+              "label": "uncertain",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "eligible": 49,
+              "processed": 49,
+              "matched": 4,
+              "uncertain": 0
+            }
+          ],
+          "completeness": {
+            "mode": "exhaustive",
+            "eligible": 49,
+            "processed": 49,
+            "matched": 4,
+            "uncertain": 0,
+            "complete": true,
+            "fallback": false,
+            "order": "assessed_ranking"
+          },
+          "evidence": []
+        },
+        {
+          "type": "sql",
+          "query_id": "eligible",
+          "purpose": "Exact structured candidate pool",
+          "sql": "SELECT e.engagement_id FROM engagements e WHERE e.status_id IN (SELECT status_id FROM status_lookup WHERE domain='project' AND code='ACT') AND e.business_unit_id NOT IN (SELECT business_unit_id FROM business_units WHERE code=:unit_0) ORDER BY e.engagement_id",
+          "parameters": {
+            "unit_0": "HLS"
+          }
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Active projects are those with status code 'ACT' in the project domain as of 2026-04-01.",
+        "Healthcare or pharmaceutical clients are identified by client party or engagement tags related to these industries.",
+        "Staffing or key-person risks require semantic matching of risk descriptions related to staffing shortages or key-person dependencies.",
+        "Projects outside the HLS business unit exclude those with business_unit.code = 'HLS'.",
+        "The reference date for active status is 2026-04-01."
+      ]
+    },
+    "own-09": {
+      "thread_id": "71116f5c42ec46639c534fcf4a6860c0",
+      "request_id": "29a5684f19874350a063253e1ddcd882",
+      "response_message_id": "998a6a737a1247da95b8fbba7c99a80c",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "Please choose an unambiguous person ID.",
+          "evidence": []
+        },
+        {
+          "type": "table",
+          "block_id": "person_options",
+          "title": "People with this name",
+          "columns": [
+            {
+              "key": "person_id",
+              "label": "person_id",
+              "unit": null
+            },
+            {
+              "key": "display_name",
+              "label": "display_name",
+              "unit": null
+            },
+            {
+              "key": "location_region",
+              "label": "location_region",
+              "unit": null
+            }
+          ],
+          "rows": [
+            {
+              "person_id": 78,
+              "display_name": "Amanda Mitchell",
+              "location_region": "EMEA"
+            },
+            {
+              "person_id": 238,
+              "display_name": "Amanda Mitchell",
+              "location_region": "LATAM"
+            }
+          ],
+          "completeness": {},
+          "evidence": []
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "April is interpreted as the full month from 2026-04-01 to 2026-04-30 inclusive."
+      ]
+    },
+    "own-10": {
+      "thread_id": "df8df4148a434a86a4aba8ff0e3311ae",
+      "request_id": "0f4e01082d424344844ca5b91526c15f",
+      "response_message_id": "cf5a1800e98a40b5a8fdcda747fae49e",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "confirmation",
+          "action_id": "4a49be99766f435c824cf33fe1973b40",
+          "status": "pending",
+          "fields": {
+            "person_id": 1,
+            "person": "Amanda Evans",
+            "engagement_id": 1,
+            "engagement": "ENG-2026-0001",
+            "start": "2026-04-02",
+            "end_inclusive": "2026-04-02",
+            "end_exclusive": "2026-04-03",
+            "hours": 8.0,
+            "minutes": 480,
+            "warnings": [],
+            "kind": "soft"
+          },
+          "booking_id": null
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": []
+    },
+    "own-11": {
+      "thread_id": "bf4c073b4ca14853b5ec120e3e4129d7",
+      "request_id": "b3fbefd0c0c847bb94f2980727668ed6",
+      "response_message_id": "4a44e8f9a4244c81be7460e0daed350e",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "confirmation",
+          "action_id": "d488ed3e255e42f98ce2fc588aa6050f",
+          "status": "pending",
+          "fields": {
+            "person_id": 1,
+            "person": "Amanda Evans",
+            "engagement_id": 1,
+            "engagement": "ENG-2026-0001",
+            "start": "2026-05-04",
+            "end_inclusive": "2026-05-05",
+            "end_exclusive": "2026-05-06",
+            "hours": 16.0,
+            "minutes": 960,
+            "warnings": [],
+            "kind": "soft"
+          },
+          "booking_id": null
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": [
+        "Dates are inclusive of both start and end days."
+      ]
+    },
+    "own-12": {
+      "thread_id": "8005171b841d475ea0facae9846d71ce",
+      "request_id": "3cbe10e8ec614cea9b3ef0158e3861d1",
+      "response_message_id": "80eebd1f1d3947b2a78ffd593fd04cc1",
+      "request_status": "completed",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "I can answer questions grounded in this professional-services database and propose soft bookings. The requested external information or source-changing operation is not supported.",
+          "evidence": []
+        }
+      ],
+      "issues": [],
+      "effective_reference_date": "2026-04-01T00:00:00+00:00",
+      "assumptions": []
+    }
+  }
+}

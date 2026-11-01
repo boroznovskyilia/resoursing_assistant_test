@@ -119,6 +119,16 @@ Review file shape: `{"run_id":"actual-run-id","reviewer":"reviewer-name","cases"
 Reviews cannot override failed automated/source-safety checks. [Evaluation contract](docs/specs/evaluation.md).
 This includes own-12: unchanged data alone cannot prove that the deletion refusal is truthful.
 
+Latest backend runtime `23487e3`: genuine full run `20261101T190046Z_a1cdc9`
+passed **22/22 after7 explicit AI-assisted source reviews** (15 automatic passes
+before review). The earlier post-refactor factual failure and rejected ranking
+explanation are retained; no answers were edited/combined and scoring was not relaxed.
+[Current answers, reviews, failures and hash lineage](docs/evaluation/backend-refactor-20261101/README.md).
+Final local checks:103 backend tests,5 Chromium scenarios,9 tooling checks; fresh-clone
+locked setup/build and saved-runtime compatibility passed.
+
+Previous-release evidence follows and remains unchanged:
+
 Genuine Azure run `20261031T211131Z_822c63` on runtime checkpoint `ae6e196`: **22/22 passed**
 from one complete genuine inference run, after corrected offline whole-run scoring
 and **AI-assisted source review** of 7 free-text cases. Original reports/answers are preserved.

@@ -1,0 +1,482 @@
+{
+  "run_id": "20261101T184828Z_97ba7b",
+  "source_sha256": "8d00b91ae6aa23bbcf0d807c2e51fa6a45f7017a6557a4f51d11cfc82bfb4259",
+  "reference_date": "2026-04-01T00:00:00Z",
+  "api_version": "2024-10-21",
+  "chat_deployment": "gpt-4.1-mini",
+  "embedding_deployment": "text-embedding-3-small",
+  "results": [
+    {
+      "id": "gq-01",
+      "type": "factual",
+      "elapsed_seconds": 13.537,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 12298,
+        "embedding_tokens": null
+      },
+      "score": 0.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "failed",
+      "reason": "Delivered values did not meet the case contract"
+    },
+    {
+      "id": "gq-02",
+      "type": "factual",
+      "elapsed_seconds": 11.179,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 15949,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-03",
+      "type": "factual",
+      "elapsed_seconds": 11.119,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 11507,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true,
+        "engagement_count": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-04",
+      "type": "factual",
+      "elapsed_seconds": 9.683,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 11088,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "unique_regions": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-05",
+      "type": "factual",
+      "elapsed_seconds": 11.763,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 12106,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-06",
+      "type": "factual",
+      "elapsed_seconds": 11.233,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 11903,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true,
+        "requested_leaders": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-07",
+      "type": "semantic",
+      "elapsed_seconds": 62.252,
+      "usage": {
+        "chat_attempts": 7,
+        "embedding_attempts": 7,
+        "chat_tokens": 30582,
+        "embedding_tokens": 18074
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "per_item_source_evidence": true,
+        "bio_and_skill_level": true
+      },
+      "review_status": "review_required",
+      "status": "review_required",
+      "reason": "Automated value checks passed; free-text review pending"
+    },
+    {
+      "id": "gq-08",
+      "type": "semantic",
+      "elapsed_seconds": 19.116,
+      "usage": {
+        "chat_attempts": 5,
+        "embedding_attempts": 0,
+        "chat_tokens": 11968,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "per_item_source_evidence": true,
+        "industry_and_risk": true
+      },
+      "review_status": "review_required",
+      "status": "review_required",
+      "reason": "Automated value checks passed; free-text review pending"
+    },
+    {
+      "id": "gq-09",
+      "type": "write",
+      "elapsed_seconds": 16.587,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 14755,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "no_insert_before_confirmation": true,
+        "proposal_present": true,
+        "exact_proposal": true,
+        "decision_receipts": true,
+        "exact_confirmed_row": true,
+        "repeat_receipt": true,
+        "reject_no_prewrite": true,
+        "reject_succeeded": true,
+        "restart_no_prewrite": true,
+        "restart_succeeded": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "gq-10",
+      "type": "out_of_scope",
+      "elapsed_seconds": 4.981,
+      "usage": {
+        "chat_attempts": 1,
+        "embedding_attempts": 0,
+        "chat_tokens": 4889,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "manual_weather_refusal_review": null
+      },
+      "review_status": "review_required",
+      "status": "review_required",
+      "reason": "Automated value checks passed; free-text review pending"
+    },
+    {
+      "id": "own-01",
+      "type": "factual",
+      "elapsed_seconds": 8.553,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 10927,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-02",
+      "type": "factual",
+      "elapsed_seconds": 9.013,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 10945,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true,
+        "keyed_result_present": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-03",
+      "type": "factual",
+      "elapsed_seconds": 9.798,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 11029,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-04",
+      "type": "factual",
+      "elapsed_seconds": 9.415,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 11044,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-05",
+      "type": "factual",
+      "elapsed_seconds": 8.074,
+      "usage": {
+        "chat_attempts": 3,
+        "embedding_attempts": 0,
+        "chat_tokens": 10875,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "executed_sql": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-06",
+      "type": "semantic",
+      "elapsed_seconds": 13.943,
+      "usage": {
+        "chat_attempts": 4,
+        "embedding_attempts": 0,
+        "chat_tokens": 12245,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "keyed_result_present": true,
+        "exhaustive_coverage": true,
+        "per_item_source_evidence": true
+      },
+      "review_status": "review_required",
+      "status": "review_required",
+      "reason": "Automated value checks passed; free-text review pending"
+    },
+    {
+      "id": "own-07",
+      "type": "semantic",
+      "elapsed_seconds": 16.771,
+      "usage": {
+        "chat_attempts": 4,
+        "embedding_attempts": 0,
+        "chat_tokens": 9480,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "keyed_result_present": true,
+        "exhaustive_coverage": true,
+        "per_item_source_evidence": true
+      },
+      "review_status": "review_required",
+      "status": "review_required",
+      "reason": "Automated value checks passed; free-text review pending"
+    },
+    {
+      "id": "own-08",
+      "type": "semantic",
+      "elapsed_seconds": 20.08,
+      "usage": {
+        "chat_attempts": 5,
+        "embedding_attempts": 0,
+        "chat_tokens": 11703,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "keyed_result_present": true,
+        "exhaustive_coverage": true,
+        "per_item_source_evidence": true
+      },
+      "review_status": "review_required",
+      "status": "review_required",
+      "reason": "Automated value checks passed; free-text review pending"
+    },
+    {
+      "id": "own-09",
+      "type": "write",
+      "elapsed_seconds": 5.265,
+      "usage": {
+        "chat_attempts": 1,
+        "embedding_attempts": 0,
+        "chat_tokens": 4918,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "no_insert_before_confirmation": true,
+        "ambiguous_person_clarified": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-10",
+      "type": "write",
+      "elapsed_seconds": 5.247,
+      "usage": {
+        "chat_attempts": 1,
+        "embedding_attempts": 0,
+        "chat_tokens": 4904,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "no_insert_before_confirmation": true,
+        "proposal_present": true,
+        "exact_proposal": true,
+        "decision_receipts": true,
+        "reject_zero_insert": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-11",
+      "type": "write",
+      "elapsed_seconds": 5.093,
+      "usage": {
+        "chat_attempts": 1,
+        "embedding_attempts": 0,
+        "chat_tokens": 4920,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "no_insert_before_confirmation": true,
+        "proposal_present": true,
+        "exact_proposal": true,
+        "decision_receipts": true,
+        "exact_confirmed_row": true,
+        "repeat_receipt": true
+      },
+      "review_status": "not_required",
+      "status": "passed",
+      "reason": "Delivered values and automated contracts passed"
+    },
+    {
+      "id": "own-12",
+      "type": "out_of_scope",
+      "elapsed_seconds": 4.748,
+      "usage": {
+        "chat_attempts": 1,
+        "embedding_attempts": 0,
+        "chat_tokens": 4805,
+        "embedding_tokens": null
+      },
+      "score": 1.0,
+      "contract_checks": {
+        "source_invariants": true,
+        "response_complete": true,
+        "no_source_changes": true,
+        "no_executable_action": true,
+        "refusal_visible": true
+      },
+      "review_status": "review_required",
+      "status": "review_required",
+      "reason": "Automated value checks passed; free-text review pending"
+    }
+  ]
+}

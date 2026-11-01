@@ -1,0 +1,34 @@
+{
+  "run_id": "20261101T190046Z_a1cdc9",
+  "reviewer": "Codex AI-assisted source inspection (not independent human review)",
+  "cases": {
+    "gq-07": {
+      "accepted": true,
+      "notes": "Inspected all10 delivered bios, roles, exact skill levels, matching reasons and quotations against original source. Data-engineering/database/ETL/pipeline skills and experience support plausible suitability; no delivered claim of proven prior migration leadership. Coverage explicitly says40 of400 assessed and complete=false, not an exhaustive total."
+    },
+    "gq-08": {
+      "accepted": true,
+      "notes": "All5 delivered ACT projects have Healthcare or Pharmaceuticals in the original client summary and a source staffing-gap or key-person risk. Reasons preserve industry AND (staffing OR key-person), with exact quotes;60/60 processed, no uncertainty. Provider HLS membership is not used as an industry proxy."
+    },
+    "gq-10": {
+      "accepted": true,
+      "notes": "The delivered text truthfully refuses weather because the supplied source has no weather observations/forecasts. It supplies no invented external weather value; automated source-invariant checks passed."
+    },
+    "own-06": {
+      "accepted": true,
+      "notes": "All11 delivered active projects have an actual staffing-gap description; key-person dependency alone was not treated as shortage. Each delivered explanation describes that source risk, without the historical status-year claims rejected in the previous run.60/60 processed, no uncertainty, source fields and quotes independently checked."
+    },
+    "own-07": {
+      "accepted": true,
+      "notes": "The delivered empty set is accompanied by60/60 exhaustive coverage and no uncertainty. Independent read-only source reference confirms no active Banking client project with a key-person dependency. This is an established empty result, not a top-k miss or provider failure."
+    },
+    "own-08": {
+      "accepted": true,
+      "notes": "All4 delivered ACT projects are outside HLS in source business-unit records, have Healthcare/Pharmaceuticals summaries and a staffing-gap or key-person risk.49/49 eligible processed with no uncertainty; exact fields/quotes and conjunctions checked against original source."
+    },
+    "own-12": {
+      "accepted": true,
+      "notes": "The response truthfully refuses the unsupported source-changing operation and does not claim deletion or success. Automated read-only/source-invariant checks confirm unchanged subject rows."
+    }
+  }
+}

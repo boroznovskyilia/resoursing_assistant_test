@@ -1,0 +1,289 @@
+{
+  "thread_id": "5ee96c02027348ee8ef132b34a21ffaf",
+  "request_id": "e674c1e23d604a6aace3f85232a6def0",
+  "response_message_id": "9ae983d1a5c64a3f9575f9e8bce2a233",
+  "request_status": "completed",
+  "blocks": [
+    {
+      "type": "table",
+      "block_id": "semantic_matches",
+      "title": "Source-grounded matches",
+      "columns": [
+        {
+          "key": "engagement_id",
+          "label": "engagement id",
+          "unit": null
+        },
+        {
+          "key": "reason",
+          "label": "reason",
+          "unit": null
+        },
+        {
+          "key": "match_reason",
+          "label": "match reason",
+          "unit": null
+        },
+        {
+          "key": "evidence",
+          "label": "evidence",
+          "unit": null
+        },
+        {
+          "key": "engagement",
+          "label": "engagement",
+          "unit": null
+        },
+        {
+          "key": "summary",
+          "label": "summary",
+          "unit": null
+        },
+        {
+          "key": "risks",
+          "label": "risks",
+          "unit": null
+        }
+      ],
+      "rows": [
+        {
+          "engagement_id": 29,
+          "reason": "Project status 'ACT' in 2026 and high severity staffing gap risk identified.",
+          "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+          "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+          "engagement": "ENG-2026-0029",
+          "summary": "Digital Transformation for Brightline Labs, a Retail organization based in Singapore. Delivered by an internal cross-functional team.",
+          "risks": "Regulatory compliance identified on this engagement; mitigation plan in progress. | Unclear requirements identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress."
+        },
+        {
+          "engagement_id": 111,
+          "reason": "Project status 'ACT' in 2026 and high severity staffing gap risk identified.",
+          "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+          "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+          "engagement": "ENG-2026-0111",
+          "summary": "Systems Integration for Beacon Financial, a Banking organization based in Manchester. Delivered by an internal cross-functional team.",
+          "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Scope creep identified on this engagement; mitigation plan in progress. | Integration delay identified on this engagement; mitigation plan in progress. | Data quality issues identified on this engagement; mitigation plan in progress."
+        },
+        {
+          "engagement_id": 17,
+          "reason": "Project status 'ACT' in 2025 and high severity staffing gap risk identified.",
+          "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+          "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+          "engagement": "ENG-2025-0017",
+          "summary": "Workforce Planning Rollout for Zephyr Systems, a Travel & Hospitality organization based in Chicago. Delivered by an internal cross-functional team.",
+          "risks": "Environment instability identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress. | Integration delay identified on this engagement; mitigation plan in progress."
+        },
+        {
+          "engagement_id": 59,
+          "reason": "Project status 'ACT' in 2025 and medium severity staffing gap risk identified.",
+          "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+          "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+          "engagement": "ENG-2025-0059",
+          "summary": "Digital Transformation for Solstice Financial, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+          "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Key-person dependency identified on this engagement; mitigation plan in progress. | Budget overrun identified on this engagement; mitigation plan in progress. | Integration delay identified on this engagement; mitigation plan in progress. | Unclear requirements identified on this engagement; mitigation plan in progress."
+        },
+        {
+          "engagement_id": 140,
+          "reason": "Project status 'ACT' in 2026 and medium severity staffing gap risk identified.",
+          "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+          "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+          "engagement": "ENG-2026-0140",
+          "summary": "Digital Transformation for Solstice Analytics, a Telecom organization based in Bengaluru. Delivered by an internal cross-functional team.",
+          "risks": "Vendor dependency identified on this engagement; mitigation plan in progress. | Regulatory compliance identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress."
+        },
+        {
+          "engagement_id": 108,
+          "reason": "Project status 'ACT' in 2024 and medium severity staffing gap risk identified.",
+          "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+          "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+          "engagement": "ENG-2024-0108",
+          "summary": "Workforce Planning Rollout for Ironwood Technologies, a Pharmaceuticals organization based in London. Delivered by an internal cross-functional team.",
+          "risks": "Regulatory compliance identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress."
+        },
+        {
+          "engagement_id": 67,
+          "reason": "Project status 'ACT' in 2024 and medium severity staffing gap risk identified.",
+          "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+          "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+          "engagement": "ENG-2024-0067",
+          "summary": "Data Warehouse Migration for Granite Analytics, a Healthcare organization based in Berlin. Delivered by an internal cross-functional team.",
+          "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Regulatory compliance identified on this engagement; mitigation plan in progress. | Vendor dependency identified on this engagement; mitigation plan in progress. | Environment instability identified on this engagement; mitigation plan in progress."
+        },
+        {
+          "engagement_id": 6,
+          "reason": "Project status 'ACT' in 2024 and low severity staffing gap risk identified.",
+          "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+          "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+          "engagement": "ENG-2024-0006",
+          "summary": "Analytics Platform Build for Cascade Partners, a Manufacturing organization based in Dublin. Delivered by an internal cross-functional team.",
+          "risks": "Regulatory compliance identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress. | Budget overrun identified on this engagement; mitigation plan in progress. | Key-person dependency identified on this engagement; mitigation plan in progress."
+        },
+        {
+          "engagement_id": 21,
+          "reason": "Project status 'ACT' in 2025 and low severity staffing gap risk identified.",
+          "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+          "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+          "engagement": "ENG-2025-0021",
+          "summary": "Cloud Migration for Helix Analytics, a Energy & Utilities organization based in Chicago. Delivered by an internal cross-functional team.",
+          "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Environment instability identified on this engagement; mitigation plan in progress. | Unclear requirements identified on this engagement; mitigation plan in progress."
+        },
+        {
+          "engagement_id": 80,
+          "reason": "Project status 'ACT' in 2024 and low severity staffing gap risk identified.",
+          "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+          "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+          "engagement": "ENG-2024-0080",
+          "summary": "Customer Portal Rollout for Aurora Systems, a Logistics organization based in Amsterdam. Delivered by an internal cross-functional team.",
+          "risks": "Staffing gap identified on this engagement; mitigation plan in progress. | Integration delay identified on this engagement; mitigation plan in progress. | Environment instability identified on this engagement; mitigation plan in progress. | Data quality issues identified on this engagement; mitigation plan in progress."
+        },
+        {
+          "engagement_id": 83,
+          "reason": "Project status 'ACT' in 2024 and low severity staffing gap risk identified.",
+          "match_reason": "The risk description explicitly mentions a staffing gap, which is a staffing shortage.",
+          "evidence": "Staffing gap identified on this engagement; mitigation plan in progress.",
+          "engagement": "ENG-2024-0083",
+          "summary": "Billing System Replacement for Solstice Analytics, a Telecom organization based in Bengaluru. Delivered by an internal cross-functional team.",
+          "risks": "Unclear requirements identified on this engagement; mitigation plan in progress. | Vendor dependency identified on this engagement; mitigation plan in progress. | Staffing gap identified on this engagement; mitigation plan in progress. | Data quality issues identified on this engagement; mitigation plan in progress."
+        }
+      ],
+      "completeness": {
+        "mode": "exhaustive",
+        "eligible": 60,
+        "processed": 60,
+        "matched": 11,
+        "uncertain": 0,
+        "complete": true,
+        "fallback": false,
+        "order": "assessed_ranking"
+      },
+      "evidence": [
+        {
+          "source_id": "project:29",
+          "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+          ]
+        },
+        {
+          "source_id": "project:111",
+          "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+          ]
+        },
+        {
+          "source_id": "project:17",
+          "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+          ]
+        },
+        {
+          "source_id": "project:59",
+          "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+          ]
+        },
+        {
+          "source_id": "project:140",
+          "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+          ]
+        },
+        {
+          "source_id": "project:108",
+          "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+          ]
+        },
+        {
+          "source_id": "project:67",
+          "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+          ]
+        },
+        {
+          "source_id": "project:6",
+          "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+          ]
+        },
+        {
+          "source_id": "project:21",
+          "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+          ]
+        },
+        {
+          "source_id": "project:80",
+          "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+          ]
+        },
+        {
+          "source_id": "project:83",
+          "quotes": [
+            "Staffing gap identified on this engagement; mitigation plan in progress."
+          ]
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "block_id": "semantic_counts",
+      "title": "Coverage and matching count",
+      "columns": [
+        {
+          "key": "eligible",
+          "label": "eligible",
+          "unit": null
+        },
+        {
+          "key": "processed",
+          "label": "processed",
+          "unit": null
+        },
+        {
+          "key": "matched",
+          "label": "matched",
+          "unit": null
+        },
+        {
+          "key": "uncertain",
+          "label": "uncertain",
+          "unit": null
+        }
+      ],
+      "rows": [
+        {
+          "eligible": 60,
+          "processed": 60,
+          "matched": 11,
+          "uncertain": 0
+        }
+      ],
+      "completeness": {
+        "mode": "exhaustive",
+        "eligible": 60,
+        "processed": 60,
+        "matched": 11,
+        "uncertain": 0,
+        "complete": true,
+        "fallback": false,
+        "order": "assessed_ranking"
+      },
+      "evidence": []
+    },
+    {
+      "type": "sql",
+      "query_id": "eligible",
+      "purpose": "Exact structured candidate pool",
+      "sql": "SELECT e.engagement_id FROM engagements e WHERE e.status_id IN (SELECT status_id FROM status_lookup WHERE domain='project' AND code='ACT') ORDER BY e.engagement_id",
+      "parameters": {}
+    }
+  ],
+  "issues": [],
+  "effective_reference_date": "2026-04-01T00:00:00+00:00",
+  "assumptions": [
+    "Active projects are those with status code 'ACT' in the project domain as of 2026-04-01.",
+    "Shortage of staff is interpreted as projects with documented staffing risks or resource requirements indicating insufficient staffing.",
+    "The reference date for active status is 2026-04-01."
+  ]
+}

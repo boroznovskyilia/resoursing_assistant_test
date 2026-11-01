@@ -1,0 +1,96 @@
+{
+  "thread_id": "9acaee6f39cc4dd28e1ff8777b26791d",
+  "request_id": "672b40992fe24783a367fa6543288db4",
+  "response_message_id": "e40c8d7e0a1e4c28a4208653c1fb9799",
+  "request_status": "completed",
+  "blocks": [
+    {
+      "type": "text",
+      "text": "The query results show three individuals in the EMEA region who have Python proficiency at level 4 or higher and are less than 60% hard-booked between March and May 2026. These individuals are Edward Hill, Matthew Hill, and Matthew White. Each of them has 0.0 hard-booked hours and 0.0% hard-booked percentage during this period. The data is complete for this query and no truncation or sampling is indicated.",
+      "evidence": []
+    },
+    {
+      "type": "table",
+      "block_id": "python_proficiency_hard_booking_emea_2026Q2",
+      "title": "List people in EMEA with Python skill proficiency >=4 and hard-booked less than 60% between March and May 2026, including person_id, name, hard_booked_hours and hard_booked_pct.",
+      "columns": [
+        {
+          "key": "person_id",
+          "label": "person id",
+          "unit": null
+        },
+        {
+          "key": "name",
+          "label": "name",
+          "unit": null
+        },
+        {
+          "key": "hard_booked_hours",
+          "label": "hard booked hours",
+          "unit": null
+        },
+        {
+          "key": "hard_booked_pct",
+          "label": "hard booked pct",
+          "unit": null
+        }
+      ],
+      "rows": [
+        {
+          "person_id": 261,
+          "name": "Edward Hill",
+          "hard_booked_hours": 0.0,
+          "hard_booked_pct": 0.0
+        },
+        {
+          "person_id": 280,
+          "name": "Matthew Hill",
+          "hard_booked_hours": 0.0,
+          "hard_booked_pct": 0.0
+        },
+        {
+          "person_id": 328,
+          "name": "Matthew White",
+          "hard_booked_hours": 0.0,
+          "hard_booked_pct": 0.0
+        }
+      ],
+      "completeness": {
+        "mode": "structured",
+        "truncated": false,
+        "has_more": false
+      },
+      "evidence": [
+        {
+          "query_id": "python_proficiency_hard_booking_emea_2026Q2",
+          "source_tables": [
+            "bookings",
+            "people",
+            "person_skills",
+            "skills"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sql",
+      "query_id": "python_proficiency_hard_booking_emea_2026Q2",
+      "purpose": "List people in EMEA with Python skill proficiency >=4 and hard-booked less than 60% between March and May 2026, including person_id, name, hard_booked_hours and hard_booked_pct.",
+      "sql": "WITH skill_python AS (\n    SELECT ps.person_id\n    FROM person_skills ps\n    JOIN skills s ON ps.skill_id = s.skill_id\n    WHERE s.name = 'Python' AND ps.proficiency >= 4\n),\nperson_emea AS (\n    SELECT person_id, display_name\n    FROM people\n    WHERE location_region = 'EMEA'\n),\nhard_bookings AS (\n    SELECT\n        b.person_id,\n        SUM(CAST(\n            CASE\n                WHEN b.start_ts < :window_start THEN\n                    CASE WHEN b.end_ts > :window_start THEN b.end_ts ELSE :window_start END - :window_start\n                WHEN b.start_ts >= :window_start AND b.start_ts < :window_end THEN\n                    CASE WHEN b.end_ts > :window_end THEN :window_end ELSE b.end_ts END - b.start_ts\n                ELSE 0\n            END AS INTEGER\n        )) AS hard_booked_minutes\n    FROM bookings b\n    WHERE b.kind = 'hard'\n      AND b.status_id IN (12,14) -- confirmed or closed bookings\n      AND b.start_ts < :window_end\n      AND b.end_ts > :window_start\n    GROUP BY b.person_id\n),\ncapacity AS (\n    SELECT :capacity_hours AS capacity_hours\n)\nSELECT\n    p.person_id,\n    p.display_name AS name,\n    COALESCE(hb.hard_booked_minutes, 0) / 60.0 AS hard_booked_hours,\n    CASE WHEN c.capacity_hours > 0 THEN (COALESCE(hb.hard_booked_minutes, 0) / 60.0) * 100.0 / c.capacity_hours ELSE NULL END AS hard_booked_pct\nFROM person_emea p\nJOIN skill_python sp ON p.person_id = sp.person_id\nLEFT JOIN hard_bookings hb ON p.person_id = hb.person_id\nCROSS JOIN capacity c\nWHERE (COALESCE(hb.hard_booked_minutes, 0) / 60.0) * 100.0 / c.capacity_hours < 60\nORDER BY p.person_id ASC;",
+      "parameters": {
+        "window_start": 1772323200,
+        "window_end": 1780272000,
+        "capacity_hours": 520
+      }
+    }
+  ],
+  "issues": [],
+  "effective_reference_date": "2026-04-01T00:00:00+00:00",
+  "assumptions": [
+    "The date range March to May 2026 is interpreted as 2026-03-01 to 2026-05-31 inclusive.",
+    "Hard-booked means bookings of kind 'hard' confirmed or completed within the date range.",
+    "Proficiency 4 or higher means person_skills with skill 'Python' and proficiency >= 4.",
+    "Region EMEA is matched to people.location_region = 'EMEA'.",
+    "Less than 60% hard-booked means total hard booking allocation in the date range is less than 60% of total available time in that period."
+  ]
+}

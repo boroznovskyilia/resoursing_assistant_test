@@ -1,0 +1,10 @@
+{
+  "run_id": "20261101T185409Z_8a6909",
+  "reviewer": "Codex AI-assisted source inspection",
+  "cases": {
+    "own-06": {
+      "accepted": false,
+      "notes": "The delivered ranking reasons claim project status ACT in years inferred from engagement codes (for example ACT in 2024). Source records establish current ACT status, not historical status in those years. Source fields, staffing-gap assessments and exhaustive coverage are correct, but these added historical assertions cannot be approved."
+    }
+  }
+}

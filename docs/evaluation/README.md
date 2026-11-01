@@ -1,4 +1,13 @@
-# Genuine Azure evaluation evidence
+# Current backend evaluation
+
+The synchronous SQLAlchemy/pydantic-settings refactor is validated on runtime23487e3:
+**22/22 from one complete genuine Azure run20261101T190046Z_a1cdc9**, after7 explicit
+AI-assisted source reviews (15 automatic passes). Both preceding post-refactor failures
+are retained. [Current evidence, delivered answers and hash lineage](backend-refactor-20261101/README.md).
+
+The previous release evidence below remains historical and unchanged.
+
+# Previous release — genuine Azure evaluation evidence
 
 Run `20261031T211131Z_822c63`, runtime checkpoint `ae6e196`, API version `2024-10-21`,
 chat `gpt-4.1-mini`, embeddings `text-embedding-3-small`.

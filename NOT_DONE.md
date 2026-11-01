@@ -1,10 +1,12 @@
 # Remaining delivery work and limits
 
-The complete genuine Azure 22-case run and explicit AI-assisted source review are
-recorded in [evaluation evidence](docs/evaluation/README.md). All delivered values,
-required booking behaviors and source invariants passed from that one run, after an
-offline scorer correction for a visible name alias. Original answers/reports are preserved;
-no inference or writes were replayed. Earlier failed development runs are retained. This does not establish universal accuracy.
+The latest full genuine Azure run20261101T190046Z_a1cdc9 on runtime23487e3 passed
+22/22 after7 explicit AI-assisted source reviews.15 cases passed automatically.
+[Current answers/reviews and both retained failures](docs/evaluation/backend-refactor-20261101/README.md).
+The first post-refactor run exposed a duration-unit error; the second had an explanation
+rejected for invented historical status years. Both were fixed and tested before the
+new complete run. No answer stitching, scorer relaxation or independent human review.
+Previous release evidence is preserved separately. This does not establish universal accuracy.
 
 ## Remaining delivery work
 

@@ -1,53 +1,53 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-01T19:00:37.794639+00:00",
+  "updated_at": "2026-11-01T19:07:48.352067+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized. On 2026-11-01 the owner explicitly approved every backend structural review recommendation, synchronous SQLAlchemy, and the proposed execution order."
   },
-  "current_task": "T14.6",
-  "next_action": "Commit rank-only trust fix after targeted tests exec68626. Currentcode now renders source-assessment reasons, never free ranker prose; removed unused ranking-reason accumulation. Run a THIRD new complete22-case Azure evaluation. First full e1e2714 run failed hard-hour calculation; second5fa44dd run20261101T185409Z_8a6909 had15auto+7review, own06 explicitly rejected for unsupported historical ACT-status years in ranking reasons (raw auto report preserved). Do not approve/mix these runs. MainAPI PID58175 exec8376 still5fa44dd, needs final graceful restart after new code. Final full103-test regression still required. Persist finalsource-review checks and7 explicit AI-assisted reviews, export allrun failures and finalanswers, finish docs/Git.",
+  "current_task": null,
+  "next_action": "Owner-approved WP-14 backend refactor complete. Runtime23487e3; final Azure20261101T190046Z_a1cdc9 has22/22 after15automatic+7explicitAI-assisted source reviews; full103backend/5browser/9tooling checks passed, locked clone setup/build and saved-runtime compatibility verified. Evidence:docs/evaluation/backend-refactor-20261101. MainAPI PID59719 exec50037 at127.0.0.1:8000 uses app:create_app with same.runtime/private.env;2savedchats readable. No evaluation process active. Remaining original delivery work:T13.4 demo video not recorded;T13.5 publication/sharing/submission separately gated. No new implementation permission needed for authorized scope.",
   "blockers": [],
   "last_checks": [
     {
-      "command": ".venv/bin/python -m pytest tests -q",
+      "command": ".venv/bin/python -m pytest tests -q (runtime23487e3)",
       "result": "passed",
-      "scope": "100 checks41.43s, including actual API subprocesses/kill/restart, native read protections, sync ORM concurrency/receipt safety, configuration isolation, legacy checkpoint and document identity."
+      "scope": "103checks42.84s; source SQL policy/physical columns, bounded repairs, sync ORM race/atomic rollback/receipt recovery, legacy checkpoint, masked settings, RAG/source trust."
     },
     {
-      "command": "npm build; Chromium test:e2e",
+      "command": "Chromium test:e2e and build",
       "result": "passed",
-      "scope": "TypeScript/Vite build;5 browser scenarios5.4s with explicit test-only gateway."
+      "scope": "5browser scenarios5.5s; TypeScript/Vite build passed. Explicit test-only provider with blank model credentials."
     },
     {
-      "command": "Existing .runtime backup/open compatibility rehearsal",
+      "command": "Fresh-clone locked setup/build and regression",
       "result": "passed",
-      "scope": "Actual2 chats history/checkpoints read using new dependencies on a temporary SQLite backup; thread/message/booking/action rows unchanged. Original files not opened as writer."
+      "scope": "Local clone installed locked deps from empty .venv, setup/build passed without credentials; updated23487e3 passed10config/setup/legacy/document/trust checks0.49s. Actual existing.runtime backup and final main restart preserve2chats/history/checkpoints."
+    },
+    {
+      "command": "Full genuine Azure20261101T190046Z_a1cdc9 and run-bound reviews",
+      "result": "passed",
+      "scope": "22/22 on23487e3;15automatic+7explicit AI-assisted source approvals; no human-review claim/scorer relaxation/answer editing/stitching. Source field/quote checks and independent empty-reference check passed."
+    },
+    {
+      "command": "Retained earlier complete runs",
+      "result": "failed",
+      "scope": "e1e2714 run20261101T184828Z_97ba7b:1hard-hour failure;5fa44dd run20261101T185409Z_8a6909:automatic checks passed butown06ranking prose explicitly rejected for invented historical ACT years. Both reports/answers retained; fixes tested before finalrun."
     },
     {
       "command": "make check; Ruff check/format; git diff --check",
       "result": "passed",
-      "scope": "9 tooling checks, links/progress inventory,60 Python files formatted/static checks."
+      "scope": "Final9tooling tests, all local links/progress inventory, Ruff60Pythonfiles and whitespace checks passed after evidence export."
     },
     {
-      "command": "Genuine Azure run20261101T184828Z_97ba7b (runtime e1e2714)",
-      "result": "failed",
-      "scope": "All22 executed on e1e2714:14 automatic passes,7 review_required,1 gq01 failure from epoch differences instead of bookings.minutes. Report and answers preserved; no rescoring can fix that factual error."
-    },
-    {
-      "command": ".venv/bin/python -m pytest tests -q (final5fa44dd)",
+      "command": "Final mainAPI health/history/static smoke",
       "result": "passed",
-      "scope": "102 checks43.80s; current physical-column/repair and full process suite. No inherited model credentials in unit checks."
+      "scope": "PID59719 exec50037 on127.0.0.1:8000, runtime23487e3 app:create_app, existing.runtime;2savedchats readable and health/UI200. No paid health probes."
     },
     {
-      "command": "Fresh local clone setup/build/current targeted regression",
+      "command": "Final exported-answer/artifact/scorer/source/secret verification",
       "result": "passed",
-      "scope": "Locked setup and build on e1e2714,9 packaging/config/compatibility checks, then fast-forward5fa44dd and8 new provenance/repair checks. No copied credentials/runtime."
-    },
-    {
-      "command": "Updated main API health/history/static smoke",
-      "result": "passed",
-      "scope": "Idle old PID3546 verified by command/cwd and stopped gracefully. New PID58175 exec8376 uses app:create_app and existing.runtime; health/history for2chats/UI/JS HTTP200. No model health probes."
+      "scope": "All22 answer hashes reconstruct exact original inference bytes; exported report/review/source-check hashes match. Scoring AST unchanged (imports only reordered). All4 supplied-file hashes equal Downloads; configured key absent from exports/source, .env0600 ignored."
     }
   ],
   "tasks": [
@@ -546,8 +546,11 @@
     },
     {
       "id": "T14.6",
-      "status": "in_progress",
-      "evidence": [],
+      "status": "done",
+      "evidence": [
+        "Runtime23487e3:103backend checks42.84s,5Chromium5.5s,9tooling/Ruff60files; fresh local clone locked setup/build and10finalcompatibility/config/trust checks passed. Actual2saved chats/history/checkpoints preserved on mainAPI restart.",
+        "Genuine full run20261101T190046Z_a1cdc9:15automatic passes +7explicit run-bound Codex AI-assisted source reviews =>22/22, CLIexit0. All22unchanged answers/hash lineage and both preceding factual-failure/review-rejection reports exported in docs/evaluation/backend-refactor-20261101; no scorer relaxation/case stitching/human-review claim."
+      ],
       "blocker": null
     }
   ],
