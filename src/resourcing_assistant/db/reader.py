@@ -417,6 +417,7 @@ class Reader:
         digest = hashlib.sha256(sql.encode()).hexdigest()
         event("sql_started", query_id=query_id, sql_sha256=digest)
         denied, eligibility_denied, tables, derived = [], [], set(), set()
+        source_columns = {}
 
         def authorize(action, a, b, database, trigger):
             if (
@@ -450,6 +451,8 @@ class Reader:
                     eligibility_denied.append(f"{a}.{b}")
                     return sqlite3.SQLITE_DENY
                 tables.add(a)
+                if b:
+                    source_columns.setdefault(a, set()).add(b)
                 if trigger and trigger not in self.objects:
                     derived.add(trigger)
             elif action == sqlite3.SQLITE_FUNCTION:
@@ -555,6 +558,10 @@ class Reader:
             "rows": rows,
             "truncated": truncated,
             "source_tables": sorted(tables),
+            "source_columns": {
+                table: sorted(columns)
+                for table, columns in sorted(source_columns.items())
+            },
         }
 
     def read_pages(self, sql, parameters, key, query_id, purpose, *, eligibility=None):

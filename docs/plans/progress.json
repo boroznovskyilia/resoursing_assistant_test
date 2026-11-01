@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-01T18:48:15.231978+00:00",
+  "updated_at": "2026-11-01T18:53:56.478932+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized. On 2026-11-01 the owner explicitly approved every backend structural review recommendation, synchronous SQLAlchemy, and the proposed execution order."
   },
   "current_task": "T14.6",
-  "next_action": "WP-14 local refactor complete:100 backend tests41.43s,5 browser tests5.4s,9 tooling tests and Ruff60files passed. Copy of actual existing .runtime (2 chats) opened with readable history/checkpoints and unchanged thread/message/booking/action rows. Commit this runtime, then run complete genuine Azure22-case evaluation; preserve original20261031 evidence. Afterwards export new run/reviews, verify fresh setup and restart existing API without resetting data.",
+  "next_action": "Commit physical-column provenance/hard-hour repair guard after targeted regression exec27087, then run a new complete22-case Azure evaluation. Failed full run20261101T184828Z_97ba7b/e1e2714 is preserved (14 automatic,7 review-required,1 failed gq01). Fresh clone setup/build and9 checks passed; actual runtime copy compatibility passed. Final full-suite check and API restart still required.",
   "blockers": [],
   "last_checks": [
     {
@@ -28,6 +28,11 @@
       "command": "make check; Ruff check/format; git diff --check",
       "result": "passed",
       "scope": "9 tooling checks, links/progress inventory,60 Python files formatted/static checks."
+    },
+    {
+      "command": "Genuine Azure run20261101T184828Z_97ba7b (runtime e1e2714)",
+      "result": "failed",
+      "scope": "All22 executed on e1e2714:14 automatic passes,7 review_required,1 gq01 failure from epoch differences instead of bookings.minutes. Report and answers preserved; no rescoring can fix that factual error."
     }
   ],
   "tasks": [

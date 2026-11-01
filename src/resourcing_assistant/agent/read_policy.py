@@ -66,7 +66,7 @@ class ReadPolicy:
         ):
             planning_question += "\nOutput policy: return ALL matching records, without LIMIT or intermediate/helper queries. Use the supplied code-computed period/capacity values."
         if self.hard_capacity_list:
-            planning_question += "\nOutput policy: each eligible person's row MUST include person_id, person/name, hard_booked_hours and hard_booked_pct (0-100). The user must see the derived booking measure used in the filter, including zeros. Do not return only names/IDs. Use full intersecting kind=hard minutes and code-computed period/capacity; no unrequested status exclusions."
+            planning_question += "\nOutput policy: each eligible person's row MUST include person_id, person/name, hard_booked_hours and hard_booked_pct (0-100). The user must see the derived booking measure used in the filter, including zeros. Do not return only names/IDs. Use SUM(bookings.minutes) / 60.0 over full intersecting kind=hard rows, including completed bookings, and code-computed period/capacity. Timestamps are ONLY overlap predicates; NEVER derive booked hours from interval length or epoch differences. Do not add booking status filters unless explicitly requested."
         if self.logged:
             planning_question += "\nLogged hours are ACTUAL time_entries minutes via work_items, never bookings or assignments."
         if task.intent == "factual" and self.scalar_total:
@@ -104,6 +104,15 @@ class ReadPolicy:
             raise ReadError(
                 "invalid_sql",
                 "Eligible person rows must display hard_booked_hours used by the percentage filter, including zero. Returning only names/IDs omits the requested measure.",
+            )
+        if (
+            self.hard_capacity_list
+            and primary
+            and "minutes" not in result.get("source_columns", {}).get("bookings", [])
+        ):
+            raise ReadError(
+                "invalid_sql",
+                "Hard-booked hours must SUM bookings.minutes / 60.0 over overlapping kind=hard rows, including completed bookings. Timestamps only select overlap; never calculate hours from epoch differences, interval length or prorating, and do not add unrequested status exclusions.",
             )
         if primary and self.logged and "time_entries" not in result["source_tables"]:
             raise ReadError(

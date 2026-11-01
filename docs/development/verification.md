@@ -117,3 +117,9 @@ checks; Ruff check/format across60 Python files. A temporary backup of the actua
 existing runtime opened both saved chats, history and checkpoints without changing
 thread/message/booking/action rows. This rehearsal did not modify the original files.
 The new Azure run is recorded separately when complete.
+
+First post-refactor genuine run20261101T184828Z_97ba7b on e1e2714 executed all22:
+14 automatic passes,7 review-required and1 factual failure. The model calculated
+hard hours from epoch differences. That report/answers remain unchanged. Physical
+column provenance and a shared-budget repair regression were added; a new complete
+run, rather than selected-case stitching or scorer relaxation, validates the fix.

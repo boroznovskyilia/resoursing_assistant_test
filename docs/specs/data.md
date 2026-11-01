@@ -214,3 +214,13 @@ The golden SQL has been checked against the supplied file, but this is not evide
 of future agent quality. Data checks exist in tests/test_data.py; known-case model results are in
 [evaluation evidence](../evaluation/README.md). Calculations, edge fixtures
 and write invariants are assigned to [work packages](../plans/implementation.md).
+
+## Hard-hour source provenance
+
+The native authorizer records physical source columns as well as tables. A recognized
+hard-booked percentage list must read bookings.minutes; aliasing an interval/epoch
+calculation as minutes/hours cannot satisfy this check. The same bounded planner
+repair owns this violation. Planner instructions explicitly state SUM(minutes)/60,
+full intersecting hard rows including completed bookings, and timestamps for overlap
+only. This minimum provenance guard is not a general proof of arbitrary SQL arithmetic.
+[Reader checks](../../tests/test_data.py) and [repair checks](../../tests/test_faults.py).

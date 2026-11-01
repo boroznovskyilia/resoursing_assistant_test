@@ -47,6 +47,12 @@ from tests.test_agent import ScriptedGateway
             "display hard_booked_hours",
         ),
         (
+            "List people who are less than 60% hard-booked",
+            "SELECT person_id,SUM(end_ts-start_ts)/60.0 AS hard_booked_hours FROM bookings WHERE kind='hard' GROUP BY person_id",
+            "SELECT person_id,SUM(minutes)/60.0 AS hard_booked_hours FROM bookings WHERE kind='hard' GROUP BY person_id",
+            "SUM bookings.minutes",
+        ),
+        (
             "How many hours were logged?",
             "SELECT SUM(minutes)/60.0 AS total_hours FROM bookings",
             "SELECT SUM(minutes)/60.0 AS total_hours FROM time_entries",

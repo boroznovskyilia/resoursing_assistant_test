@@ -266,3 +266,14 @@ def test_supplied_project_codes_resolve_before_interpretation(data):
     assert '"engagement_id": 1, "code": "ENG-2026-0001"' in schema
     assert "do not ask the user to supply their IDs" in schema
     assert "ENG-2099-9999" not in reader.prompt_schema(question="Unknown ENG-2099-9999")
+
+
+def test_read_provenance_tracks_physical_columns_not_aliases(data):
+    _, _, reader = data
+    correct = reader.read(
+        "WITH usage AS (SELECT SUM(b.minutes)/60.0 AS hours FROM bookings b) SELECT hours AS duration FROM usage"
+    )
+    wrong = reader.read("SELECT SUM(end_ts-start_ts)/60.0 AS minutes FROM bookings")
+    assert "minutes" in correct["source_columns"]["bookings"]
+    assert "minutes" not in wrong["source_columns"]["bookings"]
+    assert {"start_ts", "end_ts"} <= set(wrong["source_columns"]["bookings"])
