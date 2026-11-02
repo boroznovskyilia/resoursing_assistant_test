@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-02T09:10:07.386884+00:00",
+  "updated_at": "2026-11-02T09:16:52.000833+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized. On 2026-11-01 the owner explicitly approved every backend structural review recommendation, synchronous SQLAlchemy, and the proposed execution order."
@@ -9,6 +9,11 @@
   "next_action": "Local implementation, evaluation and demo are complete. T13.4 recording155.28s at .runtime/demo/20261102/resourcing-assistant-demo.mp4; versioned docs/development/demo-transcript.md. Isolated demo process stopped; no main API currently confirmed running. Only T13.5 remote repository/video sharing and submission remains, separately gated. Do not replay paid demos/bookings to recover context.",
   "blockers": [],
   "last_checks": [
+    {
+      "command": "Tracked UTF-8 content scan and archived draft SHA256 verification",
+      "result": "passed",
+      "scope": "139tracked text files; no Russian documentation/comments/product text,12old Russian draft files moved outside workspace with identical hashes. Functional Russian user-input reply retained. make check passed9tooling checks/local links/progress; git diff --check passed. Runtime code unchanged."
+    },
     {
       "command": "make check; git diff --check; exported-text secret scan",
       "result": "passed",
@@ -498,7 +503,8 @@
       "status": "done",
       "evidence": [
         "README/DESIGN/NOT_DONE/specifications and submission guide updated in English; coherent local implementation commits recorded. Final clone rehearsal is current task.",
-        "Coherent local checkpoint commits4271d38,c8ca3e5,13659d1,1aa8009,703cb76,ae6e196,ebd3f14 preserve QA changes. Configured key absent from171 Git history blobs and all docs including exported evidence; ignored.env0600. All4 supplied-file hashes unchanged. No push/publication."
+        "Coherent local checkpoint commits4271d38,c8ca3e5,13659d1,1aa8009,703cb76,ae6e196,ebd3f14 preserve QA changes. Configured key absent from171 Git history blobs and all docs including exported evidence; ignored.env0600. All4 supplied-file hashes unchanged. No push/publication.",
+        "2026-11-02 English-content cleanup:139tracked UTF-8 text files scanned; no Russian documentation/comments/product text. The sole Cyrillic code literal is an accepted user reply and remains functional. 12 obsolete Russian draft files outside Git archived with verified SHA256 at /private/tmp/resourcing-russian-drafts-20261102-14o0cihf. Removed their stale handoff reference; no runtime code/source/history rewritten."
       ],
       "blocker": null
     },

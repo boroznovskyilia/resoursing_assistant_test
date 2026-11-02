@@ -62,8 +62,7 @@ separate from the product's LangGraph conversation state.
 - Evaluation-only read plans are in runtime/read-plans/thread/request/attempt-uuid.json;
   inspect actual failed queries rather than blindly reproducing model calls. Original
   source/gold hashes must remain unchanged. Ordinary logs omit prompts and credentials.
-- Source obligations, accepted choices and88 scenario inventory are in specs/decisions;
-  old Russian review drafts in parent workspace are historical, not new architecture.
+- Source obligations, accepted choices and88 scenario inventory are in specs/decisions.
 
 ## Current refactor completion
 
