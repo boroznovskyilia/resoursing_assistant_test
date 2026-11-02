@@ -99,8 +99,9 @@ models just to restore missing chat context or replay a confirmed booking.
 
 ## Host and recovery notes
 
-Work directory is `/Users/iliab/projects/test_ai_assist/resoursing_assistant_test`; parent
-workspace has a short AGENTS entry point. Use project commands with correct workdir.
+Work directory is `/Users/iliab/projects/resoursing_assistant_test`, moved out of the
+obsolete wrapper directory at the owner's request. Open this directory as the Codex
+project; its own AGENTS.md is the instruction entry point. Use this workdir for commands.
 In restricted tools set UV_CACHE_DIR=/private/tmp/resourcing-uv-cache for existing
 cached packages; Make otherwise uses writable .cache/uv. Chromium installed at
 /private/tmp/resourcing-browsers; set PLAYWRIGHT_BROWSERS_PATH for this host.

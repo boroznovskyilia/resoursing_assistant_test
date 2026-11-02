@@ -12,6 +12,8 @@ Prerequisites: Python 3.12, uv, Node 26/npm and Make. Installation downloads pac
 runtime uses only local files plus the supplied Azure model endpoint. The mock source
 and model-matching tokenizer are bundled, with fingerprint validation.
 
+Clone the repository and run the following commands from its root directory.
+
 ```sh
 make setup
 ```
@@ -127,15 +129,11 @@ explanation are retained; no answers were edited/combined and scoring was not re
 Final local checks:103 backend tests,5 Chromium scenarios,9 tooling checks; fresh-clone
 locked setup/build and saved-runtime compatibility passed.
 
-Previous-release evidence follows and remains unchanged:
-
-Genuine Azure run `20261031T211131Z_822c63` on runtime checkpoint `ae6e196`: **22/22 passed**
-from one complete genuine inference run, after corrected offline whole-run scoring
-and **AI-assisted source review** of 7 free-text cases. Original reports/answers are preserved.
-Inference runtime `ae6e196`, scorer `ebd3f14`; no case stitching or write replay.
-After corrected scoring, before review: 15 passed, 7 review_required. This is the known development/acceptance set,
+The table below reports the latest run `20261101T190046Z_a1cdc9`, including its seven
+explicit AI-assisted source reviews. This is the known development/acceptance set,
 not an independent human review, held-out benchmark or repeated-run reliability claim.
-[Full evidence, answers, measurements and all-run history](docs/evaluation/README.md).
+Previous-release answers, measurements and run history remain available separately in
+[historical evaluation evidence](docs/evaluation/README.md).
 
 | Case | Type | Score | Status | Review |
 | --- | --- | --- | --- | --- |

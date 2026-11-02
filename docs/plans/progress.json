@@ -1,14 +1,19 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-02T09:16:52.000833+00:00",
+  "updated_at": "2026-11-02T09:33:09.660193+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized. On 2026-11-01 the owner explicitly approved every backend structural review recommendation, synchronous SQLAlchemy, and the proposed execution order."
   },
   "current_task": null,
-  "next_action": "Local implementation, evaluation and demo are complete. T13.4 recording155.28s at .runtime/demo/20261102/resourcing-assistant-demo.mp4; versioned docs/development/demo-transcript.md. Isolated demo process stopped; no main API currently confirmed running. Only T13.5 remote repository/video sharing and submission remains, separately gated. Do not replay paid demos/bookings to recover context.",
+  "next_action": "Open /Users/iliab/projects/resoursing_assistant_test as the Codex project; obsolete /Users/iliab/projects/test_ai_assist wrapper is removed. Local implementation, latest evaluation and demo complete. README now uses latest22-row report and documented commands passed after relocation (103backend/5browser/9tooling). Saved files/env/Git preserved; no API left running and no paid model calls made. Only T13.5 repository/video sharing and submission remains separately gated.",
   "blockers": [],
   "last_checks": [
+    {
+      "command": "Relocation reproduction: locked offline uv sync; make test; frontend build/test:e2e; make check; production history smoke",
+      "result": "passed",
+      "scope": "New root /Users/iliab/projects/resoursing_assistant_test;103backend43.68s,5Chromium8.6s,9tooling. Same Git/file/env/database/demo hashes; real API/UI/history200 with2threads and unchanged request/message counts. README latest22-row table exact; no runtime dependency on old path; no model calls."
+    },
     {
       "command": "Tracked UTF-8 content scan and archived draft SHA256 verification",
       "result": "passed",
@@ -485,7 +490,9 @@
       "status": "done",
       "evidence": [
         "Actual local Git clone ab8ba9f at /private/tmp/resourcing-git-rehearsal-20261031: documented make setup/check, Ruff checks, all50 backend tests and5 Chromium tests passed from no inherited env/dependencies/runtime.",
-        "Actual local Git clone /private/tmp/resourcing-final-rehearsal.AuHpxg initially had no env/dependencies/runtime. Locked setup/build and idempotent setup passed. Final scorer checkpointebd3f14 passed make check,92 backend39.94s,5 Chromium4.2s,Ruff. Genuine evaluation ran separately with private credentials; clone checks use explicit test providers."
+        "Actual local Git clone /private/tmp/resourcing-final-rehearsal.AuHpxg initially had no env/dependencies/runtime. Locked setup/build and idempotent setup passed. Final scorer checkpointebd3f14 passed make check,92 backend39.94s,5 Chromium4.2s,Ruff. Genuine evaluation ran separately with private credentials; clone checks use explicit test providers.",
+        "2026-11-02 owner explicitly chose relocation to /Users/iliab/projects/resoursing_assistant_test and acknowledged reopening Codex there. Revalidate locked environment, saved runtime and documented commands after moving.",
+        "2026-11-02 relocation complete: /Users/iliab/projects/resoursing_assistant_test. Git HEAD/all tracked file hashes, private.env0600, working SQLite and demo hashes preserved. Wrapper removed; redundant wrapper AGENTS/data-profile and old generated venv archived at /private/tmp/resourcing-relocation-20261102-o1xt2711. Locked99-package environment rebuilt offline using /private/tmp/resourcing-uv-cache. make test103passed43.68s; frontend build+5Chromium8.6s;9tooling checks passed. Actual production API/UI/history smoke retained2threads and all request/message counts with zero model calls; source unchanged. Evidence:.runtime/relocation-check.json."
       ],
       "blocker": null
     },
@@ -494,7 +501,8 @@
       "status": "done",
       "evidence": [
         "README/DESIGN/NOT_DONE/specifications and submission guide updated in English; coherent local implementation commits recorded. Final clone rehearsal is current task.",
-        "English README per-case table and commands, DESIGN, NOT_DONE, specs/verification/handoff and exported evaluation lineage/history updated. Known-set/AI-review limits and remaining demo/publication are explicit."
+        "English README per-case table and commands, DESIGN, NOT_DONE, specs/verification/handoff and exported evaluation lineage/history updated. Known-set/AI-review limits and remaining demo/publication are explicit.",
+        "2026-11-02 checked original brief README deliverable: setup/API/web/evaluation commands and results table present. Added repository-root instruction and aligned README table attribution with latest20261101T190046Z_a1cdc9; all22table rows exactly match exported report. Historical evidence retained separately."
       ],
       "blocker": null
     },
