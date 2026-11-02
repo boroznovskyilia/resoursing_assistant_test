@@ -1,7 +1,7 @@
 # Working in this project
 
 Repository documentation, specifications, durable instructions, code comments and
-product text are in English. Discuss the work with the owner in Russian.
+product text are in English.
 The repository name is exactly `resoursing_assistant_test`. Its primary branch is
 `master` locally and on GitHub; keep this branch name consistent.
 
@@ -17,6 +17,14 @@ Read [handoff](docs/plans/handoff.md) and run `make progress` before selecting w
 [progress.json](docs/plans/progress.json) is the single current task-status/evidence
 record. Update it after status/check/blocker changes and before compact or handoff.
 The plan owns task definitions; do not duplicate live status tables elsewhere.
+
+Apply the [change/conflict procedure](docs/development/workflow.md#changes-and-contradictions)
+on every new condition, discovered contradiction, specification gap or failing check.
+Initiate it yourself: identify affected contracts/code/checks and reassess old evidence.
+Use human-in-the-loop (HITL) for unresolved requirement conflicts or changes to agreed
+behavior; an explicit owner instruction already resolving the issue needs no repeat
+approval. Continue independent work while a decision is pending. Finish with the
+[completion review](docs/development/workflow.md#completion-review).
 
 Execute the dependency-ordered
 [work packages](docs/plans/implementation.md) without seeking approval for each routine

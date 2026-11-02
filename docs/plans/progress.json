@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-02T09:54:14.250886+00:00",
+  "updated_at": "2026-11-02T11:05:55.897263+00:00",
   "authorization": {
     "application_development": "authorized",
-    "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized. On 2026-11-01 the owner explicitly approved every backend structural review recommendation, synchronous SQLAlchemy, and the proposed execution order. On2026-11-02 owner supplied https://github.com/boroznovskyilia/resoursing_assistant_test and requested master as the local and GitHub primary branch; branch/remote synchronization is authorized. Email submission remains separate."
+    "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized. On 2026-11-01 the owner explicitly approved every backend structural review recommendation, synchronous SQLAlchemy, and the proposed execution order. On2026-11-02 owner supplied https://github.com/boroznovskyilia/resoursing_assistant_test and requested master as the local and GitHub primary branch; branch/remote synchronization is authorized. Email submission remains separate. On 2026-11-02 the owner approved applying the proposed development-harness changes: one change/conflict procedure, HITL boundaries, impact review, evidence reassessment, documentation cleanup and completion review. Application scope and delivery permissions are unchanged. On 2026-11-02 the owner requested removing the Russian-response rule and explicitly authorized committing the approved harness changes as little harness update and pushing master to the existing origin."
   },
-  "current_task": null,
-  "next_action": "Requested master synchronization and repository publication are complete at https://github.com/boroznovskyilia/resoursing_assistant_test. Keep master locally/remotely and origin/master as upstream. Workdir /Users/iliab/projects/resoursing_assistant_test. No branch implementation work remains; only demo delivery and external invitation submission remain separately scoped. Do not send messages or host the video without applicable instruction.",
+  "current_task": "T15.2",
+  "next_action": "Create the owner-requested little harness update commit from the verified documentation changes, push master to origin, and verify remote equality before completing T15.2.",
   "blockers": [],
   "last_checks": [
     {
@@ -78,6 +78,21 @@
       "command": "Final exported-answer/artifact/scorer/source/secret verification",
       "result": "passed",
       "scope": "All22 answer hashes reconstruct exact original inference bytes; exported report/review/source-check hashes match. Scoring AST unchanged (imports only reordered). All4 supplied-file hashes equal Downloads; configured key absent from exports/source, .env0600 ignored."
+    },
+    {
+      "command": "WP-15: make check; git diff --check; ad hoc changed-path/history/local-heading validation",
+      "result": "passed",
+      "scope": "Documentation/status only: 9 tooling tests, local links, exact 63-task inventory and whitespace passed. All 16 added local heading links resolve. Previous task evidence, checks, blockers and service records preserved; no application/source/evaluation artifact changed. No new model or application behavior claim."
+    },
+    {
+      "command": "WP-15 manual workflow walkthroughs and final impact review",
+      "result": "passed",
+      "scope": "Reviewed unambiguous bug fix, ambiguous requirement/HITL with independent progress, explicit owner change without duplicate approval and interrupted-session reconciliation. Conditional HITL wording checked; active document ownership and historical evidence distinguished. Manual instruction review only; future agent compliance/context-loss reliability remains unverified."
+    },
+    {
+      "command": "T15.2: make check; git diff --check; targeted language/history/path assertions; git ls-remote origin refs/heads/master",
+      "result": "passed",
+      "scope": "9 tooling tests, local links and 64-task inventory passed. Fixed conversation-language rule removed; English repository rule retained. All 12 modified paths are documentation/status, and historical task/check evidence is preserved. Remote master matches baseline 1c5b209; new commit/push is still pending."
     }
   ],
   "tasks": [
@@ -592,6 +607,26 @@
       "evidence": [
         "Runtime23487e3:103backend checks42.84s,5Chromium5.5s,9tooling/Ruff60files; fresh local clone locked setup/build and10finalcompatibility/config/trust checks passed. Actual2saved chats/history/checkpoints preserved on mainAPI restart.",
         "Genuine full run20261101T190046Z_a1cdc9:15automatic passes +7explicit run-bound Codex AI-assisted source reviews =>22/22, CLIexit0. All22unchanged answers/hash lineage and both preceding factual-failure/review-rejection reports exported in docs/evaluation/backend-refactor-20261101; no scorer relaxation/case stitching/human-review claim."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T15.1",
+      "status": "done",
+      "evidence": [
+        "2026-11-02 owner approved this harness revision. Impact: AGENTS.md; workflow/document-writing rules; plans/progress/handoff; decision/source catalogues; verification/scenario navigation. Existing behavior, source fixtures, evaluation artifacts and tooling schema remain unchanged. Checks: existing tooling tests/link/progress validation, whitespace checks and manual procedure walkthroughs.",
+        "Implemented DEC-45 through the single workflow.md change/conflict procedure and links from AGENTS, document-writing rules, plan/spec/source navigation and verification. Added document ownership, conditional HITL, impact recording, supersession/evidence reassessment and completion review. Handoff now links authoritative state/evidence instead of duplicating current results. Corrected stale planning/source/stack/status instructions; no runtime, source fixture, scorer or historical report changed.",
+        "2026-11-02 manual instruction walkthroughs: (1) a minute/hour bug against an unambiguous rule leads to a reproducing check/code fix without weakening the contract or asking approval; (2) ambiguous capacity warning versus prohibition requires a saved question/options/impact and a blocked dependent task while independent work continues; (3) an explicit owner change permitting multiple pending proposals supersedes DEC-18 only within that hypothetical scope, with booking/storage/agent/API/UI checks and historical evidence reassessed, without repeat approval; (4) interrupted work is reconciled against files/diff and saved blockers before resuming, without reset, booking replay or automatic paid evaluation. These are manual reviews of written instructions, not actual business changes, independent-agent trials or context-compaction tests.",
+        "make check passed: all 9 existing tooling tests, local Markdown targets and the exact 63-task inventory. git diff --check passed. An ad hoc check confirmed all 16 added local heading links resolve, previous 62 task records/checks/blockers/runtime-service records were preserved, and all 11 changed paths are Markdown or progress.json. No application/browser/Azure checks rerun: application behavior and executable files are unchanged; earlier application passes remain scoped historical evidence."
+      ],
+      "blocker": null
+    },
+    {
+      "id": "T15.2",
+      "status": "in_progress",
+      "evidence": [
+        "2026-11-02 explicit owner instruction: remove the Russian-response requirement, git commit little harness update and git push. Impact: AGENTS.md; the same active language clause in product/core.md and DEC-43, superseded by DEC-46; WP-15 task/progress and the previously approved uncommitted harness documentation. Application code/config/data/scenarios and historical evaluation evidence are unaffected. Checks: make check, git diff --check, targeted language-rule scan and local/remote commit comparison.",
+        "Removed the fixed owner-conversation language from AGENTS.md and product/core.md; DEC-46 explicitly supersedes that clause of DEC-43. Repository English-content requirements are unchanged. make check passed all 9 tooling tests, local links and the exact 64-task inventory; git diff --check and targeted language/history/path assertions passed. Remote master and local HEAD both equal 1c5b209 before publication. Commit/push verification remains pending; previous application/model evidence is not relabeled as a new run."
       ],
       "blocker": null
     }

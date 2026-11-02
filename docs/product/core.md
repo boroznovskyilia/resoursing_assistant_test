@@ -44,7 +44,7 @@ No multi-tenancy, login, cross-thread user memory/Store, external vector service
 external alerting, streaming, cloud hosting, avatar UI, admin CRUD or DSPy optimizer.
 No chat folders, search or rename feature is planned for v1.
 
-The UI, demo prompts and repository content are English; design discussion is Russian.
+The UI, demo prompts and repository content are English.
 No broad multilingual-quality claim is made. Plain CSS and accessible basic controls
 suffice; agent behavior and safe persistence take priority over visual polish.
 

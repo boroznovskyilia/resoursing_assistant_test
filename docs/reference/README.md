@@ -16,10 +16,11 @@ start implementation. The owner authorized full end-to-end implementation on 202
 | SRC-O | Owner messages | Accepted choices and explicit full implementation authorization; see progress.json |
 | SRC-A | [Additional cases](additional-cases-draft.json) | Twelve owner-approved case specifications; first eight oracles computed read-only on 2026-10-31; not executable tests |
 
-The reference DOCX, dictionary, and gold JSON are byte-identical copies. The database
-is not copied into an application directory during this planning stage. Its supplied
-location is `/Users/iliab/Downloads/source.sqlite`; future fresh-clone distribution is
-an implementation/setup decision. The absolute profile path is historical metadata.
+The reference DOCX, dictionary, and gold JSON are byte-identical copies. The supplied
+database is bundled as [data/source.sqlite](../../data/source.sqlite); setup creates
+only absent working copies and preserves existing state. The original supplied
+location `/Users/iliab/Downloads/source.sqlite` and absolute profile path are historical
+provenance, not runtime dependencies. See [setup commands](../../README.md).
 
 ## SHA-256 fingerprints
 
@@ -32,8 +33,11 @@ an implementation/setup decision. The absolute profile path is historical metada
 
 ## Precedence and contradictions
 
-Do not silently choose a convenient source when they disagree. Record the conflict
-and accepted interpretation or explicit remaining uncertainty in [the decision register](../decisions/README.md).
+Do not silently choose a convenient source when they disagree. Initiate the
+[change/conflict procedure](../development/workflow.md#changes-and-contradictions).
+Keep unresolved questions and dependent-work blockers in progress.json; record the
+owner's accepted interpretation and any superseded choice in the
+[decision register](../decisions/README.md).
 Actual records settle factual values; the brief defines required behavior; gold
 defines the published acceptance examples. A gold SQL snippet does not define every
 business rule for every future query. Owner-approved scope changes are recorded explicitly.

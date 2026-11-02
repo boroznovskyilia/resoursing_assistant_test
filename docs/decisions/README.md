@@ -2,8 +2,10 @@
 
 Consolidated from owner decisions on 2026-10-31. **Saving these documents is authorized;
 full application development was explicitly authorized later on 2026-10-31.** Accepted means a design choice, not a tested result.
-Source obligations are in [requirements](../specs/requirements.md). No additional design
-question is required before reviewing this complete package.
+Source obligations are in [requirements](../specs/requirements.md). New conflicts and
+proposed behavior changes follow the [change/conflict procedure](../development/workflow.md#changes-and-contradictions).
+Current work, pending questions and checks belong in progress.json; this register
+preserves accepted choices and their reasons rather than live task status.
 
 ## Accepted owner decisions
 
@@ -52,17 +54,23 @@ question is required before reviewing this complete package.
 | DEC-41 | 60s/model request, one transport retry, one format repair | Retry-After <=10s, else no immediate retry; default backoff 1s; shared SQL repair budget |
 | DEC-42 | 5s/SQL execution, 1000 rows or 1 MiB result | Explicit truncation; full aggregates separate; exhaustive reads use bounded pages |
 | DEC-44 | Owner explicitly authorized full end-to-end implementation on 2026-10-31 | Scope-question reply; progress.json records status/evidence; publication still separate |
-| DEC-43 | Save the entire specification and development plan in English now | Russian conversation continues; no intermediate Russian repository required |
+| DEC-43 | Save the entire specification and development plan in English now | Repository content remains English; the owner-conversation language clause is superseded by DEC-46 |
+| DEC-45 | Owner approved the development-harness revision on 2026-11-02 | Agents initiate change/impact review, use HITL for unresolved requirement meaning or proposed changes to agreed behavior, reassess evidence and perform completion review; [workflow](../development/workflow.md) |
+| DEC-46 | Owner removed the fixed language for owner conversations on 2026-11-02 | Supersedes the conversation-language clause of DEC-43; repository documentation, comments and product text remain English |
 
 ## Stack contract
 
-| Layer | Selected baseline | Verification still required |
+The baseline below includes the owner-approved 2026-11-01 persistence revision.
+The last column identifies what needs verification when that layer changes, not a
+claim that earlier checks are still pending.
+
+| Layer | Selected baseline | Verification when changed |
 | --- | --- | --- |
 | Python | 3.12, uv, isolated environment and lockfile | Interpreter installation and dependency compatibility |
 | Agent/checkpoints | LangGraph StateGraph, langgraph-checkpoint-sqlite | Exact saver integration, interrupt replay and restart behavior |
 | Generative steps | DSPy explicit typed signatures | Azure transport, retry/cache behavior and token accounting |
 | API | FastAPI, Pydantic v2 | Runtime contract/response validation |
-| SQL | stdlib sqlite3, explicit transactions/read controls | Authorizer/function policy and deadlines on real queries |
+| SQL | Synchronous SQLAlchemy repositories; native sqlite3 protected reader and LangGraph saver | Owned-schema compatibility, atomic writer/receipt, authorizer/function policy and query deadlines |
 | Vectors | Local SQLite cache + in-process cosine search | Numeric representation chosen minimally; no vector server |
 | Frontend | React, TypeScript, Vite, plain CSS; Node 26/npm | Build and browser integration |
 | Tests | pytest and Playwright | Deterministic and real-process scenarios; real Azure eval separately |
@@ -93,17 +101,15 @@ changes to agreed business behavior still require owner review.
   recent window only if mandatory current fields/input still fit. Otherwise fail before
   execution. No fabricated summary or silent critical-input truncation.
 
-## Remaining work, not another questionnaire
+## Applying and revising decisions
 
-1. Full implementation authorized on 2026-10-31; record actual task evidence in progress.json.
-2. Implementation-time verification of versions, Azure endpoint/credentials, prompt
-   sizes, latency, token usage, query limits and semantic recall. Credentials come later.
-3. Submission logistics: exact deadline time/timezone, repository publication/access,
-   recipient address and recording. No external communication has been authorized.
-
-No unanswered business-rule choice is being hidden behind these items. If implementation
-reveals a contradiction that changes behavior, report the concrete conflict and impact;
-do not restart a long questionnaire for ordinary implementation choices.
+Use the [workflow](../development/workflow.md#human-decisions) to distinguish autonomous
+corrections from decisions requiring the owner. An explicit owner instruction can
+resolve a change without repeat approval; an agent's proposal cannot authorize itself.
+Record a replacement with its scope/reason, mark the prior choice superseded and link
+the active contract. Do not silently change original source requirements or reports.
+Live blockers and delivery permissions must be checked in progress.json and AGENTS.md;
+historical design gates are not new approval requests.
 
 ## Backend structure revision — owner accepted 2026-11-01
 

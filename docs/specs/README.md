@@ -29,8 +29,12 @@ Deterministic pytest checks, real SQLite/API integration, actual process/restart
 Chromium UI tests are linked in [verification](../development/verification.md).
 The actual-model22-case runner uses isolated production API subprocesses; results
 and explicit review status are linked from [README](../../README.md).
-Each future behavior change updates relevant existing checks and this scenario map;
-do not claim an unrun scenario passed or change expected behavior to hide a failure.
+For each new condition, gap or contradiction initiate the
+[change/conflict procedure](../development/workflow.md#changes-and-contradictions).
+Trace affected requirement/decision IDs through topic contracts, scenarios and linked
+checks; update this map if coverage changes and reassess prior evidence. Unresolved
+meaning follows HITL; do not claim an unrun scenario passed or change expected behavior
+to hide a failure. This map supports impact review but does not compute complete coverage.
 
 ## Core safety and continuity checks
 

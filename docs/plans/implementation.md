@@ -4,15 +4,18 @@ Status: full end-to-end implementation explicitly authorized by the owner on 202
 Live task status/evidence is maintained only in [progress.json](progress.json).
 Start/recover using [handoff](handoff.md) and `make progress`.
 
-## Gates, current status and completion rules
+## Gates and completion rules
 
-| Gate | Evidence | Status |
+Gate definitions below are acceptance criteria. Current task status and evidence live
+only in [progress.json](progress.json).
+
+| Gate | Required evidence | Completion condition |
 | --- | --- | --- |
-| G0 Requirements understood | Source inventory, data facts, accepted business conventions | Documented; source findings are data evidence, not agent results |
-| G1 Architecture selected | Accepted choices in decision register | Selected; reviewed; full implementation explicitly authorized |
-| G2 Acceptance specified | Written scenarios, approved 22 cases, scoring, per-task criteria | Written; local checks and known-case Azure results mapped in verification.md |
-| G3 Development authorized | Separate explicit owner instruction | Authorized 2026-10-31, explicit scope-question reply |
-| G4 Delivery verified | Real checks/results, fresh clone and demo, honest limitations | In progress; local/model checks exist, demo/publication remain |
+| G0 Requirements understood | Source inventory, data facts, accepted business conventions | Source findings distinguished from business rules and agent results |
+| G1 Architecture selected | Accepted choices in decision register | Selected architecture and explicit defaults reviewed |
+| G2 Acceptance specified | Written scenarios, approved 22 cases, scoring, per-task criteria | Observable acceptance and required checks defined |
+| G3 Development authorized | Separate explicit owner instruction | Applicable implementation authorization recorded |
+| G4 Delivery verified | Real checks/results, fresh clone, demo and authorized delivery | Required checks and deliverables verified; limitations and remaining blockers explicit |
 
 After G3, proceed through the plan without asking approval for every routine task.
 Do not wait for credentials before doing independent local work. Missing Azure access
@@ -26,21 +29,23 @@ external services or elaborate project management infrastructure for this loop.
 
 ## Dependency order
 
-| Package | Prerequisites | Result | Status |
-| --- | --- | --- | --- |
-| WP-01 | Source review, owner choices | Complete specifications and final review package | See progress.json |
-| WP-02 | WP-01, G3 | Locked stack/configuration and reproducible environment | See progress.json |
-| WP-03 | WP-02 | Source copies, calculations, schema and SQL permission boundary | See progress.json |
-| WP-04 | WP-02/03 | Threads, requests, history, checkpoints and context | See progress.json |
-| WP-05 | WP-03/04 | Intent/entity resolution and clarification graph | See progress.json |
-| WP-06 | WP-03/05 | Composable factual answers and SQL evidence | See progress.json |
-| WP-07 | WP-03/05/06 | Semantic index, assessment/ranking and fallback | See progress.json |
-| WP-08 | WP-03/04/05, WP-06/07 for mixed flows | Booking proposal, decision, recovery and pending reads | See progress.json |
-| WP-09 | WP-04/06/07/08 | Typed FastAPI lifecycle and request recovery | See progress.json |
-| WP-10 | WP-09 | React saved-chat UI and restoration | See progress.json |
-| WP-11 | WP-06/07/08/09 | Full 22-case runner, scoring and review artifacts | See progress.json |
-| WP-12 | WP-09/10/11 | Integrated fault/limit/concurrency verification and measurements | See progress.json |
-| WP-13 | WP-10/11/12 | Fresh-clone proof, final delivery docs and demo | See progress.json |
+| Package | Prerequisites | Result |
+| --- | --- | --- |
+| WP-01 | Source review, owner choices | Complete specifications and final review package |
+| WP-02 | WP-01, G3 | Locked stack/configuration and reproducible environment |
+| WP-03 | WP-02 | Source copies, calculations, schema and SQL permission boundary |
+| WP-04 | WP-02/03 | Threads, requests, history, checkpoints and context |
+| WP-05 | WP-03/04 | Intent/entity resolution and clarification graph |
+| WP-06 | WP-03/05 | Composable factual answers and SQL evidence |
+| WP-07 | WP-03/05/06 | Semantic index, assessment/ranking and fallback |
+| WP-08 | WP-03/04/05, WP-06/07 for mixed flows | Booking proposal, decision, recovery and pending reads |
+| WP-09 | WP-04/06/07/08 | Typed FastAPI lifecycle and request recovery |
+| WP-10 | WP-09 | React saved-chat UI and restoration |
+| WP-11 | WP-06/07/08/09 | Full 22-case runner, scoring and review artifacts |
+| WP-12 | WP-09/10/11 | Integrated fault/limit/concurrency verification and measurements |
+| WP-13 | WP-10/11/12 | Fresh-clone proof, final delivery docs and demo |
+| WP-14 | Existing backend/checks, owner-approved structural review | Compatible backend and persistence refactor |
+| WP-15 | Existing harness, owner-approved workflow revision | Consistent change handling, HITL and session recovery |
 
 Build the agent first, API second, UI third. Checks are written with each feature;
 WP-11 is end-to-end evaluation, not the first testing task. Limits and diagnostic
@@ -59,8 +64,9 @@ explicit defaults, source ambiguities, task criteria and the recorded developmen
 
 Corners: stale outside drafts, confusing design approval with permission to code,
 pretending proposed defaults were owner-selected, source instructions overriding scope.
-Done: docs internally coherent, no hidden business choice, implementation still gated.
-Current evidence is documentation/source inspection only, not application execution.
+Done: docs internally coherent, no hidden business choice, and explicit authorization
+recorded before application work. This package's checks concern documentation/source
+inspection; subsequent application evidence belongs to the relevant implementation tasks.
 
 ## WP-02 Locked environment and configuration
 
@@ -302,19 +308,12 @@ verified and claims match evidence. Any residual failure is visible in NOT_DONE/
 
 ## Execution loop after G3
 
-1. Read the next eligible package and only relevant contracts; inspect existing callers
-   and checks. Set its status In progress and choose the smallest complete implementation.
-2. Implement its tasks and meaningful checks together. Reuse standard/library features;
-   no unused abstractions or unchosen architecture alongside the selected one.
-3. Run focused checks, fix the cause of failures, then required integration/docs checks.
-   Broaden testing when new behavior or unresolved concerns justify it.
-4. Update actual commands/test-file links, evidence and limitations. Mark Done only
-   with acceptance evidence; make coherent commits if authorized by development scope.
-5. Continue to the next eligible task. If blocked externally, complete independent work
-   and state the concrete missing input. Escalate behavior-changing contradictions, not
-   routine implementation details. Never silently skip a mandatory acceptance check.
-6. Finish only when the agreed delivery target is achieved or report remaining blockers
-   honestly. Stop at the boundary before externally publishing or sending anything.
+Follow the [task workflow](../development/workflow.md), including its change/conflict
+procedure and completion review. Select work by these dependencies, keep the active
+task and next action in progress.json, and continue independently eligible work while
+an owner decision or external input blocks another task. Add follow-up definitions
+here and matching progress entries when new work is authorized; do not reuse unrelated
+completed tasks or treat an old completion as evidence for a changed contract.
 
 Package status is recorded in progress.json. Current checks and evidence are in
 [verification](../development/verification.md). This plan contains written tasks,
@@ -337,3 +336,21 @@ Done: every review item is implemented, saved-runtime compatibility is checked,
 local checks pass, genuine-model results/reviews are reported honestly, and changed
 imports/commands/specifications are updated. Existing evaluation artifacts remain
 historical evidence rather than being relabeled as results of the new runtime.
+
+## WP-15 Owner-approved development harness revision
+
+Owner approved this workflow revision on 2026-11-02. Preserve application behavior,
+source fixtures and historical verification artifacts; use existing documents and
+progress fields without a new runtime service or semantic-validation tool.
+
+- T15.1 Consolidate change/conflict handling, HITL, impact review and evidence freshness; remove conflicting status instructions and shorten session recovery guidance.
+- T15.2 Remove the fixed owner-conversation language, align related documents, and commit/push the approved harness revision to master.
+
+Done: one linked procedure defines triggers, authority, owner decisions, affected
+contracts/code/checks, evidence reassessment and completion review. Current statuses
+have one home; historical material and superseded decisions are distinguishable.
+Checks: make check, git diff --check and manual walkthroughs of a contract bug, an
+ambiguous requirement, an explicit owner change and interrupted-session recovery.
+Walkthroughs review instruction consistency; they do not prove future agent compliance.
+For T15.2, verify the language-rule removal and documentation checks, create the requested
+`little harness update` commit, and verify that remote master matches the committed revision.

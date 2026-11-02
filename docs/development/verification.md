@@ -25,6 +25,14 @@ ports/browser launch and dependency downloads require allowed sandbox escalation
 normal local terminals do not have that sandbox restriction. Its installed browser
 path is `/private/tmp/resourcing-browsers` via PLAYWRIGHT_BROWSERS_PATH.
 
+For changed contracts, use the [change/conflict procedure](workflow.md#changes-and-contradictions)
+to identify affected checks and prior results that no longer establish current
+acceptance. Keep this document's checkpoint-specific evidence historical. Record new
+results or justified reuse in progress.json and perform the
+[completion review](workflow.md#completion-review). Documentation changes use tooling
+checks and manual consistency review; they do not establish application/model quality.
+No automated semantic-consistency or requirement-coverage check exists yet.
+
 ## Previous release evidence (before the backend refactor)
 
 - Runtime checkpoint `ae6e196` was checked in a genuine local Git clone at
@@ -73,6 +81,7 @@ questions. Timing/token/recall/storage methodology and actual counts are exporte
 | [Evaluation runner](../../tests/test_evaluation.py) | S-070–S-074: five write-case branches through actual API subprocesses, restart receipts/exact terms, read-only source changes, startup cleanup, reports/review exit codes and failure continuation | Explicit test-only model; no Azure accuracy claim |
 | [Browser](../../frontend/e2e/chat.spec.ts) | S-059–S-064: rendering/history, pending/decision flow, network retry, mobile/markup | One Chromium engine; not universal accessibility certification |
 | [Continuity tooling](../../scripts/test_check_progress.py) | Fresh-process status restore, invalid state rejection, inventory/gate/evidence checks | Does not trigger Codex compact or prove app behavior |
+| [Change/conflict workflow](workflow.md#changes-and-contradictions) | Manual review of impact, HITL, historical evidence and completion against the task diff | Written procedure; no automated proof of future compliance or complete semantic coverage |
 
 The88 scenario IDs remain a written acceptance inventory. A mapped scenario can have
 uncovered variants; this table is not proof that every scenario/variant passed. No
