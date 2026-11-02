@@ -2,7 +2,8 @@
 
 Repository documentation, specifications, durable instructions, code comments and
 product text are in English. Discuss the work with the owner in Russian.
-The repository name is exactly `resoursing_assistant_test`.
+The repository name is exactly `resoursing_assistant_test`. Its primary branch is
+`master` locally and on GitHub; keep this branch name consistent.
 
 ## Authorization boundary
 
@@ -23,6 +24,11 @@ step. Implement meaningful checks with each task, fix failures, and update actua
 verification evidence. A missing Azure credential blocks live-model checks, not
 independent local work. Never claim unavailable checks passed. Publishing, deployment,
 repository sharing and sending messages require their own applicable authorization.
+
+On2026-11-02 the owner supplied the public target
+https://github.com/boroznovskyilia/resoursing_assistant_test and authorized synchronizing
+local/remote `master`. The repository was published under that scope. Demo hosting,
+application deployment and external messages remain separately authorized actions.
 
 ## Design baseline and navigation
 

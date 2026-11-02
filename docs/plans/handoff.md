@@ -17,6 +17,11 @@ content is English. Exact Git repository name: `resoursing_assistant_test`.
    saved gate; record it accurately. Never reset/delete uncommitted work or replay a
    completed booking because chat context is missing.
 
+The owner authorized synchronizing local and remote `master` on2026-11-02 and supplied
+https://github.com/boroznovskyilia/resoursing_assistant_test. The code is now public
+there, with `master` as GitHub's default branch and local upstream `origin/master`.
+No branch force-push or history rewrite was used. Demo delivery/email remain separate.
+
 ## Durable status protocol
 
 progress.json is the single live status/evidence record; the plan owns task meanings,
@@ -82,7 +87,8 @@ SQL, semantic recommendations, actual API stop/start before Confirm, receipt/his
 reload and Reject. Local2m35s MP4 and continuous4m54s WebM/evidence are under
 `.runtime/demo/20261102/`; the versioned [transcript](../development/demo-transcript.md)
 records checks. Only semantic waiting is explicitly accelerated8x. The isolated demo
-API was stopped; main saved chats/source were untouched. No upload/sharing/submission.
+API was stopped; main saved chats/source were untouched. The video has not been
+uploaded and no invitation submission was sent. Repository publication is recorded above.
 
 ## Previous release evaluation evidence
 
@@ -94,7 +100,7 @@ run reports remain available; final report/answer/scorer hashes were verified. A
 backend and5 browser checks passed from the actual local Git-clone rehearsal.
 
 `progress.json` owns current validation progress, active evaluation and service IDs;
-remote publication/video sharing/submission remain unfinished. Do not rerun paid
+video delivery/submission remain unfinished; repository publication is complete. Do not rerun paid
 models just to restore missing chat context or replay a confirmed booking.
 
 ## Host and recovery notes
@@ -109,8 +115,9 @@ Local HTTP ports/browser launches and downloads need tool sandbox escalation; au
 has allowed them. No approval-review rejection occurred. Production API/UI may be running at127.0.0.1:8000;
 verify the exact PID/command/health before restarting and preserve its existing.runtime.
 Current process IDs and sessions belong only in progress.json. No background goal,
-automation or subagent exists. Real Azure evaluation calls are authorized; no publication,
-external message or remote sharing has occurred. Credentials must never appear in reports.
+automation or subagent exists. Real Azure evaluation calls are authorized. Repository
+publication was authorized and completed; no external message was sent. Credentials
+must never appear in reports.
 
 The latest actual checks and local Git commits are in progress.json/Git. Do not rerun
 past installation steps without cause. No tool exposed here forces Codex compaction;

@@ -16,7 +16,9 @@ answers, process/database evidence and verification results. An explicitly label
 The isolated demo runtime was stopped afterwards; main saved chats were untouched.
 The original source hash and all24 source-table invariants passed. Only one confirmed
 40-hour soft booking was added in the demo copy; repeat Confirm and Reject added none.
-Video upload and repository sharing have not happened.
+The [public repository](https://github.com/boroznovskyilia/resoursing_assistant_test)
+uses `master` as its default branch; local `master` tracks `origin/master`. Video
+delivery and the invitation email remain outstanding.
 
 ## Re-recording procedure
 
@@ -72,10 +74,12 @@ repository merely because local development is authorized.
 Draft message for owner review after evidence is complete:
 
 > Hi Clarise,
-> Here are the repository and demo recording: [insert actual reviewed links].
+> Repository: https://github.com/boroznovskyilia/resoursing_assistant_test
+> Demo recording: resourcing-assistant-demo.mp4 (attach before sending).
 > Setup, evaluation results, design decisions and remaining limitations are documented
 > in README.md, DESIGN.md and NOT_DONE.md.
 > Kind regards,
 > Ilia
 
-The placeholders above are not real links or a claim that submission is ready.
+The repository link is live. The draft has not been sent; attach the prepared MP4
+or replace its filename with an actual video link before submitting.

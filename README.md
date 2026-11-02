@@ -17,6 +17,8 @@ and model-matching tokenizer are bundled, with fingerprint validation.
 Clone the repository and run the following commands from its root directory.
 
 ```sh
+git clone --branch master https://github.com/boroznovskyilia/resoursing_assistant_test.git
+cd resoursing_assistant_test
 make setup
 ```
 
@@ -169,7 +171,8 @@ SQL, semantic recommendations, and a pending booking confirmed after an actual A
 process restart, followed by Reject. Genuine Azure models were used throughout.
 A local 2m35s MP4 with English captions is prepared; its long semantic waiting period
 is explicitly accelerated8x, with the full continuous source recording retained.
-Video upload, repository sharing and external submission remain outstanding.
+The repository is published on GitHub with `master` as its default branch. Video
+delivery and external submission remain outstanding.
 
 ## Design and continued development
 

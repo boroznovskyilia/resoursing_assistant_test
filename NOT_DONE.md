@@ -15,8 +15,9 @@ Previous release evidence is preserved separately. This does not establish unive
   Reject. A local 2m35s captioned MP4 and full4m54s source recording are prepared;
   the video still needs an accessible delivery link. The versioned
   [transcript](docs/development/demo-transcript.md) includes verified write/source checks.
-- No remote repository publication, deployment, sharing or submission has occurred.
-  Those require the owner's applicable scope and real repository/demo links.
+- The [repository](https://github.com/boroznovskyilia/resoursing_assistant_test) is public
+  with `master` as its default branch. Demo delivery and the invitation submission
+  remain outstanding; no application deployment or external message was performed.
 - Free-text review was performed by Codex through AI-assisted inspection of actual
   source records and all delivered reasons. No independent human review, held-out
   benchmark, repeated-run reliability estimate or production-load test was performed.
