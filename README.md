@@ -3,6 +3,8 @@
 Local conversational Resourcing Assistant: persistent LangGraph agent, typed DSPy
 steps, FastAPI and React chat over the supplied professional-services SQLite database.
 
+The default branch is `master`.
+
 **Implementation is present and locally tested. Real Azure evaluation is recorded
 below.** Scripted providers are confined to tests.
 
