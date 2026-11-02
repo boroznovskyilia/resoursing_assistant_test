@@ -38,6 +38,25 @@ Suggested prompts are public assignment examples, not hard-coded application tem
 EMEA/Python/availability; experienced data engineers for a migration; Amanda Evans on
 ENG-2026-0001 for40h in April. The real interpreter must support changed filters too.
 
+## Public-repository security check — 2 November 2026
+
+Baseline `48feed3`: all24 reachable commits,312 Git blobs and141 tracked files were
+checked. Official Gitleaks v8.30.1 passed both complete Git history and a snapshot of
+the tracked working tree with zero findings. The downloaded release checksum was
+verified; source files and credentials were not uploaded to any scanner service.
+An additional exact scan found no configured Azure key or its encoded variants in
+Git objects, tracked files or the uncompressed assignment document package.
+
+`.env` is ignored, untracked and mode0600. `.env.example` is tracked with empty key
+and endpoint fields. Ignore checks cover secret env variants, runtime databases/logs,
+dependencies, caches, build output and browser artifacts. None of these private or
+generated paths was found in Git history. The bundled mock database is intentional;
+all four supplied-file hashes still match the original assignment files.
+
+Local reports are under `.runtime/publication-audit/20261102/` and stay out of Git.
+No Git remote was configured at audit time; no push, upload or external message was
+performed. The submission draft below intentionally awaits actual delivery links.
+
 ## Before sharing
 
 Fresh Git-clone setup/run/build/test commands must work with local source/tokenizer,

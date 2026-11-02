@@ -19,10 +19,12 @@ reply or a replacement for the original email.
   is not included in the text available to this workspace.
 - Questions can be emailed; assumptions should be documented in DESIGN.md.
 
-The owner will add credentials later. No credentials have been requested in chat or
-embedded in these documents. No email or messenger message has been sent.
+This document records the invitation requirements. Local credentials are configured
+only in the ignored `.env`; no credential values are embedded in this document.
+Actual model execution evidence is in [README](../../README.md). No email or
+messenger message has been sent.
 
 The brief allows a recording or transcript, while the email asks for a recording.
-Choosing a video would satisfy both; this is a submission recommendation, not a new
-mandatory application feature. Current Azure availability, remaining budget, and
-credentials have not been tested. These are stated account limits, not cost estimates.
+A genuine-model [demo recording and transcript](../development/demo-transcript.md)
+have been prepared. These account limits come from the invitation; remaining quota
+and actual billed cost were not measured.
