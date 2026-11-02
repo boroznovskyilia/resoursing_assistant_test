@@ -1,9 +1,24 @@
 # Final demonstration and submission checklist
 
-This is a local preparation guide, not a sent submission. Actual-model evidence and
-recording await Azure access; current limitations are in [NOT_DONE](../../NOT_DONE.md).
+This is a local preparation guide, not a sent submission. Actual-model evaluation
+and the local recording are complete; current limitations are in
+[NOT_DONE](../../NOT_DONE.md).
 
-## Once credentials are available
+## Prepared local demo
+
+The [versioned transcript](demo-transcript.md) records the genuine Azure-backed UI
+session on 2 November 2026: factual SQL, semantic recommendations, booking Confirm
+after a real API process restart, and Reject. Local files are under
+`.runtime/demo/20261102/`, including `resourcing-assistant-demo.mp4` (2m35s, English
+captions, no audio), `resourcing-assistant-raw.webm` (continuous4m54s), delivered
+answers, process/database evidence and verification results. An explicitly labelled
+8x edit shortens only the semantic-response waiting interval; replies are unchanged.
+The isolated demo runtime was stopped afterwards; main saved chats were untouched.
+The original source hash and all24 source-table invariants passed. Only one confirmed
+40-hour soft booking was added in the demo copy; repeat Confirm and Reject added none.
+Video upload and repository sharing have not happened.
+
+## Re-recording procedure
 
 1. Add supplied endpoint/key to .env, run `make setup` without overwriting saved state,
    and start `make run`. Verify health and an actual DSPy chat/embedding smoke call.

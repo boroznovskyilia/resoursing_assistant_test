@@ -1,14 +1,24 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-01T19:07:48.352067+00:00",
+  "updated_at": "2026-11-02T09:10:07.386884+00:00",
   "authorization": {
     "application_development": "authorized",
     "evidence": "2026-10-31 owner explicitly answered scope clarification: implement the entire Resourcing Assistant according to the plan. Includes independent local implementation and later real Azure validation when access exists. Publishing/submission not authorized. On 2026-11-01 the owner explicitly approved every backend structural review recommendation, synchronous SQLAlchemy, and the proposed execution order."
   },
   "current_task": null,
-  "next_action": "Owner-approved WP-14 backend refactor complete. Runtime23487e3; final Azure20261101T190046Z_a1cdc9 has22/22 after15automatic+7explicitAI-assisted source reviews; full103backend/5browser/9tooling checks passed, locked clone setup/build and saved-runtime compatibility verified. Evidence:docs/evaluation/backend-refactor-20261101. MainAPI PID59719 exec50037 at127.0.0.1:8000 uses app:create_app with same.runtime/private.env;2savedchats readable. No evaluation process active. Remaining original delivery work:T13.4 demo video not recorded;T13.5 publication/sharing/submission separately gated. No new implementation permission needed for authorized scope.",
+  "next_action": "Local implementation, evaluation and demo are complete. T13.4 recording155.28s at .runtime/demo/20261102/resourcing-assistant-demo.mp4; versioned docs/development/demo-transcript.md. Isolated demo process stopped; no main API currently confirmed running. Only T13.5 remote repository/video sharing and submission remains, separately gated. Do not replay paid demos/bookings to recover context.",
   "blockers": [],
   "last_checks": [
+    {
+      "command": "make check; git diff --check; exported-text secret scan",
+      "result": "passed",
+      "scope": "9tooling checks, all local links/progress, no whitespace errors; six changed/versioned documentation files contain no configured Azure key. No backend runtime code changed in this task."
+    },
+    {
+      "command": "Genuine browser demo + media/source/write verification,2026-11-02",
+      "result": "passed",
+      "scope": "MP4 captioned155.28s; real API stop/start, pending restore, one exact40h soft booking, repeatConfirm+Reject no duplicate, all24 source invariants,10semantic source records checked, original source unchanged. Full recording/answers/evidence retained; no publication."
+    },
     {
       "command": ".venv/bin/python -m pytest tests -q (runtime23487e3)",
       "result": "passed",
@@ -494,15 +504,18 @@
     },
     {
       "id": "T13.4",
-      "status": "not_started",
-      "evidence": [],
+      "status": "done",
+      "evidence": [
+        "2026-11-02 genuine Azure/production UI demo: local .runtime/demo/20261102/resourcing-assistant-demo.mp4,155.28s,1440x1000,H264,English captions/no audio. Continuous294.24s source retained; only labelled semantic waiting accelerated8x; answers unchanged. Versioned docs/development/demo-transcript.md.",
+        "Real API PID9231 stopped, new PID10085 restarted using same isolated SQLite runtime; pending action restored. Confirm created exactly one40h soft/SFT booking#2621; repeatConfirm200 and Reject created none. All24 source invariants, original SHA256, exact dates/person/project/minutes passed. Factual gold score1.0; semantic automated score1.0 plus explicit AI-assisted source review, all10 names/bios/roles/skills independently checked. Representative encoded frames/media metadata inspected; no secrets in exported text."
+      ],
       "blocker": null
     },
     {
       "id": "T13.5",
       "status": "blocked",
       "evidence": [],
-      "blocker": "Local submission draft/checklist prepared; actual remote repository/demo links and sending/publication require owner scope and completed real demo."
+      "blocker": "Local MP4 and versioned transcript are ready; remote repository/video links and external sharing/submission still need applicable owner instruction."
     },
     {
       "id": "T14.1",
@@ -554,12 +567,5 @@
       "blocker": null
     }
   ],
-  "runtime_services": [
-    {
-      "url": "http://127.0.0.1:8000",
-      "pid": 3546,
-      "exec_session_id": 23525,
-      "purpose": "Final production local API/UI, genuine Azure configured, existing.runtime preserved; health makes no model probes. Production behavior identical to accepted inference runtimeae6e196; scorer tools at ebd3f14."
-    }
-  ]
+  "runtime_services": []
 }

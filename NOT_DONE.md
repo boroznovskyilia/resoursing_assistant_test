@@ -10,9 +10,11 @@ Previous release evidence is preserved separately. This does not establish unive
 
 ## Remaining delivery work
 
-- Record the submission's three representative conversations and demo video, including
-  an actual API restart before booking confirmation. Evaluation already exercises the
-  model-backed restart/Confirm/Reject paths, but no submission video has been recorded.
+- The three representative UI conversations were recorded on 2 November 2026 using
+  genuine Azure models, including an actual API restart before Confirm and a separate
+  Reject. A local 2m35s captioned MP4 and full4m54s source recording are prepared;
+  the video still needs an accessible delivery link. The versioned
+  [transcript](docs/development/demo-transcript.md) includes verified write/source checks.
 - No remote repository publication, deployment, sharing or submission has occurred.
   Those require the owner's applicable scope and real repository/demo links.
 - Free-text review was performed by Codex through AI-assisted inspection of actual

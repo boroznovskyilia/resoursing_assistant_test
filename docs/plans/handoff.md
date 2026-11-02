@@ -78,6 +78,13 @@ AI-assisted source reviews =>22/22. [Evidence](../evaluation/backend-refactor-20
 Both prior failed/rejected runs are preserved; no stitching or independent human review.
 Actual API process/session IDs remain only in progress.json. No evaluation is active.
 
+T13.4 demo was completed on 2 November 2026. Genuine Azure/browser capture shows factual
+SQL, semantic recommendations, actual API stop/start before Confirm, receipt/history
+reload and Reject. Local2m35s MP4 and continuous4m54s WebM/evidence are under
+`.runtime/demo/20261102/`; the versioned [transcript](../development/demo-transcript.md)
+records checks. Only semantic waiting is explicitly accelerated8x. The isolated demo
+API was stopped; main saved chats/source were untouched. No upload/sharing/submission.
+
 ## Previous release evaluation evidence
 
 The previous release QA was completed before the owner-approved WP-14 refactor. Start with [evaluation evidence](../evaluation/README.md),
@@ -88,7 +95,7 @@ run reports remain available; final report/answer/scorer hashes were verified. A
 backend and5 browser checks passed from the actual local Git-clone rehearsal.
 
 `progress.json` owns current validation progress, active evaluation and service IDs;
-demo video and remote publication/submission remain unfinished. Do not rerun paid
+remote publication/video sharing/submission remain unfinished. Do not rerun paid
 models just to restore missing chat context or replay a confirmed booking.
 
 ## Host and recovery notes

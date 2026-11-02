@@ -162,6 +162,15 @@ not an independent human review, held-out benchmark or repeated-run reliability 
 | own-11 | write | 1.0 | passed | not_required |
 | own-12 | out_of_scope | 1.0 | passed | approved |
 
+## Demo
+
+The [recorded demo transcript](docs/development/demo-transcript.md) covers factual
+SQL, semantic recommendations, and a pending booking confirmed after an actual API
+process restart, followed by Reject. Genuine Azure models were used throughout.
+A local 2m35s MP4 with English captions is prepared; its long semantic waiting period
+is explicitly accelerated8x, with the full continuous source recording retained.
+Video upload, repository sharing and external submission remain outstanding.
+
 ## Design and continued development
 
 - [DESIGN](DESIGN.md): concise architecture, state, retrieval, failures and assumptions.
